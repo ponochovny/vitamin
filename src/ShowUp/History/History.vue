@@ -1,0 +1,73 @@
+<template>
+  <div class="History">
+        <div class="History__item" v-for="item of items" :key="item.title">
+            <span :style="{width: `${item.filled}%`}"></span>
+            <div class="History__title">
+                {{item.date}}
+            </div>
+        </div>
+  </div>
+</template>
+
+<script>
+export default {
+    props: ['items'],
+    name: 'history',
+    components: {
+
+    },
+    data () {
+        return {
+
+        }
+    },
+    methods: {
+    },
+    mounted() {
+    }
+}
+</script>
+
+<style lang="scss">
+    .History {
+        width: 560px;
+        &__item {
+            position: relative;
+            display: inline-block;
+            width: 263px;
+            height: 65px;
+            background: #F2F2F2;
+            border-radius: 5px;
+            margin-right: 34px;
+            margin-bottom: 28px;
+
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 24px;
+            line-height: 28px;
+
+            color: #161616;
+            &:nth-child(even) {
+                margin-right: 0;
+            }
+
+            span {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+
+                background: linear-gradient(270deg, #70FFDD 0%, rgba(63, 128, 255, 0.58) 100%);
+                border-radius: 5px;
+            }
+        }
+        &__title {
+            display: inline-block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+</style>

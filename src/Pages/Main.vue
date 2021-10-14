@@ -1,0 +1,77 @@
+<template>
+    <div class="Main">
+        <template v-if="isUserLoggedIn">
+          <ProductsSearch />
+          <div :style="{marginTop: '56px'}">
+              <h2 :style="{marginBottom: '35px'}">Выбранные продукты</h2>
+              <ChoosenProducts :choosenProducts="products" />
+          </div>
+          <div :style="{marginTop: '56px'}">
+              <h2 :style="{marginBottom: '35px'}">От дневной нормы</h2>
+              <FilledChars v-if="products.length > 0" :productCharacteristics="averageChoosenProductsChars" />
+          </div>
+          <History :items="history" />
+        </template>
+        <template v-else>
+          <h2 style="width: 100%; text-align: center; margin-top: 60px">You're not logged in. <router-link to="/auth">Log in</router-link></h2>
+        </template>
+    </div>
+</template>
+
+<script>
+import FilledChars from '../ShowUp/FilledChars'
+import ProductsSearch from '../ProductsSearch/ProductsSearch'
+import ChoosenProducts from '../ShowUp/ChoosenProducts/ChoosenProducts'
+import History from '../ShowUp/History/History'
+import {products} from '../constants/products'
+import {history} from '../constants/history'
+
+export default {
+  name: 'app',
+  components: {
+    'FilledChars': FilledChars,
+    'ProductsSearch': ProductsSearch,
+    'ChoosenProducts': ChoosenProducts,
+    'History': History,
+  },
+  data () {
+    return {
+      products: [],
+      history: [],
+
+      isLoggedIn: true
+    }
+  },
+  computed: {
+    averageChoosenProductsChars() {
+      return this.$store.getters.averageChoosenProductsChars
+    },
+    isUserLoggedIn() {
+      return this.$store.getters.isUserLoggedIn
+    }
+  },
+  mounted() {
+    this.products = [...products]
+    this.history = [...history]
+  }
+}
+</script>
+
+<style lang="scss">
+    .Main {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        align-content: flex-start;
+        padding: 0 45px;
+        .ProductsSearch {
+            margin-top: 56px;
+            margin-right: 96px;
+        }
+        .ChoosenProducts {
+            margin-right: 96px;
+        }
+    }
+</style>
