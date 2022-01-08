@@ -7,7 +7,7 @@ import firebase from 'firebase/app'
 import Toasted from 'vue-toasted'
 import Spinner from './Components/Spinner/Spinner'
 
-Vue.use(Toasted, {position: 'bottom-center', keepOnHover: true, duration: 2500})
+Vue.use(Toasted, {position: 'bottom-center', keepOnHover: true, duration: 4500})
 
 Vue.component('Loader', Spinner)
 
@@ -30,6 +30,7 @@ new Vue({
 
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
+        console.log('... Vue (created) - log in')
         this.$store.dispatch('autoLoginUser', user)
       }
     }),

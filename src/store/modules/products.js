@@ -21,13 +21,12 @@ export default {
         createProduct(state, payload) {
             state.products.push(payload)
         },
-        // updateProduct (state, {title, description, id}) {
-        //     const product = state.product.find(a => {
-        //         return a.id === id
-        //     })
-        //     product.title = title
-        //     product.description = description
-        // },
+        updateProduct (state, {title, id}) {
+            const product = state.products.find(a => {
+                return a.id === id
+            })
+            product.title = title
+        },
         addProductToChoosen(state, payload) {
             state.choosenProducts.push(
                 {
@@ -140,26 +139,24 @@ export default {
                 throw error
             }
         },
-        // async updateProduct ({commit}, {title, description, id}) {
-        //     commit('clearError')
-        //     commit('setLoading', true)
-        //     try {
-        //         await firebase.database().ref('products').child(id).update({
-        //             title,
-        //             description
-        //         })
-        //         commit('updateProduct', {
-        //             title,
-        //             description,
-        //             id
-        //         })
-        //         commit('setLoading', false)
-        //     } catch (error) {
-        //         commit('setError', error.message)
-        //         commit('setLoading', false)
-        //         throw error
-        //     }
-        // },
+        async updateProduct ({commit}, {title, id}) {
+            commit('clearError')
+            commit('setLoading', true)
+            try {
+                await firebase.database().ref('products').child(id).update({
+                    title
+                })
+                commit('updateProduct', {
+                    title,
+                    id
+                })
+                commit('setLoading', false)
+            } catch (error) {
+                commit('setError', error.message)
+                commit('setLoading', false)
+                throw error
+            }
+        },
         async fetchProducts ({commit}) {
             commit('clearError')
             commit('setLoading', true)

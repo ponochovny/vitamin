@@ -55,27 +55,32 @@ export default {
     }
   },
   mounted() {
-    const rangeStart = 0
-    const rangeEnd = 2
+    // const rangeStart = 0
+    // const rangeEnd = 2
     
-    var iterate = function* (start = 0, end = 5, step = 1) {
-        for (let i = start; i <= end; i += step) {
-            yield i;
-        }
-    }
+    // var iterate = function* (start = 0, end = 5, step = 1) {
+    //     for (let i = start; i <= end; i += step) {
+    //         yield i;
+    //     }
+    // }
     
-    var values =    (rangeStart, rangeEnd);
-    var tmp = [];
+    // var values =    (rangeStart, rangeEnd);
+    // var tmp = [];
     
-    for (let item = 0; item < rangeEnd; item++) {
-        console.log('...', item)
-        console.log('...', values.next())
-        if (values.next().done) break
+    // for (let item = 0; item < rangeEnd; item++) {
+    //     console.log('...', item)
+    //     console.log('... values.next', values.next)
+
+    //     if (values.next) {
+    //         console.log('...', values.next())
+    //         debugger
+    //         if (values.next().done) break
+        
+    //         tmp.push(values.next().value)
+    //     }
+    // }
     
-        tmp.push(values.next().value)
-    }
-    
-    console.log(tmp.join(","))
+    // console.log(tmp.join(","))
   }
 }
 </script>

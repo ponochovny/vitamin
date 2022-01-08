@@ -87,7 +87,7 @@ export default {
                     left: 0;
                     height: calc(100% + 2px);
                     max-width: 100%;
-                    border-radius: 30px;
+                    // border-radius: 30px;
                 }
             }
             &__label {

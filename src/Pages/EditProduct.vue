@@ -44,7 +44,7 @@
         <!-- <p>Источник</p>
         <input v-for="item of columns" :key="item" type="text" v-model="productData.source[item-1].origin"> -->
         <br>
-        <button @click="saveData">{{ loading ? '...' : 'Save'}}</button>
+        <button @click="editData">{{ loading ? '...' : 'Save'}}</button>
     </div>
 </template>
 
@@ -86,14 +86,17 @@ export default {
     }
   },
   methods: {
-    saveData: function() {
+    editData: function() {
       // 1. send new data to existed product to edit
       // 2. edit basic characteristics if there are new fields
-      this.$store.dispatch('createProduct', {
-        ...this.productData
+      this.$store.dispatch('updateProduct', {
+        title: this.productData.title,
+        id: this.currentItem.id
       })
         .then(() => {
           this.$router.push('/')
+
+          this.$toasted.success(`Data updated: ${this.productData.title}`)
         })
         .catch((error) => {
           this.$toasted.error(error)
