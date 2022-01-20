@@ -36,6 +36,7 @@ new Vue({
     }),
 
     this.$store.dispatch('fetchProducts')
+    this.$store.dispatch('fetchRegisteredMeals')
   },
   render: h => h(App)
 })
