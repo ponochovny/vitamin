@@ -3,7 +3,9 @@
         <div class="ChoosenProducts__list">
             <Product v-for="item of choosenProducts" :key="item.title" :item="item" />
         </div>
-        <button>Зарегистрировать</button>
+        <button
+            @click="registerMeal"
+        >Зарегистрировать</button>
     </div>
 </template>
 
@@ -21,11 +23,21 @@ export default {
     },
     computed: {
         choosenProducts() {
+            console.lo
             return this.$store.getters.choosenProducts
         }
     },
     methods: {
-        
+        registerMeal() {
+            this.$store.dispatch('registerMeal')
+                .then(() => {
+                    this.$toasted.success('Data had been registered!')
+                    this.$store.dispatch('clearChoosenProducts')
+                })
+                .catch((error) => {
+                    this.$toasted.error(error)
+                })
+        }
     },
     mounted() {
 

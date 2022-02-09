@@ -10,6 +10,8 @@ class Product {
 
 export default {
     state: {
+        registeredMeals: [],
+
         products: [],
         choosenProducts: [],
         averChProdChars: {}
@@ -17,6 +19,9 @@ export default {
     mutations: {
         loadProducts(state, payload) {
             state.products = payload
+        },
+        loadRegisteredMeals(state, payload) {
+            state.registeredMeals = payload
         },
         createProduct(state, payload) {
             state.products.push(payload)
@@ -26,6 +31,9 @@ export default {
                 return a.id === id
             })
             product.title = title
+        },
+        registerMeal (state, payload) {
+            state.registeredMeals.push(payload)
         },
         addProductToChoosen(state, payload) {
             state.choosenProducts.push(
@@ -157,6 +165,28 @@ export default {
                 throw error
             }
         },
+        async registerMeal ({commit, state}) {
+            const date = new Date()
+
+            commit('clearError')
+            commit('setLoading', true)
+            try {
+                await firebase.database().ref('registeredMeals').push({
+                    date: date.valueOf(),
+                    productsList: state.choosenProducts
+                })
+                commit('registerMeal', {
+                    date: date.valueOf(),
+                    productsList: state.choosenProducts
+                })
+                commit('setLoading', false)
+            } catch (error) {
+                console.log('... error', error)
+                commit('setError', error.message)
+                commit('setLoading', false)
+                throw error
+            }
+        },
         async fetchProducts ({commit}) {
             commit('clearError')
             commit('setLoading', true)
@@ -175,6 +205,36 @@ export default {
                     )
                 })
                 commit('loadProducts', resultProducts)
+                commit('setLoading', false)
+            } catch(error) {
+                commit('setError', error.message)
+                commit('setLoading', false)
+                throw error
+            }
+        },
+        async fetchRegisteredMeals ({commit}) {
+            commit('clearError')
+            commit('setLoading', true)
+            const resultRegisteredMeals = []
+            try {
+                const registeredMealsVal = await firebase.database().ref('registeredMeals').once('value')
+                console.log('... registeredMealsVal', registeredMealsVal)
+
+                const registeredMeals = registeredMealsVal.val()
+                console.log('... registeredMeals', registeredMeals)
+
+                Object.keys(registeredMeals).forEach(key => {
+                    resultRegisteredMeals.push(
+                        {
+                            productsList: registeredMeals[key],
+                            date: registeredMeals[key].date,
+                            id: key
+                        }
+                    )
+                })
+                console.log('... resultRegisteredMeals', resultRegisteredMeals)
+
+                commit('loadRegisteredMeals', resultRegisteredMeals)
                 commit('setLoading', false)
             } catch(error) {
                 commit('setError', error.message)

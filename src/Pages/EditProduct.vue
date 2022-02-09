@@ -44,7 +44,7 @@
         <!-- <p>Источник</p>
         <input v-for="item of columns" :key="item" type="text" v-model="productData.source[item-1].origin"> -->
         <br>
-        <button @click="editData">{{ loading ? '...' : 'Save'}}</button>
+        <button @click="editData">{{ loading ? '...' : 'Save changes'}}</button>
     </div>
 </template>
 
@@ -86,7 +86,7 @@ export default {
     }
   },
   methods: {
-    editData: function() {
+    editData() {
       // 1. send new data to existed product to edit
       // 2. edit basic characteristics if there are new fields
       this.$store.dispatch('updateProduct', {

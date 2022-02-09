@@ -24,7 +24,6 @@ import ProductsSearch from '../ProductsSearch/ProductsSearch'
 import ChoosenProducts from '../ShowUp/ChoosenProducts/ChoosenProducts'
 import History from '../ShowUp/History/History'
 import {products} from '../constants/products'
-import {history} from '../constants/history'
 
 export default {
   name: 'app',
@@ -37,7 +36,12 @@ export default {
   data () {
     return {
       products: [],
-      history: [],
+      history: [
+          {
+              date: '29.01.2021',
+              filled: '90'
+          }
+      ],
 
       isLoggedIn: true
     }
@@ -52,7 +56,6 @@ export default {
   },
   mounted() {
     this.products = [...products]
-    this.history = [...history]
   }
 }
 </script>
