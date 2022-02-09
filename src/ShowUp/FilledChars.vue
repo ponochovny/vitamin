@@ -1,22 +1,22 @@
 <template>
   <div class="FilledChars">
-    <h2>Б/Ж/У</h2>
+    <h2>Б/Ж/У [total: {{ totalPercent('foodEnergy') }}]</h2>
     <CharList
         :myClass="'FilledChars__list'"
-        :productCharacteristics="productCharacteristics.foodEnergy"
+        :averageProductsCharacteristics="averageProductsCharacteristics.foodEnergy"
         :characteristics="characteristics.foodEnergy"
     />
-    <h2>Витамины</h2>
+    <h2>Витамины [total: {{ totalPercent('vitamins') }}]</h2>
     <CharList
         :myClass="'FilledChars__list'"
-        :productCharacteristics="productCharacteristics.vitamins"
+        :averageProductsCharacteristics="averageProductsCharacteristics.vitamins"
         :characteristics="characteristics.vitamins"
         :itemBefore="'Витамин '"
         :itemAfter="', мг'"
     />
-    <h2>Микро/Макроелементы</h2>
+    <h2>Микро/Макроелементы [total: {{ totalPercent('macromicto') }}]</h2>
     <CharList
-        :productCharacteristics="productCharacteristics.macromicto"
+        :averageProductsCharacteristics="averageProductsCharacteristics.macromicto"
         :characteristics="characteristics.macromicto"
         :itemAfter="', мг'"
     />
@@ -25,10 +25,11 @@
 
 <script>
 import CharList from './CharList/CharList'
+import {calculatedPercent} from '../Tools/calculatePercentage'
 
 export default {
-    props: ['productCharacteristics'],
-    name: 'app',
+    props: ['averageProductsCharacteristics'],
+    name: 'filledChars',
     components: {
         'CharList': CharList
     },
@@ -39,11 +40,35 @@ export default {
     computed: {
         characteristics() {
             return this.$store.getters.basicCharacteristics
-        }
+        },
     },
     methods: {
+        totalPercent(parameter) {
+            let times = 0
+            let summ = 0
+            let result = 0
+
+            for (let item of this.characteristics[parameter]) {
+                times++
+                summ += +calculatedPercent(item, this.averageProductsCharacteristics[parameter])
+            }
+
+            result = (summ/times).toFixed(2)
+
+            return result > 100 ? 100 : +result
+        }
     },
     mounted() {
+    },
+    watch: {
+        averageProductsCharacteristics(oldVal, newVal) {
+            let summ = this.totalPercent('foodEnergy') + this.totalPercent('vitamins') + this.totalPercent('macromicto')
+            let result = (summ/3).toFixed(2)
+
+            if (newVal.percentage !== oldVal.percentage || newVal.percentage === undefined) {
+                this.$store.dispatch('allTotalPercentage', result > 100 ? 100 : +result)
+            }
+        }
     }
 }
 </script>

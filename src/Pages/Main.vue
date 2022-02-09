@@ -8,9 +8,9 @@
           </div>
           <div :style="{marginTop: '56px'}">
               <h2 :style="{marginBottom: '35px'}">От дневной нормы</h2>
-              <FilledChars v-if="products.length > 0" :productCharacteristics="averageChoosenProductsChars" />
+              <FilledChars v-if="products.length > 0" :averageProductsCharacteristics="averageChoosenProductsChars" />
           </div>
-          <History :items="history" />
+          <History :items="registeredMeals" />
         </template>
         <template v-else>
           <h2 style="width: 100%; text-align: center; margin-top: 60px">You're not logged in. <router-link to="/auth">Log in</router-link></h2>
@@ -36,12 +36,6 @@ export default {
   data () {
     return {
       products: [],
-      history: [
-          {
-              date: '29.01.2021',
-              filled: '90'
-          }
-      ],
 
       isLoggedIn: true
     }
@@ -52,6 +46,9 @@ export default {
     },
     isUserLoggedIn() {
       return this.$store.getters.isUserLoggedIn
+    },
+    registeredMeals() {
+      return this.$store.getters.registeredMeals
     }
   },
   mounted() {

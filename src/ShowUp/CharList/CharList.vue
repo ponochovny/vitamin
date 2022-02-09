@@ -6,10 +6,13 @@
             </div>
             <div class="list__progress progress">
                 <div class="progress__bar">
-                    <span :style="{backgroundColor: bgColors(), width: `${calculatedPercent(item)}%`}"></span>
+                    <span :style="{
+                        backgroundColor: bgColors(),
+                        width: `${calculatedPercentComputed(item, averageProductsCharacteristics)}%`
+                    }"></span>
                 </div>
                 <div class="progress__label">
-                    {{ calculatedPercent(item) }}%
+                    {{ calculatedPercentComputed(item, averageProductsCharacteristics) }}%
                 </div>
             </div>
         </li>
@@ -17,11 +20,12 @@
 </template>
 
 <script>
+import {calculatedPercent} from '../../Tools/calculatePercentage'
 import {colors} from '../../constants/colors'
 
 export default {
     props: {
-        productCharacteristics: Array,
+        averageProductsCharacteristics: Array,
         characteristics: Array,
         itemBefore: {
             type: String,
@@ -49,30 +53,25 @@ export default {
             let result = this.colors.length > 0 ? this.colors[randomNumber].value : '#fff'
             return result
         },
-        average: function(arr) {
-            let counter = 0
-            let summ = 0
-            for (let item of arr) {
-                counter++
-                summ += item.value
-            }
-            return summ/counter
-        },
-        averageFromMax: function(arrMax, fillArr) {
-            let fill = this.average(fillArr)
-            let max = this.average(arrMax)
-            const result = (fill*100)/max
-            return result.toFixed(0)
-        },
-        calculatedPercent: function(item) {
-            let findItem = this.productCharacteristics ? this.productCharacteristics.find(productItem => productItem.title === item.title) : undefined
-            return !findItem ? '0' : this.averageFromMax(item.values, findItem.versions)
+        calculatedPercentComputed(item, averageProductsCharacteristics) {
+            return calculatedPercent(item, averageProductsCharacteristics)
         }
-    },
-    computed: {
     },
     mounted() {
         this.colors = [...colors]
+    },
+    computed: {
+        totalPrecent() {
+            let times = 0
+            let summ = 0
+
+            for (let item of this.characteristics) {
+                times++
+                summ += +this.calculatedPercentComputed(item, this.averageProductsCharacteristics)
+            }
+
+            return summ/times
+        }
     }
 }
 </script>
