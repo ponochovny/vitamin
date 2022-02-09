@@ -7,6 +7,8 @@ import firebase from 'firebase/app'
 import Toasted from 'vue-toasted'
 import Spinner from './Components/Spinner/Spinner'
 
+Vue.use(require('vue-moment'));
+
 Vue.use(Toasted, {position: 'bottom-center', keepOnHover: true, duration: 4500})
 
 Vue.component('Loader', Spinner)

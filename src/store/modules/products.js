@@ -113,6 +113,10 @@ export default {
 
             state.averChProdChars = {...chars}
         },
+        allTotalPercentage(state, payload) {
+            console.log('... allTotalPercentage', payload)
+            state.averChProdChars = {...state.averChProdChars, percentage: payload}
+        },
         clearChoosenProducts(state) {
             state.choosenProducts = []
             state.averChProdChars = {}
@@ -173,11 +177,13 @@ export default {
             try {
                 await firebase.database().ref('registeredMeals').push({
                     date: date.valueOf(),
-                    productsList: state.choosenProducts
+                    productsList: state.choosenProducts,
+                    percentage: state.averChProdChars.percentage
                 })
                 commit('registerMeal', {
                     date: date.valueOf(),
-                    productsList: state.choosenProducts
+                    productsList: state.choosenProducts,
+                    percentage: state.averChProdChars.percentage
                 })
                 commit('setLoading', false)
             } catch (error) {
@@ -218,16 +224,17 @@ export default {
             const resultRegisteredMeals = []
             try {
                 const registeredMealsVal = await firebase.database().ref('registeredMeals').once('value')
-                console.log('... registeredMealsVal', registeredMealsVal)
+
+                if (registeredMealsVal.val() === null) return
 
                 const registeredMeals = registeredMealsVal.val()
-                console.log('... registeredMeals', registeredMeals)
 
                 Object.keys(registeredMeals).forEach(key => {
                     resultRegisteredMeals.push(
                         {
                             productsList: registeredMeals[key],
                             date: registeredMeals[key].date,
+                            percentage: registeredMeals[key].percentage,
                             id: key
                         }
                     )
@@ -241,6 +248,10 @@ export default {
                 commit('setLoading', false)
                 throw error
             }
+        },
+
+        allTotalPercentage({commit}, payload) {
+            commit('allTotalPercentage', payload)
         },
 
         addProductToChoosen({commit}, payload) {
@@ -267,6 +278,9 @@ export default {
     getters: {
         products(state) {
             return state.products
+        },
+        registeredMeals(state) {
+            return state.registeredMeals
         },
         choosenProducts(state) {
             return state.choosenProducts

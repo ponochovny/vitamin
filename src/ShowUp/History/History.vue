@@ -1,11 +1,13 @@
 <template>
   <div class="History">
+      <template v-if="items.length">
         <div class="History__item" v-for="item of items" :key="item.title">
-            <span :style="{width: `${item.filled}%`}"></span>
+            <span :style="{width: `${item.percentage}%`}"></span>
             <div class="History__title">
-                {{item.date}}
+                {{ item.date | moment("DD.MM.YYYY") }}
             </div>
         </div>
+      </template>
   </div>
 </template>
 
@@ -24,7 +26,7 @@ export default {
     methods: {
     },
     mounted() {
-    }
+    },
 }
 </script>
 
