@@ -62,10 +62,6 @@ export default {
     },
     watch: {
         averageProductsCharacteristics(oldVal, newVal) {
-
-            console.log('... oldVal', oldVal.percentage)
-            console.log('... newVal', newVal.percentage)
-
             let summ = this.totalPercent('foodEnergy') + this.totalPercent('vitamins') + this.totalPercent('macromicto')
             let result = (summ/3).toFixed(2)
 
