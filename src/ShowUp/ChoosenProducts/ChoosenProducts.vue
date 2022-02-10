@@ -23,7 +23,6 @@ export default {
     },
     computed: {
         choosenProducts() {
-            console.lo
             return this.$store.getters.choosenProducts
         }
     },

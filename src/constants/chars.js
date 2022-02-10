@@ -17,7 +17,7 @@ export const characteristics = {
         {title: 'K', description: 'Lorem ipsum', values: [{value: 9, origin: 'v1'},{value: 11, origin: 'v2'}]},
         {title: 'Z', description: 'Lorem ipsum', values: [{value: 9, origin: 'v1'},{value: 11, origin: 'v2'}]},
     ],
-    macromicto: [
+    macroMicro: [
         {title: 'Калий', description: 'Lorem ipsum', values: [{value: 3, origin: 'v1'},{value: 4, origin: 'v2'}]},
         {title: 'Магний', description: 'Lorem ipsum', values: [{value: 1, origin: 'v1'},{value: 4, origin: 'v2'}]},
     ],

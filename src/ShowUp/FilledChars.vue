@@ -14,10 +14,10 @@
         :itemBefore="'Витамин '"
         :itemAfter="', мг'"
     />
-    <h2>Микро/Макроелементы [total: {{ totalPercent('macromicto') }}]</h2>
+    <h2>Микро/Макроелементы [total: {{ totalPercent('macroMicro') }}]</h2>
     <CharList
-        :averageProductsCharacteristics="averageProductsCharacteristics.macromicto"
-        :characteristics="characteristics.macromicto"
+        :averageProductsCharacteristics="averageProductsCharacteristics.macroMicro"
+        :characteristics="characteristics.macroMicro"
         :itemAfter="', мг'"
     />
   </div>
@@ -62,7 +62,7 @@ export default {
     },
     watch: {
         averageProductsCharacteristics(oldVal, newVal) {
-            let summ = this.totalPercent('foodEnergy') + this.totalPercent('vitamins') + this.totalPercent('macromicto')
+            let summ = this.totalPercent('foodEnergy') + this.totalPercent('vitamins') + this.totalPercent('macroMicro')
             let result = (summ/3).toFixed(2)
 
             if (newVal.percentage !== oldVal.percentage || newVal.percentage === undefined) {
