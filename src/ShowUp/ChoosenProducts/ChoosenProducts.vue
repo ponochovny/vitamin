@@ -4,8 +4,9 @@
             <Product v-for="item of choosenProducts" :key="item.title" :item="item" />
         </div>
         <button
+            :disabled="choosenProducts.length == 0"
             @click="registerMeal"
-        >Зарегистрировать</button>
+        >{{ alreadyRegisteredForCurrentDate ? 'Добавить еще' : 'Зарегистрировать'}}</button>
     </div>
 </template>
 
@@ -24,18 +25,58 @@ export default {
     computed: {
         choosenProducts() {
             return this.$store.getters.choosenProducts
-        }
+        },
+
+        alreadyRegisteredForCurrentDate() {
+            return this.$store.getters.alreadyRegisteredForCurrentDate
+        },
     },
     methods: {
         registerMeal() {
-            this.$store.dispatch('registerMeal')
-                .then(() => {
-                    this.$toasted.success('Data had been registered!')
-                    this.$store.dispatch('clearChoosenProducts')
+            if (this.choosenProducts.length == 0) return
+
+            if (this.alreadyRegisteredForCurrentDate) {
+
+                // ...
+                const dateObjNow = new Date()
+
+                const monthNow = dateObjNow.getUTCMonth() + 1
+                const dayNow = dateObjNow.getUTCDate()
+                const yearNow = dateObjNow.getUTCFullYear()
+
+                const foundElement = this.$store.state.products.registeredMeals.find(el => {
+                    const thisDate = new Date(el.date)
+                    
+                    const month = thisDate.getUTCMonth() + 1
+                    const day = thisDate.getUTCDate()
+                    const year = thisDate.getUTCFullYear()
+                    
+                    return (month === monthNow && day === dayNow && year === yearNow)
                 })
-                .catch((error) => {
-                    this.$toasted.error(error)
+                // ...
+
+                this.$store.dispatch('updateRegisteredMeal', {
+                    id: foundElement.id,
+                    productList: foundElement.productsList
                 })
+                    .then(() => {
+                        this.$toasted.success('Data had been updated!')
+                        this.$store.dispatch('clearChoosenProducts')
+                    })
+                    .catch((error) => {
+                        this.$toasted.error(error)
+                    })
+
+            } else {
+                this.$store.dispatch('registerMeal')
+                    .then(() => {
+                        this.$toasted.success('Data had been registered!')
+                        this.$store.dispatch('clearChoosenProducts')
+                    })
+                    .catch((error) => {
+                        this.$toasted.error(error)
+                    })
+            }
         }
     },
     mounted() {

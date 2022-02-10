@@ -35,6 +35,18 @@ export default {
         registerMeal (state, payload) {
             state.registeredMeals.push(payload)
         },
+        updateRegisteredMeal (state, payload) {
+            state.registeredMeals = state.registeredMeals.map(el => {
+                if (el.id === payload.id) {
+                    return {
+                        ...el,
+                        productsList: payload.productsList
+                    }
+                }
+
+                return el
+            })
+        },
         addProductToChoosen(state, payload) {
             state.choosenProducts.push(
                 {
@@ -150,17 +162,67 @@ export default {
                 throw error
             }
         },
-        async updateProduct ({commit}, {title, id}) {
+        async updateProduct ({commit}, {title, characteristics, id}) {
             commit('clearError')
             commit('setLoading', true)
+            console.log('... update Product')
             try {
                 await firebase.database().ref('products').child(id).update({
-                    title
+                    title,
+                    characteristics
                 })
                 commit('updateProduct', {
                     title,
+                    characteristics,
                     id
                 })
+                commit('setLoading', false)
+            } catch (error) {
+                commit('setError', error.message)
+                commit('setLoading', false)
+                throw error
+            }
+        },
+        async updateRegisteredMeal ({commit, state}, {id, productList}) {
+            const choosenProducts = state.choosenProducts
+
+            commit('clearError')
+            commit('setLoading', true)
+            try {
+
+                // ... calculate summ
+                let newProductsList = productList.map(el => {
+                    const found = choosenProducts.find(innerEl => innerEl.id === el.id)
+
+                    if (found) {
+
+                        // remove this element from origin array
+                        const index = choosenProducts.indexOf(found)
+                        choosenProducts.splice(index, 1)
+                        // ...
+                        
+                        return {
+                            ...el,
+                            amount: +el.amount + +found.amount
+                        }
+                    }
+
+                    return el
+                })
+                newProductsList = [...newProductsList, ...choosenProducts]
+                // ...
+
+                await firebase.database().ref('registeredMeals').child(id).update({
+                    percentage: 69.69,
+                    productsList: newProductsList
+                })
+
+                // UPDATE LOCALLY
+                commit('updateRegisteredMeal', {
+                    id,
+                    productsList: newProductsList
+                })
+
                 commit('setLoading', false)
             } catch (error) {
                 commit('setError', error.message)
@@ -179,10 +241,25 @@ export default {
                     productsList: state.choosenProducts,
                     percentage: state.averChProdChars.percentage
                 })
+
+                // In progress... Get new Registered meal ID
+                const registeredMealsVal = await firebase.database().ref('registeredMeals').once('value')
+                const registeredMeals = registeredMealsVal.val()
+
+                let foundElementId = null
+
+                Object.keys(registeredMeals).forEach(key => {
+                    if (registeredMeals[key].date === date.valueOf()) {
+                        foundElementId = key
+                    }
+                })
+                // ...
+
                 commit('registerMeal', {
                     date: date.valueOf(),
                     productsList: state.choosenProducts,
-                    percentage: state.averChProdChars.percentage
+                    percentage: state.averChProdChars.percentage,
+                    id: foundElementId
                 })
                 commit('setLoading', false)
             } catch (error) {
@@ -231,14 +308,13 @@ export default {
                 Object.keys(registeredMeals).forEach(key => {
                     resultRegisteredMeals.push(
                         {
-                            productsList: registeredMeals[key],
+                            productsList: registeredMeals[key].productsList,
                             date: registeredMeals[key].date,
                             percentage: registeredMeals[key].percentage,
                             id: key
                         }
                     )
                 })
-                console.log('... resultRegisteredMeals', resultRegisteredMeals)
 
                 commit('loadRegisteredMeals', resultRegisteredMeals)
                 commit('setLoading', false)
@@ -286,6 +362,24 @@ export default {
         },
         averageChoosenProductsChars(state) {
             return state.averChProdChars
+        },
+        alreadyRegisteredForCurrentDate(state) {
+            const isTrue = !!state.registeredMeals.find(el => {
+                const dateObj = new Date(el.date)
+                const dateObjNow = new Date()
+
+                const month = dateObj.getUTCMonth() + 1 //months from 1-12
+                const day = dateObj.getUTCDate()
+                const year = dateObj.getUTCFullYear()
+                
+                const monthNow = dateObjNow.getUTCMonth() + 1 //months from 1-12
+                const dayNow = dateObjNow.getUTCDate()
+                const yearNow = dateObjNow.getUTCFullYear()
+
+                return (month === monthNow && day === dayNow && year === yearNow)
+            })
+
+            return isTrue
         }
     }
 }
