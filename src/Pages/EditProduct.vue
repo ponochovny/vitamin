@@ -91,6 +91,7 @@ export default {
       // 2. edit basic characteristics if there are new fields
       this.$store.dispatch('updateProduct', {
         title: this.productData.title,
+        characteristics: this.productData.characteristics,
         id: this.currentItem.id
       })
         .then(() => {
