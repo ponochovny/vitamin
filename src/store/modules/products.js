@@ -47,7 +47,7 @@ export default {
             found.amount = payload.amount
             state.choosenProducts = [...state.choosenProducts, ...found]
         },
-        averageChProdChars(state) {
+        averageProdsChars(state) {
             if (state.choosenProducts.length === 0) return {}
 
             let listOfProductsWithAverage = []
@@ -114,7 +114,6 @@ export default {
             state.averChProdChars = {...chars}
         },
         allTotalPercentage(state, payload) {
-            console.log('... allTotalPercentage', payload)
             state.averChProdChars = {...state.averChProdChars, percentage: payload}
         },
         clearChoosenProducts(state) {
@@ -256,19 +255,19 @@ export default {
 
         addProductToChoosen({commit}, payload) {
             commit('addProductToChoosen', {...payload, amount: 100})
-            commit('averageChProdChars')
+            commit('averageProdsChars')
         },
         updateChoosenProduct({commit}, payload) {
             commit('updateChoosenProduct', payload)
-            commit('averageChProdChars')
+            commit('averageProdsChars')
         },
         clearChoosenProducts({commit}) {
             commit('clearChoosenProducts')
-            commit('averageChProdChars')
+            commit('averageProdsChars')
         },
         removeProductFromChoosen({commit, state}, payload) {
             commit('removeProductFromChoosen', payload)
-            commit('averageChProdChars')
+            commit('averageProdsChars')
             let newArr = state.choosenProducts.filter(el => el.id !== payload)
             if (newArr.length === 0) {
                 commit('clearChoosenProducts')

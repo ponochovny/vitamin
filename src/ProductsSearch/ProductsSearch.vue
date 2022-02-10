@@ -136,6 +136,7 @@ export default {
             li {
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
 
                 font-family: Roboto;
                 font-style: normal;
@@ -160,7 +161,10 @@ export default {
 
                 .ProductsSearch {
                     &__icon {
-                        padding: 0 10px;
+                        display: inline-flex;
+                        align-items: center;
+
+                        padding: 5px 10px;
                         border-radius: 5px;
                         background-color: transparent;
 

@@ -20,7 +20,7 @@ export default {
                 {title: 'K', description: 'Lorem ipsum', values: [{value: 0.12, origin: 'v1'}]},
                 {title: 'Z', description: 'Lorem ipsum', values: [{value: 12, origin: 'v1'}]},
             ],
-            macromicto: [
+            macroMicro: [
                 {title: 'Калий', description: 'Lorem ipsum', values: [{value: 2500, origin: 'v1'},{value: 4, origin: 'v2'}]},
                 {title: 'Магний', description: 'Lorem ipsum', values: [{value: 400, origin: 'v1'},{value: 4, origin: 'v2'}]},
             ],

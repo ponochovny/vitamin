@@ -43,6 +43,11 @@ export default {
         margin-right: 24px;
         margin-bottom: 16px;
         width: 263px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+
         &__title {
             font-family: Roboto;
             font-style: normal;

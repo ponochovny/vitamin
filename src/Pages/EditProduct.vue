@@ -27,9 +27,9 @@
         </ul>
         <h3>Микро/Макро <div></div></h3>
         <ul>
-          <li v-for="(item, i) of productData.characteristics.macromicto" :key="item.title">
+          <li v-for="(item, i) of productData.characteristics.macroMicro" :key="item.title">
             <span>{{ item.title }}</span>
-            <input type="text" v-model="productData.characteristics.macromicto[i].versions[0].value">
+            <input type="text" v-model="productData.characteristics.macroMicro[i].versions[0].value">
           </li>
         </ul>
         <br>

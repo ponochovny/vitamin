@@ -4,11 +4,11 @@
           <ProductsSearch />
           <div :style="{marginTop: '56px'}">
               <h2 :style="{marginBottom: '35px'}">Выбранные продукты</h2>
-              <ChoosenProducts :choosenProducts="products" />
+              <ChoosenProducts />
           </div>
           <div :style="{marginTop: '56px'}">
               <h2 :style="{marginBottom: '35px'}">От дневной нормы</h2>
-              <FilledChars v-if="products.length > 0" :averageProductsCharacteristics="averageChoosenProductsChars" />
+              <FilledChars :averageProductsCharacteristics="averageChoosenProductsChars" />
           </div>
           <History :items="registeredMeals" />
         </template>
@@ -23,7 +23,6 @@ import FilledChars from '../ShowUp/FilledChars'
 import ProductsSearch from '../ProductsSearch/ProductsSearch'
 import ChoosenProducts from '../ShowUp/ChoosenProducts/ChoosenProducts'
 import History from '../ShowUp/History/History'
-import {products} from '../constants/products'
 
 export default {
   name: 'app',
@@ -35,8 +34,6 @@ export default {
   },
   data () {
     return {
-      products: [],
-
       isLoggedIn: true
     }
   },
@@ -50,9 +47,6 @@ export default {
     registeredMeals() {
       return this.$store.getters.registeredMeals
     }
-  },
-  mounted() {
-    this.products = [...products]
   }
 }
 </script>
