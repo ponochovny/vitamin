@@ -165,7 +165,6 @@ export default {
         async updateProduct ({commit}, {title, characteristics, id}) {
             commit('clearError')
             commit('setLoading', true)
-            console.log('... update Product')
             try {
                 await firebase.database().ref('products').child(id).update({
                     title,
@@ -213,7 +212,6 @@ export default {
                 // ...
 
                 await firebase.database().ref('registeredMeals').child(id).update({
-                    percentage: 69.69,
                     productsList: newProductsList
                 })
 
