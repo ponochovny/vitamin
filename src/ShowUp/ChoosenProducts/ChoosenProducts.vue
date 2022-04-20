@@ -147,4 +147,17 @@ export default {
             }
         }
     }
+
+    @media (max-width: 1440px) {
+        .ChoosenProducts {
+            &__list {
+                margin-bottom: 16px;
+            }
+            button {
+                width: auto;
+                padding-left: 30px;
+                padding-right: 30%;
+            }
+        }
+    }
 </style>

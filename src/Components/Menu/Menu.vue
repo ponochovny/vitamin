@@ -2,7 +2,7 @@
     <div class="Menu">
         <div class="Menu__logo">
             <router-link to="/">
-                <img src="https://ecomed56.ru/wp-content/uploads/2019/06/cropped-leaf.png" alt="">
+                <img src="../../assets/leaf.png" alt="">
             </router-link>
         </div>
         <ul>

@@ -82,4 +82,20 @@ export default {
             color: #696969;
         }
     }
+
+    @media (max-width: 1440px) {
+        .item {
+            margin-right: 16px;
+            width: 100%;
+            max-width: 250px;
+            &__title {
+                font-size: 16px;
+            }
+
+            input {
+                height: 32px;
+                font-size: 16px;
+            }
+        }
+    }
 </style>

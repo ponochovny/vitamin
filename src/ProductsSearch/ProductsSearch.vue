@@ -1,8 +1,8 @@
 <template>
     <div class="ProductsSearch">
-        <div class="ProductsSearch__title">
+        <h2 class="ProductsSearch__title">
             Продукты
-        </div>
+        </h2>
         <div class="separator" />
         <input type="text" v-model="search">
         <div class="separator" />
@@ -86,16 +86,9 @@ export default {
 
 <style lang="scss">
     .ProductsSearch {
-        width: 383px;
+        max-width: 383px;
+        min-width: 290px;
         &__title {
-            font-family: Roboto;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 48px;
-            line-height: 56px;
-
-            color: #000000;
-
             margin-bottom: 21px;
         }
         button {
@@ -175,5 +168,14 @@ export default {
                 }
             }
         }
+    }
+
+    @media (max-width: 1440px) {
+      .ProductsSearch {
+        &__title {
+          // font-size: 36px;
+          // line-height: 44px;
+        }
+      }
     }
 </style>

@@ -2,11 +2,11 @@
     <div class="Main">
         <template v-if="isUserLoggedIn">
           <ProductsSearch />
-          <div :style="{marginTop: '56px'}">
+          <div class="Main__choosenProducts">
               <h2 :style="{marginBottom: '35px'}">Выбранные продукты</h2>
               <ChoosenProducts />
           </div>
-          <div :style="{marginTop: '56px'}">
+          <div class="Main__filledChars">
               <h2 :style="{marginBottom: '35px'}">От дневной нормы</h2>
               <FilledChars :averageProductsCharacteristics="averageChoosenProductsChars" />
           </div>
@@ -53,19 +53,41 @@ export default {
 
 <style lang="scss">
     .Main {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        align-items: flex-start;
-        align-content: flex-start;
-        padding: 0 45px;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-items: flex-start;
+      align-content: flex-start;
+      padding: 0 45px;
+      .ProductsSearch {
+          margin-top: 56px;
+          margin-right: 96px;
+      }
+      .ChoosenProducts {
+          margin-right: 96px;
+      }
+      &__choosenProducts,
+      &__filledChars {
+        margin-top: 56px;
+      }
+    }
+
+    @media (max-width: 1440px) {
+      .Main {
         .ProductsSearch {
-            margin-top: 56px;
-            margin-right: 96px;
+          margin-top: 36px;
+          margin-right: 50px;
         }
         .ChoosenProducts {
-            margin-right: 96px;
+          max-width: 530px;
+          min-width: 420px;
+          margin-right: 50px;
         }
+        &__choosenProducts,
+        &__filledChars {
+          margin-top: 36px;
+        }
+      }
     }
 </style>
