@@ -19,10 +19,10 @@
 </template>
 
 <script>
-import FilledChars from '../ShowUp/FilledChars'
-import ProductsSearch from '../ProductsSearch/ProductsSearch'
-import ChoosenProducts from '../ShowUp/ChoosenProducts/ChoosenProducts'
-import History from '../ShowUp/History/History'
+import FilledChars from '../ShowUp/FilledChars.vue'
+import ProductsSearch from '../ProductsSearch/ProductsSearch.vue'
+import ChoosenProducts from '../ShowUp/ChoosenProducts/ChoosenProducts.vue'
+import History from '../ShowUp/History/History.vue'
 
 export default {
   name: 'app',

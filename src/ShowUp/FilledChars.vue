@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import CharList from './CharList/CharList'
+import CharList from './CharList/CharList.vue'
 import {calculatedPercent} from '../Tools/calculatePercentage'
 
 export default {

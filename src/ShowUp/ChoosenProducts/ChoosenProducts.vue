@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Product from './Product/Product'
+import Product from './Product/Product.vue'
 export default {
     name: 'app',
     components: {
@@ -60,21 +60,21 @@ export default {
                     productList: foundElement.productsList
                 })
                     .then(() => {
-                        this.$toasted.success('Data had been updated!')
+                        // this.$toasted.success('Data had been updated!')
                         this.$store.dispatch('clearChoosenProducts')
                     })
                     .catch((error) => {
-                        this.$toasted.error(error)
+                        // this.$toasted.error(error)
                     })
 
             } else {
                 this.$store.dispatch('registerMeal')
                     .then(() => {
-                        this.$toasted.success('Data had been registered!')
+                        // this.$toasted.success('Data had been registered!')
                         this.$store.dispatch('clearChoosenProducts')
                     })
                     .catch((error) => {
-                        this.$toasted.error(error)
+                        // this.$toasted.error(error)
                     })
             }
         }

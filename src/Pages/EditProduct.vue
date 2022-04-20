@@ -7,14 +7,13 @@
           <li v-for="(outerItem, outerIndex) of productData.characteristics.foodEnergy" :key="`${outerItem.title}-${outerIndex}`">
             <span>{{ outerItem.title }}</span>
 
-            <template v-for="(item, index) of outerItem.versions">
-              <!-- :model="productData.characteristics.foodEnergy[outerIndex].versions[index].value" -->
-              <input
-                type="text"
-                v-model="productData.characteristics.foodEnergy[outerIndex].versions[index].value"
-                :key="`${item.title + index}`"
-              >
-            </template>
+            <!-- :model="productData.characteristics.foodEnergy[outerIndex].versions[index].value" -->
+            <input
+              v-for="(item, index) of outerItem.versions"
+              type="text"
+              v-model="productData.characteristics.foodEnergy[outerIndex].versions[index].value"
+              :key="`${item.title + index}`"
+            >
 
           </li>
         </ul>
@@ -102,10 +101,10 @@ export default {
         .then(() => {
           this.$router.push('/')
 
-          this.$toasted.success(`Data updated: ${this.productData.title}`)
+          // this.$toasted.success(`Data updated: ${this.productData.title}`)
         })
         .catch((error) => {
-          this.$toasted.error(error)
+          // this.$toasted.error(error)
         })
     },
 

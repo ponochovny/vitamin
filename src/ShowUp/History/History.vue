@@ -4,7 +4,8 @@
         <div class="History__item" v-for="item of items" :key="item.title">
             <span :style="{width: `${item.percentage}%`}"></span>
             <div class="History__title">
-                {{ item.date | moment("DD.MM.YYYY") }}
+                <!-- {{ item.date | moment("DD.MM.YYYY") }} -->
+                {{ item.date }}
             </div>
         </div>
       </template>

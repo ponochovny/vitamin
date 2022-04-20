@@ -1,14 +1,13 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
+
 import AuthGuard from './auth-guard'
-import Auth from '../Pages/Auth'
-import Main from '../Pages/Main'
-import AddProduct from '../Pages/AddProduct'
-import EditProduct from '../Pages/EditProduct'
+import Auth from '../Pages/Auth.vue'
+import Main from '../Pages/Main.vue'
+import AddProduct from '../Pages/AddProduct.vue'
+import EditProduct from '../Pages/EditProduct.vue'
 
-Vue.use(VueRouter)
-
-export default new VueRouter({
+const router = createRouter({
+    history: createWebHistory(),
     routes: [
         {
             path: '',
@@ -29,8 +28,12 @@ export default new VueRouter({
             beforeEnter: AuthGuard
         }
     ],
-    mode: 'history',
     scrollBehavior (to, from, savedPosition) {
-        return { x: 0, y: 0 }
+        if (savedPosition) {
+            return savedPosition
+        }
+        return { left: 0, top: 0 }
     }
 })
+
+export default router

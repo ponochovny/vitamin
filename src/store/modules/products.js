@@ -1,4 +1,4 @@
-import firebase from 'firebase'
+import { getDatabase, ref, onValue, child, get } from 'firebase/database'
 
 class Product {
     constructor (title, characteristics, uid) {
@@ -150,7 +150,7 @@ export default {
                     getters.user.id,
                 )
 
-                const product = await firebase.database().ref('products').push(newProduct)
+                const product = await database.ref('products').push(newProduct)
                 commit('setLoading', false)
                 commit('createProduct', {
                     ...newProduct,
@@ -166,7 +166,7 @@ export default {
             commit('clearError')
             commit('setLoading', true)
             try {
-                await firebase.database().ref('products').child(id).update({
+                await database.ref('products').child(id).update({
                     title,
                     characteristics
                 })
@@ -211,7 +211,7 @@ export default {
                 newProductsList = [...newProductsList, ...choosenProducts]
                 // ...
 
-                await firebase.database().ref('registeredMeals').child(id).update({
+                await database.ref('registeredMeals').child(id).update({
                     productsList: newProductsList
                 })
 
@@ -234,14 +234,14 @@ export default {
             commit('clearError')
             commit('setLoading', true)
             try {
-                await firebase.database().ref('registeredMeals').push({
+                await database.ref('registeredMeals').push({
                     date: date.valueOf(),
                     productsList: state.choosenProducts,
                     percentage: state.averChProdChars.percentage
                 })
 
                 // In progress... Get new Registered meal ID
-                const registeredMealsVal = await firebase.database().ref('registeredMeals').once('value')
+                const registeredMealsVal = await database.ref('registeredMeals').once('value')
                 const registeredMeals = registeredMealsVal.val()
 
                 let foundElementId = null
@@ -272,8 +272,15 @@ export default {
             commit('setLoading', true)
             const resultProducts = []
             try {
-                const productsVal = await firebase.database().ref('products').once('value')
-                const products = productsVal.val()
+                const dbRef = ref(getDatabase())
+                const products = await get(child(dbRef, 'products')).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        return snapshot.val()
+                    } else {
+                        console.log('No data available')
+                    }
+                }).catch(error => console.log(error))
+                
                 Object.keys(products).forEach(key => {
                     resultProducts.push(
                         {
@@ -293,15 +300,20 @@ export default {
             }
         },
         async fetchRegisteredMeals ({commit}) {
+            const database = getDatabase()
             commit('clearError')
             commit('setLoading', true)
             const resultRegisteredMeals = []
             try {
-                const registeredMealsVal = await firebase.database().ref('registeredMeals').once('value')
-
-                if (registeredMealsVal.val() === null) return
-
-                const registeredMeals = registeredMealsVal.val()
+                
+                const dbRef = ref(getDatabase())
+                const registeredMeals = await get(child(dbRef, 'registeredMeals')).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        return snapshot.val()
+                    } else {
+                        console.log('No data available')
+                    }
+                }).catch(error => console.log(error))
 
                 Object.keys(registeredMeals).forEach(key => {
                     resultRegisteredMeals.push(
