@@ -89,3 +89,15 @@ body {
         }
     }
 }
+
+@media (max-width: 1440px) {
+    body {
+        h2 {
+            font-size: 36px;
+            line-height: 44px;
+        }
+        button {
+            font-size: 16px;
+        }
+    }
+}

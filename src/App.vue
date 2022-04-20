@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Menu from './Components/Menu/Menu'
+import Menu from './Components/Menu/Menu.vue'
 
 export default {
   name: 'app',
@@ -30,8 +30,8 @@ export default {
       },
       (newValue, oldValue)=>{
         if (newValue) {
-          this.$toasted.clear()
-          this.$toasted.error(newValue)
+          // this.$toasted.clear()
+          // this.$toasted.error(newValue)
         }
       },
     )

@@ -1,4 +1,4 @@
-import firebase from 'firebase'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 
 class User {
     constructor(id) {
@@ -17,12 +17,22 @@ export default {
     },
     actions: {
         async registerUser ({commit}, {email, password}) {
+            console.log('registerUser...')
+            const auth = getAuth()
             commit('clearError')
             commit('setLoading', true)
             try {
-                const user = await firebase.auth().createUserWithEmailAndPassword(email, password)
-                commit('setUser', new User(user.uid))
-                commit('setLoading', false)
+                console.log('...use1')
+
+                createUserWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        const user = userCredential.user
+                        commit('setUser', new User(user.uid))
+                        commit('setLoading', false)
+                    })
+                    .catch(error => console.log(error))
+
+                console.log('...use2')
             } catch (error) {
                 commit('setLoading', false)
                 commit('setError', error.message)
@@ -31,12 +41,17 @@ export default {
         },
 
         async loginUser ({commit}, {email, password}) {
+            const auth = getAuth()
             commit('clearError')
             commit('setLoading', true)
             try {
-                const user = await firebase.auth().signInWithEmailAndPassword(email, password)
-                commit('setUser', new User(user.uid))
-                commit('setLoading', false)
+                signInWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        const user = userCredential.user
+                        commit('setUser', new User(user.uid))
+                        commit('setLoading', false)
+                    })
+                    .catch(error => console.log(error))
             } catch (error) {
                 commit('setLoading', false)
                 commit('setError', error.message)
@@ -48,7 +63,8 @@ export default {
             commit('setUser', new User(payload.uid))
         },
         logoutUser({commit}) {
-            firebase.auth().signOut()
+            const auth = getAuth()
+            signOut(auth)
             commit('setUser', null)
         }
     },
