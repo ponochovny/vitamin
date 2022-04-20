@@ -12,8 +12,7 @@ export default new VueRouter({
     routes: [
         {
             path: '',
-            component: Main,
-            // beforeEnter: AuthGuard
+            component: Main
         },
         {
             path: '/auth',
@@ -21,14 +20,14 @@ export default new VueRouter({
         },
         {
             path: '/new-product',
-            component: AddProduct
+            component: AddProduct,
+            beforeEnter: AuthGuard
         },
         {
             path: '/edit-product/:id',
-            component: EditProduct
-        },
-      // { path: '/edit-product', component:  },
-      // { path: '/products', component:  },
+            component: EditProduct,
+            beforeEnter: AuthGuard
+        }
     ],
     mode: 'history',
     scrollBehavior (to, from, savedPosition) {

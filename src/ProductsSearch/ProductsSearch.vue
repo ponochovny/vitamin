@@ -6,7 +6,6 @@
         <div class="separator" />
         <input type="text" v-model="search">
         <div class="separator" />
-        <!-- <Loader /> -->
         <p v-if="loading" style="text-align: center; font-size: 24px; margin-bottom: 15px">
             <Loader />
         </p>

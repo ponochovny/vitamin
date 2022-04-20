@@ -23,6 +23,8 @@ export default {
             macroMicro: [
                 {title: 'Калий', description: 'Lorem ipsum', values: [{value: 2500, origin: 'v1'},{value: 4, origin: 'v2'}]},
                 {title: 'Магний', description: 'Lorem ipsum', values: [{value: 400, origin: 'v1'},{value: 4, origin: 'v2'}]},
+                {title: 'Железо', description: 'Lorem ipsum', values: [{value: 12, origin: 'v1'}]},
+                {title: 'Кальций', description: 'Lorem ipsum', values: [{value: 12, origin: 'v1'}]},
             ],
         }
     },

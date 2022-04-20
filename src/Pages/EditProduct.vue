@@ -31,6 +31,14 @@
             <span>{{ item.title }}</span>
             <input type="text" v-model="productData.characteristics.macroMicro[i].versions[0].value">
           </li>
+          <!--  -->
+          <!-- <li v-for="(item, i) of productData.characteristics.macromicto" :key="item.title">
+            <span>{{ item.title }}</span>
+            <input type="text"
+              :value="productData.characteristics.macromicto[i].versions[0].value"
+              @change="tempHandler"
+            >
+          </li> -->
         </ul>
         <br>
         
@@ -51,9 +59,6 @@
 <script>
 export default {
   name: 'edit-product',
-  components: {
-      
-  },
   data () {
     return {
         productData: {
@@ -102,11 +107,16 @@ export default {
         .catch((error) => {
           this.$toasted.error(error)
         })
+    },
+
+    tempHandler(value) {
+      console.log('... value', value.target.value)
     }
   },
   mounted() {
     let chars = {}
     for (let key in this.$store.getters.basicCharacteristics) {
+      // console.log('... key', key)
       chars[key] = []
       for (let item of this.$store.getters.basicCharacteristics[key]) {
         let innerItem = {
