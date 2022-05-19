@@ -9,6 +9,10 @@ import router from './router'
 import { initializeApp } from 'firebase/app'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 // import Toasted from 'vue-toasted'
+
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
+
 import Spinner from './Components/Spinner/Spinner.vue'
 
 // const app = createApp(App)
@@ -42,8 +46,28 @@ const app = createApp({
 app.use(store)
 app.use(router)
 
+app.use(Toast, {
+	transition: 'Vue-Toastification__fade',
+	maxToasts: 5,
+	newestOnTop: true,
+
+	position: 'bottom-center',
+	timeout: 5000,
+	closeOnClick: true,
+	pauseOnFocusLoss: true,
+	pauseOnHover: true,
+	draggable: true,
+	draggablePercent: 0.6,
+	showCloseButtonOnHover: false,
+	hideProgressBar: true,
+	closeButton: false,
+	icon: false,
+	rtl: false,
+})
+
 // app.use(moment);
 // app.use(Toasted, {position: 'bottom-center', keepOnHover: true, duration: 4500})
+app.use()
 app.component('Loader', Spinner)
 
 app.mount('#app')

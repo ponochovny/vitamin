@@ -1,10 +1,25 @@
-import { getDatabase, ref, child, get, update, push } from 'firebase/database'
+import {
+	getDatabase,
+	ref,
+	child,
+	get,
+	update,
+	push,
+	set,
+} from 'firebase/database'
 
 class Product {
 	constructor(title, characteristics, uid) {
 		this.title = title
 		this.characteristics = characteristics
 		this.uid = uid
+	}
+}
+class RegisteredMeal {
+	constructor(date, percentage, productsList) {
+		this.date = date
+		this.percentage = percentage
+		this.productsList = productsList
 	}
 }
 
@@ -36,16 +51,10 @@ export default {
 			state.registeredMeals.push(payload)
 		},
 		updateRegisteredMeal(state, payload) {
-			state.registeredMeals = state.registeredMeals.map((el) => {
-				if (el.id === payload.id) {
-					return {
-						...el,
-						productsList: payload.productsList,
-					}
-				}
-
-				return el
+			const index = state.registeredMeals.findIndex((el) => {
+				return el.id === payload.id
 			})
+			state.registeredMeals[index].productsList = payload.productsList
 		},
 		addProductToChoosen(state, payload) {
 			state.choosenProducts.push({
@@ -53,9 +62,13 @@ export default {
 			})
 		},
 		updateChoosenProduct(state, payload) {
-			let found = state.choosenProducts.find((el) => el.id === payload.id)
-			found.amount = payload.amount
-			state.choosenProducts = [...state.choosenProducts, ...found]
+			const choosenProducts = [...state.choosenProducts]
+			const index = choosenProducts.findIndex((item) => {
+				return item.id === payload.id
+			})
+			choosenProducts[index].amount = +payload.amount
+
+			state.choosenProducts = [...choosenProducts]
 		},
 		averageProdsChars(state) {
 			if (state.choosenProducts.length === 0) return {}
@@ -190,14 +203,19 @@ export default {
 				throw error
 			}
 		},
-		async updateRegisteredMeal({ commit, state }, { id, productList }) {
-			const choosenProducts = state.choosenProducts
-
+		async updateRegisteredMeal({ commit, state, getters }) {
 			commit('clearError')
 			commit('setLoading', true)
+
+			const curDateItem = {
+				...JSON.parse(JSON.stringify(getters.alreadyRegisteredForCurrentDate)),
+			}
+			const choosenProducts = state.choosenProducts
+			const dbRef = ref(getDatabase())
+
 			try {
 				// ... calculate summ
-				let newProductsList = productList.map((el) => {
+				let newProductsList = curDateItem.productsList.map((el) => {
 					const found = choosenProducts.find((innerEl) => innerEl.id === el.id)
 
 					if (found) {
@@ -217,18 +235,22 @@ export default {
 				newProductsList = [...newProductsList, ...choosenProducts]
 				// ...
 
-				await database.ref('registeredMeals').child(id).update({
+				const updates = {}
+				updates['/registeredMeals/' + curDateItem.id] = {
+					...curDateItem,
 					productsList: newProductsList,
-				})
+				}
+				update(dbRef, updates)
 
-				// UPDATE LOCALLY
+				// // UPDATE LOCALLY
 				commit('updateRegisteredMeal', {
-					id,
+					id: curDateItem.id,
 					productsList: newProductsList,
 				})
 
 				commit('setLoading', false)
 			} catch (error) {
+				console.log('... error?', error)
 				commit('setError', error.message)
 				commit('setLoading', false)
 				throw error
@@ -236,46 +258,39 @@ export default {
 		},
 		async registerMeal({ commit, state }) {
 			const date = new Date()
+			const db = getDatabase()
 
 			commit('clearError')
 			commit('setLoading', true)
+
+			const newProduct = new RegisteredMeal(
+				date.valueOf(),
+				state.averChProdChars.percentage,
+				state.choosenProducts
+			)
+
 			try {
-				await database.ref('registeredMeals').push({
-					date: date.valueOf(),
-					productsList: state.choosenProducts,
-					percentage: state.averChProdChars.percentage,
-				})
-
-				// In progress... Get new Registered meal ID
-				const registeredMealsVal = await database
-					.ref('registeredMeals')
-					.once('value')
-				const registeredMeals = registeredMealsVal.val()
-
-				let foundElementId = null
-
-				Object.keys(registeredMeals).forEach((key) => {
-					if (registeredMeals[key].date === date.valueOf()) {
-						foundElementId = key
-					}
-				})
-				// ...
+				const registeredMealsListRef = ref(db, 'registeredMeals')
+				const newRegisteredMealKey = push(registeredMealsListRef)
+				set(newRegisteredMealKey, newProduct)
 
 				commit('registerMeal', {
-					date: date.valueOf(),
-					productsList: state.choosenProducts,
-					percentage: state.averChProdChars.percentage,
-					id: foundElementId,
+					date: newProduct.date,
+					productsList: newProduct.choosenProducts,
+					percentage: newProduct.percentage,
+					id: newRegisteredMealKey,
 				})
+				commit('clearError')
 				commit('setLoading', false)
 			} catch (error) {
-				console.log('... error', error)
 				commit('setError', error.message)
 				commit('setLoading', false)
 				throw error
 			}
 		},
-		async fetchProducts({ commit }) {
+		async fetchProducts({ commit, getters }) {
+			if (!getters.isUser) return
+
 			commit('clearError')
 			commit('setLoading', true)
 
@@ -308,7 +323,9 @@ export default {
 				throw error
 			}
 		},
-		async fetchRegisteredMeals({ commit }) {
+		async fetchRegisteredMeals({ commit, getters }) {
+			if (!getters.isUser) return
+
 			commit('clearError')
 			commit('setLoading', true)
 			const resultRegisteredMeals = []
@@ -322,16 +339,23 @@ export default {
 							console.log('No data available')
 						}
 					})
-					.catch((error) => console.log(error))
-
-				Object.keys(registeredMeals).forEach((key) => {
-					resultRegisteredMeals.push({
-						productsList: registeredMeals[key].productsList,
-						date: registeredMeals[key].date,
-						percentage: registeredMeals[key].percentage,
-						id: key,
+					.catch((error) => {
+						if (error.message === 'Permission denied') {
+							console.log('!> User is not logged in to get registered meals')
+						} else {
+							console.log(error)
+						}
 					})
-				})
+
+				registeredMeals &&
+					Object.keys(registeredMeals).forEach((key) => {
+						resultRegisteredMeals.push({
+							productsList: registeredMeals[key].productsList,
+							date: registeredMeals[key].date,
+							percentage: registeredMeals[key].percentage,
+							id: key,
+						})
+					})
 
 				commit('loadRegisteredMeals', resultRegisteredMeals)
 				commit('setLoading', false)
@@ -368,6 +392,9 @@ export default {
 		},
 	},
 	getters: {
+		isUser(_, _2, rootState) {
+			return rootState.user
+		},
 		products(state) {
 			return state.products
 		},
@@ -381,7 +408,7 @@ export default {
 			return state.averChProdChars
 		},
 		alreadyRegisteredForCurrentDate(state) {
-			const isTrue = !!state.registeredMeals.find((el) => {
+			const found = state.registeredMeals.find((el) => {
 				const dateObj = new Date(el.date)
 				const dateObjNow = new Date()
 
@@ -396,7 +423,7 @@ export default {
 				return month === monthNow && day === dayNow && year === yearNow
 			})
 
-			return isTrue
+			return found
 		},
 	},
 }
