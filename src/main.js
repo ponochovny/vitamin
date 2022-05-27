@@ -15,13 +15,13 @@ import Spinner from './Components/Spinner/Spinner.vue'
 const app = createApp({
 	created() {
 		const firebaseConfig = {
-			apiKey: 'AIzaSyD3Yp8HeC90zt5GIGQ1_4xInpQLdzE_e-g',
-			authDomain: 'vitamin-ebb2c.firebaseapp.com',
-			databaseURL: 'https://vitamin-ebb2c.firebaseio.com',
-			projectId: 'vitamin-ebb2c',
-			storageBucket: 'vitamin-ebb2c.appspot.com',
-			messagingSenderId: '572356425545',
-			appId: '1:572356425545:web:e606d7e159a540f4ed0c98',
+			apiKey: import.meta.env.VITE_API_KEY,
+			authDomain: `${import.meta.env.VITE_PROJECT_ID}.firebaseapp.com`,
+			databaseURL: `https://${import.meta.env.VITE_PROJECT_ID}.firebaseio.com`,
+			projectId: import.meta.env.VITE_PROJECT_ID,
+			storageBucket: `${import.meta.env.VITE_PROJECT_ID}.appspot.com`,
+			messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+			appId: import.meta.env.VITE_APP_ID,
 		}
 		// Initialize Firebase
 		const firebaseApp = initializeApp(firebaseConfig)

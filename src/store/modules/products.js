@@ -60,8 +60,8 @@ export default {
 		averageProdsChars(state) {
 			if (state.choosenProducts.length === 0) return {}
 
-			let listOfProductsWithAverage = []
-			let chars = {}
+			const listOfProductsWithAverage = []
+			const chars = {}
 
 			const average = (arr) => {
 				let counter = 0
@@ -96,6 +96,7 @@ export default {
 				}
 				listOfProductsWithAverage.push(currProductChars)
 			}
+
 			for (const [key, item] of Object.entries(listOfProductsWithAverage[0])) {
 				chars[key] = []
 				for (const productItem of listOfProductsWithAverage) {
