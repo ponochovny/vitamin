@@ -14,7 +14,7 @@
 <script>
 import Product from './Product/Product.vue'
 import { useToast } from 'vue-toastification'
-import { dateObj } from '../../Tools/dateObj'
+import { dateObj } from '../../../tools/dateObj'
 
 export default {
 	name: 'app',

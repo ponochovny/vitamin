@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { dateObj } from '../../Tools/dateObj'
+import { dateObj } from '../../../tools/dateObj'
 export default {
 	props: ['items'],
 	name: 'history',
