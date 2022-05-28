@@ -143,7 +143,7 @@ export default {
 		button {
 			width: auto;
 			padding-left: 30px;
-			padding-right: 30%;
+			padding-right: 30px;
 		}
 	}
 }

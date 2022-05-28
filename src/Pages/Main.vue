@@ -8,9 +8,7 @@
 			</div>
 			<div class="Main__filledChars">
 				<h2 :style="{ marginBottom: '35px' }">От дневной нормы</h2>
-				<FilledChars
-					:averageProductsCharacteristics="averageChoosenProductsChars"
-				/>
+				<FilledChars />
 			</div>
 			<History :items="registeredMeals" />
 		</template>
@@ -23,10 +21,10 @@
 </template>
 
 <script>
-import FilledChars from '../Components/ShowUp/FilledChars.vue'
-import ProductsSearch from '../Components/ProductsSearch/ProductsSearch.vue'
-import ChoosenProducts from '../Components/ShowUp/ChoosenProducts/ChoosenProducts.vue'
-import History from '../Components/ShowUp/History/History.vue'
+import FilledChars from '../components/ShowUp/FilledChars.vue'
+import ProductsSearch from '../components/ProductsSearch/ProductsSearch.vue'
+import ChoosenProducts from '../components/ShowUp/ChoosenProducts/ChoosenProducts.vue'
+import History from '../components/ShowUp/History/History.vue'
 
 export default {
 	name: 'app',
@@ -42,9 +40,6 @@ export default {
 		}
 	},
 	computed: {
-		averageChoosenProductsChars() {
-			return this.$store.getters.averageChoosenProductsChars
-		},
 		isUserLoggedIn() {
 			return this.$store.getters.isUserLoggedIn
 		},

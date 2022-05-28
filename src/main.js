@@ -13,7 +13,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 
-import Spinner from './Components/Spinner/Spinner.vue'
+import Spinner from './components/Spinner/Spinner.vue'
 
 // const app = createApp(App)
 const app = createApp({
@@ -36,8 +36,9 @@ const app = createApp({
 				console.log('... Vue (created) - log in')
 				this.$store.dispatch('autoLoginUser', user)
 			}
-		}),
-			this.$store.dispatch('fetchProducts')
+		})
+
+		this.$store.dispatch('fetchProducts')
 		this.$store.dispatch('fetchRegisteredMeals')
 	},
 	render: () => h(App),
