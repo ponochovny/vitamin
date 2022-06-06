@@ -90,6 +90,70 @@ body {
     }
 }
 
+a {
+    color: #4e8479;
+    text-decoration: none;
+
+    &:hover {
+        color: #72ada1;
+        text-decoration: underline;
+    }
+}
+
+#app {
+
+}
+
+.fieldset {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 16px;
+    &__label {
+        margin-right: 16px;
+    }
+    &__title {
+        font-size: 24px;
+        color: gray;
+        margin: 0 0 16px 0;
+        border-bottom: 1px solid black;
+        display: inline-block;
+    }
+}
+.fieldsetGroup {
+    margin-bottom: 36px;
+
+    .fieldset {
+        &__input {
+            margin-right: 10px;
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+    &.wl-25 {
+        .fieldset__label {
+            width: 25%;
+        }
+    }
+    &.wl-15 {
+        .fieldset__label {
+            width: 15%;
+        }
+    }
+
+    &.wi-5 {
+        .fieldset__input {
+            width: 5%;
+        }
+    }
+    &.wi-10 {
+        .fieldset__input {
+            width: 10%;
+        }
+    }
+}
+
 @media (max-width: 1440px) {
     body {
         h2 {

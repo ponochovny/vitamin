@@ -1,22 +1,22 @@
 # Vitamin
 
-This template should help get you started developing with Vue 3 in Vite.
+This project is using:
+- Firebase authorization
+- Firebase real-time database
+
+## About the project
+
+This project is designed to manage your meal data with food energy, vitamins and micro/macro elements in these. Also personal daily preferences. Calculate daily needs and store meals data by dates.
 
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.vscode-typescript-vue-plugin).
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
 ## Project Setup
 
 ```sh
-npm install
+npm i
 ```
-
-### Compile and Hot-Reload for Development
 
 ```sh
 npm run dev
