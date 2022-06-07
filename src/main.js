@@ -13,7 +13,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 
-import Spinner from './Components/Spinner/Spinner.vue'
+import Spinner from './components/Spinner/Spinner.vue'
 
 // const app = createApp(App)
 const app = createApp({

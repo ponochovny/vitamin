@@ -23,10 +23,10 @@
 </template>
 
 <script>
-import FilledChars from '../Components/ShowUp/FilledChars.vue'
-import ProductsSearch from '../Components/ProductsSearch/ProductsSearch.vue'
-import ChoosenProducts from '../Components/ShowUp/ChoosenProducts/ChoosenProducts.vue'
-import History from '../Components/ShowUp/History/History.vue'
+import FilledChars from '../components/ShowUp/FilledChars.vue'
+import ProductsSearch from '../components/ProductsSearch/ProductsSearch.vue'
+import ChoosenProducts from '../components/ShowUp/ChoosenProducts/ChoosenProducts.vue'
+import History from '../components/ShowUp/History/History.vue'
 
 export default {
 	name: 'app',

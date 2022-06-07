@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import AuthGuard from './auth-guard'
-import Auth from '../Pages/Auth.vue'
-import Main from '../Pages/Main.vue'
-import AddProduct from '../Pages/AddProduct.vue'
-import EditProduct from '../Pages/EditProduct.vue'
+import Auth from '../pages/Auth.vue'
+import Main from '../pages/Main.vue'
+import AddProduct from '../pages/AddProduct.vue'
+import EditProduct from '../pages/EditProduct.vue'
 
 const router = createRouter({
 	history: createWebHistory(),

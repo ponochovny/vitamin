@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Menu from './Components/Menu/Menu.vue'
+import Menu from './components/Menu/Menu.vue'
 // import Toast from 'vue-toastification'
 import { useToast } from 'vue-toastification'
 
