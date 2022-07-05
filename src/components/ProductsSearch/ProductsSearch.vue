@@ -108,9 +108,9 @@ export default {
     max-width: 263px;
   }
   input {
-    width: 263px;
+    width: 100%;
     height: 41px;
-    margin: 27px 0;
+    margin: 24px 0;
     padding: 0 7px;
     background-color: #f2f2f2;
     border: 1px solid #b5b5b5;
@@ -132,7 +132,7 @@ export default {
   }
   .separator {
     width: 100%;
-    height: 2px;
+    height: 1px;
     background-color: #bcbcbc;
   }
   &__list {

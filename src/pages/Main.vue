@@ -4,36 +4,36 @@
       <ProductsSearch />
       <div class="Main__choosenProducts">
         <h2 :style="{ marginBottom: '35px' }">Выбранные продукты</h2>
-        <!-- <ChoosenProducts /> -->
+        <ChoosenProducts />
       </div>
       <div class="Main__filledChars">
         <h2 :style="{ marginBottom: '35px' }">От дневной нормы</h2>
-        <!-- <FilledChars /> -->
+        <FilledChars />
       </div>
-      <!-- <History :items="registeredMeals" /> -->
+      <History :items="registeredMeals" />
     </template>
-    <!-- <template v-else> -->
-    <h2 style="width: 100%; text-align: center; margin-top: 60px">
-      You're not logged in. <router-link to="/auth">Log in</router-link>
-    </h2>
-    <!-- </template> -->
+    <template v-else>
+      <h2 style="width: 100%; text-align: center; margin-top: 60px">
+        You're not logged in. <router-link to="/auth">Log in</router-link>
+      </h2>
+    </template>
   </div>
 </template>
 
 <script lang="ts">
 import { useMainStore } from '../stores'
-// import FilledChars from '../components/ShowUp/FilledChars.vue'
+import FilledChars from '../components/ShowUp/FilledChars.vue'
 import ProductsSearch from '../components/ProductsSearch/ProductsSearch.vue'
-// import ChoosenProducts from '../components/ShowUp/ChoosenProducts/ChoosenProducts.vue'
-// import History from '../components/ShowUp/History/History.vue'
+import ChoosenProducts from '../components/ShowUp/ChoosenProducts/ChoosenProducts.vue'
+import History from '../components/ShowUp/History/History.vue'
 
 export default {
   name: 'app',
   components: {
-    // FilledChars: FilledChars,
+    FilledChars,
     ProductsSearch,
-    // ChoosenProducts: ChoosenProducts,
-    // History: History,
+    ChoosenProducts,
+    History,
   },
   data() {
     return {
@@ -44,9 +44,9 @@ export default {
     isUserLoggedIn() {
       return useMainStore().isUserLoggedIn
     },
-    // registeredMeals() {
-    // 	return this.$store.getters.registeredMeals
-    // },
+    registeredMeals() {
+      return useMainStore().registeredMeals
+    },
   },
 }
 </script>

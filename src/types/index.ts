@@ -17,6 +17,7 @@ export type Product = {
   title: string
   uid: string
   characteristics: Characteristics
+  amount?: number
 }
 
 export type RegisteredMeal = {
