@@ -32,14 +32,12 @@ const app = createApp({
     onAuthStateChanged(firebaseAuth, (user) => {
       if (user) {
         console.log('... Vue (created) - log in')
-        // console.log('Store1:', useMainStore().data)
         useMainStore().autoLoginUser(user)
-        // this.$store.dispatch('autoLoginUser', user)
       }
     })
 
-    // this.$store.dispatch('fetchProducts')
-    // this.$store.dispatch('fetchRegisteredMeals')
+    useMainStore().fetchProducts()
+    useMainStore().fetchRegisteredMeals()
   },
   render: () => h(App),
 })

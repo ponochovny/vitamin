@@ -1,17 +1,17 @@
 <template>
   <div class="Main">
-    <!-- <template v-if="isUserLoggedIn"> -->
-    <!-- <ProductsSearch /> -->
-    <div class="Main__choosenProducts">
-      <h2 :style="{ marginBottom: '35px' }">Выбранные продукты</h2>
-      <!-- <ChoosenProducts /> -->
-    </div>
-    <div class="Main__filledChars">
-      <h2 :style="{ marginBottom: '35px' }">От дневной нормы</h2>
-      <!-- <FilledChars /> -->
-    </div>
-    <!-- <History :items="registeredMeals" /> -->
-    <!-- </template> -->
+    <template v-if="isUserLoggedIn">
+      <ProductsSearch />
+      <div class="Main__choosenProducts">
+        <h2 :style="{ marginBottom: '35px' }">Выбранные продукты</h2>
+        <!-- <ChoosenProducts /> -->
+      </div>
+      <div class="Main__filledChars">
+        <h2 :style="{ marginBottom: '35px' }">От дневной нормы</h2>
+        <!-- <FilledChars /> -->
+      </div>
+      <!-- <History :items="registeredMeals" /> -->
+    </template>
     <!-- <template v-else> -->
     <h2 style="width: 100%; text-align: center; margin-top: 60px">
       You're not logged in. <router-link to="/auth">Log in</router-link>
@@ -21,8 +21,9 @@
 </template>
 
 <script lang="ts">
+import { useMainStore } from '../stores'
 // import FilledChars from '../components/ShowUp/FilledChars.vue'
-// import ProductsSearch from '../components/ProductsSearch/ProductsSearch.vue'
+import ProductsSearch from '../components/ProductsSearch/ProductsSearch.vue'
 // import ChoosenProducts from '../components/ShowUp/ChoosenProducts/ChoosenProducts.vue'
 // import History from '../components/ShowUp/History/History.vue'
 
@@ -30,7 +31,7 @@ export default {
   name: 'app',
   components: {
     // FilledChars: FilledChars,
-    // ProductsSearch: ProductsSearch,
+    ProductsSearch,
     // ChoosenProducts: ChoosenProducts,
     // History: History,
   },
@@ -40,9 +41,9 @@ export default {
     }
   },
   computed: {
-    // isUserLoggedIn() {
-    // 	return this.$store.getters.isUserLoggedIn
-    // },
+    isUserLoggedIn() {
+      return useMainStore().isUserLoggedIn
+    },
     // registeredMeals() {
     // 	return this.$store.getters.registeredMeals
     // },

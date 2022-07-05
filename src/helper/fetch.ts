@@ -1,4 +1,5 @@
 import { getDatabase, ref, child, get } from 'firebase/database'
+import { Product, RegisteredMeal } from '../types'
 
 export const fetch = async (folderName: string) => {
   try {
@@ -24,11 +25,11 @@ export const fetch = async (folderName: string) => {
 }
 
 export const getProducts = async () => {
-  const data = await fetch('products')
-  const resultProducts: any[] = []
+  const data: Product[] = await fetch('products')
+  const result: Product[] = []
 
-  Object.keys(data).forEach((key) => {
-    resultProducts.push({
+  Object.keys(data).forEach((key: any) => {
+    result.push({
       title: data[key].title,
       characteristics: { ...data[key].characteristics },
       uid: data[key].uid,
@@ -36,5 +37,21 @@ export const getProducts = async () => {
     })
   })
 
-  return resultProducts
+  return result
+}
+
+export const getRegisteredMeals = async () => {
+  const data: RegisteredMeal[] = await fetch('registeredMeals')
+  const result: RegisteredMeal[] = []
+
+  Object.keys(data).forEach((key: any) => {
+    result.push({
+      productsList: data[key].productsList,
+      date: data[key].date,
+      percentage: data[key].percentage,
+      id: key,
+    })
+  })
+
+  return result
 }
