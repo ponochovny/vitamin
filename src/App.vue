@@ -1,6 +1,7 @@
 <template>
   <div>
     <Menu />
+    <p>{{ data }}</p>
     <router-view></router-view>
   </div>
 </template>
@@ -9,6 +10,7 @@
 import Menu from './components/Menu/Menu.vue'
 // import Toast from 'vue-toastification'
 import { useToast } from 'vue-toastification'
+import { useMainStore } from './stores/index'
 
 export default {
   name: 'app',
@@ -18,6 +20,7 @@ export default {
   data() {
     return {
       toast: useToast(),
+      data: [],
     }
   },
   methods: {
@@ -26,6 +29,7 @@ export default {
     // },
   },
   mounted() {
+    // console.log('Store2:', useMainStore().getData)
     // this.$store.watch(
     // 	(state) => {
     // 		return this.$store.getters.error // could also put a Getter here
@@ -50,6 +54,11 @@ export default {
     // 		}
     // 	}
     // )
+  },
+  computed: {
+    data() {
+      return useMainStore().data
+    },
   },
 }
 </script>

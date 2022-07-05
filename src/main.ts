@@ -1,7 +1,8 @@
+import { createPinia } from 'pinia'
 import { createApp, h } from 'vue'
 import App from './App.vue'
+
 import './styles.scss'
-// import store from './store'
 import router from './router'
 import { initializeApp } from 'firebase/app'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
@@ -9,6 +10,8 @@ import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 
 import Spinner from './components/Spinner/Spinner.vue'
+
+import { useMainStore } from './stores/index'
 
 const app = createApp({
   created() {
@@ -29,6 +32,8 @@ const app = createApp({
     onAuthStateChanged(firebaseAuth, (user) => {
       if (user) {
         console.log('... Vue (created) - log in')
+        // console.log('Store1:', useMainStore().data)
+        useMainStore().autoLoginUser(user)
         // this.$store.dispatch('autoLoginUser', user)
       }
     })
@@ -38,29 +43,25 @@ const app = createApp({
   },
   render: () => h(App),
 })
+  .use(createPinia())
+  .use(router)
+  .use(Toast, {
+    transition: 'Vue-Toastification__fade',
+    maxToasts: 5,
+    newestOnTop: true,
 
-// app.use(store)
-app.use(router)
-
-app.use(Toast, {
-  transition: 'Vue-Toastification__fade',
-  maxToasts: 5,
-  newestOnTop: true,
-
-  position: 'bottom-center',
-  timeout: 5000,
-  closeOnClick: true,
-  pauseOnFocusLoss: true,
-  pauseOnHover: true,
-  draggable: true,
-  draggablePercent: 0.6,
-  showCloseButtonOnHover: false,
-  hideProgressBar: true,
-  closeButton: false,
-  icon: false,
-  rtl: false,
-})
-
-app.component('Loader', Spinner)
-
-app.mount('#app')
+    position: 'bottom-center',
+    timeout: 5000,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: false,
+    hideProgressBar: true,
+    closeButton: false,
+    icon: false,
+    rtl: false,
+  })
+  .component('Loader', Spinner)
+  .mount('#app')
