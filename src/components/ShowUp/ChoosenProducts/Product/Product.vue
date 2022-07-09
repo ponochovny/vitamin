@@ -40,9 +40,6 @@ export default {
       this.$store.dispatch('removeProductFromChoosen', this.item.id)
     },
   },
-  mounted() {
-    console.log('item', this.item)
-  },
 }
 </script>
 

@@ -60,14 +60,14 @@ export const useMainStore = defineStore({
     addProductToChoosen(payload: Product) {
       this.choosenProducts.push({
         ...payload,
+        amount: 100,
       })
+      this.averageProdsChars()
     },
     allTotalPercentage(payload: object) {
       this.averChProdChars = { ...this.averChProdChars, percentage: payload }
     },
     updateChoosenProduct(payload: Product) {
-      this.averageProdsChars()
-
       const choosenProducts: Product[] = [...this.choosenProducts]
       const index = choosenProducts.findIndex((item) => {
         return item.id === payload.id
@@ -75,6 +75,8 @@ export const useMainStore = defineStore({
       choosenProducts[index].amount = payload.amount ? +payload.amount : NaN
 
       this.choosenProducts = [...choosenProducts]
+
+      this.averageProdsChars()
     },
     removeProductFromChoosen(payload: string) {
       const newArr: Product[] = this.choosenProducts.filter(
