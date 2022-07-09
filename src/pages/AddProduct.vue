@@ -108,9 +108,9 @@ export default {
 	},
 	mounted() {
 		let chars = {}
-		for (let key in this.$store.getters.basicCharacteristics) {
+		for (let key in this.$store.getters.userChars) {
 			chars[key] = []
-			for (let item of this.$store.getters.basicCharacteristics[key]) {
+			for (let item of this.$store.getters.userChars[key]) {
 				let innerItem = {
 					title: item.title,
 					versions: [{ value: 0, origin: '' }],

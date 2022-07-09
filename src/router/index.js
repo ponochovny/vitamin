@@ -5,6 +5,7 @@ import Auth from '../pages/Auth.vue'
 import Main from '../pages/Main.vue'
 import AddProduct from '../pages/AddProduct.vue'
 import EditProduct from '../pages/EditProduct.vue'
+import Profile from '../pages/Profile.vue'
 
 const router = createRouter({
 	history: createWebHistory(),
@@ -26,6 +27,11 @@ const router = createRouter({
 			path: '/edit-product/:id',
 			component: EditProduct,
 			beforeEnter: AuthGuard,
+		},
+		{
+			path: '/profile',
+			component: Profile,
+			// beforeEnter: AuthGuard,
 		},
 	],
 	scrollBehavior(to, from, savedPosition) {

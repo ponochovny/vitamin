@@ -178,7 +178,6 @@ export default {
 					id: newPostKey,
 				})
 			} catch (error) {
-				console.log('... test 3')
 				commit('setError', error.message)
 				commit('setLoading', false)
 				throw error
@@ -251,7 +250,6 @@ export default {
 
 				commit('setLoading', false)
 			} catch (error) {
-				console.log('... error?', error)
 				commit('setError', error.message)
 				commit('setLoading', false)
 				throw error

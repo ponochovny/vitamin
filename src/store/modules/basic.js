@@ -1,125 +1,55 @@
+import { getDatabase, ref, update, get, child } from 'firebase/database'
 import { characteristics } from '../../constants/chars'
 
 export default {
 	state: {
-		characteristics: {
-			foodEnergy: [
-				{
-					title: 'Белки',
-					description: 'Lorem ipsum',
-					values: [{ value: 140, origin: 'v1' }],
-				},
-				{
-					title: 'Жиры',
-					description: 'Lorem ipsum',
-					values: [{ value: 94, origin: 'v1' }],
-				},
-				{
-					title: 'Углеводы',
-					description: 'Lorem ipsum',
-					values: [
-						{ value: 351, origin: 'v1' },
-						{ value: 163, origin: 'v2' },
-					],
-				},
-				{
-					title: 'Калорий',
-					description: 'Lorem ipsum',
-					values: [{ value: 2806, origin: 'v1' }],
-				},
-			],
-			vitamins: [
-				{
-					title: 'A',
-					description: 'Lorem ipsum',
-					values: [{ value: 900, origin: 'v1' }],
-				},
-				{
-					title: 'B1',
-					description: 'Lorem ipsum',
-					values: [{ value: 1.5, origin: 'v1' }],
-				},
-				{
-					title: 'B2',
-					description: 'Lorem ipsum',
-					values: [{ value: 1.8, origin: 'v1' }],
-				},
-				{
-					title: 'B4',
-					description: 'Lorem ipsum',
-					values: [{ value: 500, origin: 'v1' }],
-				},
-				{
-					title: 'B6',
-					description: 'Lorem ipsum',
-					values: [{ value: 2, origin: 'v1' }],
-				},
-				{
-					title: 'B12',
-					description: 'Lorem ipsum',
-					values: [{ value: 0.003, origin: 'v1' }],
-				},
-				{
-					title: 'C',
-					description: 'Lorem ipsum',
-					values: [{ value: 90, origin: 'v1' }],
-				},
-				{
-					title: 'D',
-					description: 'Lorem ipsum',
-					values: [{ value: 0.01, origin: 'v1' }],
-				},
-				{
-					title: 'E',
-					description: 'Lorem ipsum',
-					values: [{ value: 15, origin: 'v1' }],
-				},
-				{
-					title: 'K',
-					description: 'Lorem ipsum',
-					values: [{ value: 0.12, origin: 'v1' }],
-				},
-				{
-					title: 'Z',
-					description: 'Lorem ipsum',
-					values: [{ value: 12, origin: 'v1' }],
-				},
-			],
-			macroMicro: [
-				{
-					title: 'Калий',
-					description: 'Lorem ipsum',
-					values: [
-						{ value: 2500, origin: 'v1' },
-						{ value: 4, origin: 'v2' },
-					],
-				},
-				{
-					title: 'Магний',
-					description: 'Lorem ipsum',
-					values: [
-						{ value: 400, origin: 'v1' },
-						{ value: 4, origin: 'v2' },
-					],
-				},
-				{
-					title: 'Железо',
-					description: 'Lorem ipsum',
-					values: [{ value: 12, origin: 'v1' }],
-				},
-				{
-					title: 'Кальций',
-					description: 'Lorem ipsum',
-					values: [{ value: 12, origin: 'v1' }],
-				},
-			],
+		userChars: null,
+	},
+	mutations: {
+		setUserChars(state, payload) {
+			state.userChars = payload
 		},
 	},
-	mutatuins: {},
-	actions: {},
+	actions: {
+		async fetchChars({ rootState, commit }) {
+			const userId = rootState.user.user.id
+			try {
+				const dbRef = ref(getDatabase())
+				const userChars = await get(child(dbRef, 'profile/' + userId)).then(
+					(snapshot) => {
+						if (snapshot.exists()) {
+							return snapshot.val()
+						} else {
+							console.log('No data available')
+						}
+					}
+				)
+				commit('setUserChars', userChars)
+			} catch (error) {
+				console.log(error)
+				throw Error(error)
+			}
+		},
+		async updateUserChars({ rootState }, payload) {
+			const userId = rootState.user.user.id
+			const db = getDatabase()
+			const updates = {}
+
+			updates['/profile/' + userId] = JSON.parse(JSON.stringify(payload))
+			try {
+				update(ref(db), updates)
+			} catch (err) {
+				console.log(error)
+				throw Error(error)
+			}
+		},
+	},
 	getters: {
 		basicCharacteristics(state) {
 			return characteristics
+		},
+		userChars(state) {
+			return state.userChars
 		},
 	},
 }

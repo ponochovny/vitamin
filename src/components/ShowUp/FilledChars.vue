@@ -1,5 +1,5 @@
 <template>
-	<div class="FilledChars">
+	<div class="FilledChars" v-if="characteristics">
 		<h2>Б/Ж/У [total: {{ totalPercent('foodEnergy') }}]</h2>
 		<CharList
 			:myClass="'FilledChars__list'"
@@ -32,7 +32,6 @@ import CharList from './CharList/CharList.vue'
 import { calculatedPercent } from '../../tools/calculatePercentage'
 
 export default {
-	props: ['averageProductsCharacteristics'],
 	name: 'filledChars',
 	components: {
 		CharList: CharList,
@@ -42,7 +41,10 @@ export default {
 	},
 	computed: {
 		characteristics() {
-			return this.$store.getters.basicCharacteristics
+			return this.$store.getters.userChars
+		},
+		averageProductsCharacteristics() {
+			return this.$store.getters.averageChoosenProductsChars
 		},
 	},
 	methods: {
@@ -50,7 +52,6 @@ export default {
 			let times = 0
 			let summ = 0
 			let result = 0
-
 			for (let item of this.characteristics[parameter]) {
 				times++
 				summ += +calculatedPercent(
@@ -58,13 +59,10 @@ export default {
 					this.averageProductsCharacteristics[parameter]
 				)
 			}
-
 			result = (summ / times).toFixed(2)
-
 			return result > 100 ? 100 : +result
 		},
 	},
-	mounted() {},
 	watch: {
 		averageProductsCharacteristics(oldVal, newVal) {
 			let summ =

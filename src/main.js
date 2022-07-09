@@ -36,8 +36,9 @@ const app = createApp({
 				console.log('... Vue (created) - log in')
 				this.$store.dispatch('autoLoginUser', user)
 			}
-		}),
-			this.$store.dispatch('fetchProducts')
+		})
+
+		this.$store.dispatch('fetchProducts')
 		this.$store.dispatch('fetchRegisteredMeals')
 	},
 	render: () => h(App),

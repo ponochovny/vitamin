@@ -22,13 +22,10 @@ export default {
 	},
 	actions: {
 		async registerUser({ commit }, { email, password }) {
-			console.log('registerUser...')
 			const auth = getAuth()
 			commit('clearError')
 			commit('setLoading', true)
 			try {
-				console.log('...use1')
-
 				createUserWithEmailAndPassword(auth, email, password)
 					.then((userCredential) => {
 						const user = userCredential.user
@@ -36,8 +33,6 @@ export default {
 						commit('setLoading', false)
 					})
 					.catch((error) => console.log(error))
-
-				console.log('...use2')
 			} catch (error) {
 				commit('setLoading', false)
 				commit('setError', error.message)
@@ -45,7 +40,7 @@ export default {
 			}
 		},
 
-		async loginUser({ commit }, { email, password }) {
+		async loginUser({ commit, dispatch }, { email, password }) {
 			const auth = getAuth()
 			commit('clearError')
 			commit('setLoading', true)
@@ -53,11 +48,11 @@ export default {
 			const promise = new Promise((resolve, reject) => {
 				signInWithEmailAndPassword(auth, email, password)
 					.then((userCredential) => {
-						console.log('... userCredential', userCredential)
-
 						const user = userCredential.user
 						commit('setUser', new User(user.uid))
 						commit('setLoading', false)
+
+						dispatch('fetchChars')
 
 						resolve(userCredential)
 					})
@@ -98,6 +93,7 @@ export default {
 
 		autoLoginUser({ dispatch }, payload) {
 			dispatch('setUser', new User(payload.uid))
+			dispatch('fetchChars')
 		},
 		logoutUser({ dispatch }) {
 			const auth = getAuth()

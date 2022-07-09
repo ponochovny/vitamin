@@ -8,9 +8,7 @@
 			</div>
 			<div class="Main__filledChars">
 				<h2 :style="{ marginBottom: '35px' }">От дневной нормы</h2>
-				<FilledChars
-					:averageProductsCharacteristics="averageChoosenProductsChars"
-				/>
+				<FilledChars />
 			</div>
 			<History :items="registeredMeals" />
 		</template>
@@ -42,9 +40,6 @@ export default {
 		}
 	},
 	computed: {
-		averageChoosenProductsChars() {
-			return this.$store.getters.averageChoosenProductsChars
-		},
 		isUserLoggedIn() {
 			return this.$store.getters.isUserLoggedIn
 		},
