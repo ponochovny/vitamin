@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-// import AuthGuard from './auth-guard'
-// import Auth from '../pages/Auth.vue'
+import AuthGuard from './auth-guard'
+import Auth from '../pages/Auth.vue'
 // import Main from '../pages/Main.vue'
 
 // Temporary
@@ -17,10 +17,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '',
     component: Main,
   },
-  // {
-  // 	path: '/auth',
-  // 	component: Auth,
-  // },
+  {
+    path: '/auth',
+    component: Auth,
+  },
   // {
   // 	path: '/new-product',
   // 	component: AddProduct,
@@ -34,7 +34,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/profile',
     component: Profile,
-    // beforeEnter: AuthGuard,
+    beforeEnter: AuthGuard,
   },
   {
     path: '/404',

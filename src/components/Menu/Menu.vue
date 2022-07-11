@@ -23,6 +23,7 @@
 </template>
 
 <script lang="ts">
+import router from '../../router'
 import { useMainStore } from '../../stores'
 
 export default {
@@ -33,10 +34,10 @@ export default {
     },
   },
   methods: {
-    // logOut: function () {
-    // 	this.$store.dispatch('logoutUser')
-    // 	this.$router.push('/')
-    // },
+    logOut() {
+      useMainStore().logoutUser()
+      router.push('/')
+    },
   },
 }
 </script>

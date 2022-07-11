@@ -4,7 +4,12 @@ import { Characteristics, Product, RegisteredMeal } from '../types'
 import { areTwoDatesEquels, summOfValueOfArray } from '../helper'
 import { characteristics } from '../constants/chars'
 import { average } from '../helper/calculatePercentage'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth'
 
 class User {
   id: string
@@ -18,6 +23,7 @@ export type RootState = {
   user: null | { id: string }
   userChars: null | Characteristics
   isLoading: boolean
+  error: string | null
   productsList: Product[]
   registeredMeals: RegisteredMeal[]
   choosenProducts: Product[]
@@ -31,6 +37,7 @@ export const useMainStore = defineStore({
       user: null,
       userChars: null,
       isLoading: true,
+      error: null,
       productsList: [],
       registeredMeals: [],
       choosenProducts: [],
@@ -170,13 +177,19 @@ export const useMainStore = defineStore({
     },
 
     async loginUser({ email, password }: { email: string; password: string }) {
-      // commit('clearError')
+      this.error = null
       this.isLoading = true
 
       const auth = getAuth()
 
-      return signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const userCredential = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+          )
+
           const user = userCredential.user
 
           this.user = new User(user.uid)
@@ -184,16 +197,52 @@ export const useMainStore = defineStore({
 
           this.fetchChars()
 
-          return userCredential
-        })
-        .catch((error) => {
+          resolve(userCredential)
+        } catch (error: any) {
           console.log('[loginUser] ERROR:', error)
 
           this.isLoading = false
-          // commit('setError', error.message)
+          this.error = error.message
 
-          return new Error(error)
-        })
+          reject(error)
+        }
+      })
+    },
+    async registerUser({
+      email,
+      password,
+    }: {
+      email: string
+      password: string
+    }) {
+      const auth = getAuth()
+
+      this.error = null
+      this.isLoading = true
+
+      return new Promise(async (resolve, reject) => {
+        try {
+          const userCredential = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          )
+
+          const user = userCredential.user
+
+          this.user = new User(user.uid)
+          this.isLoading = false
+
+          resolve(userCredential)
+        } catch (error: any) {
+          console.log('[createUserWithEmailAndPassword] ERROR:', error)
+
+          this.error = error.message
+          this.isLoading = false
+
+          reject(error)
+        }
+      })
     },
 
     async fetchChars() {
@@ -220,6 +269,11 @@ export const useMainStore = defineStore({
           console.log('Status:', status)
         })
         .catch((error) => console.log('[updateUserChars] ERROR:', error))
+    },
+    logoutUser() {
+      const auth = getAuth()
+      signOut(auth)
+      this.user = null
     },
   },
   getters: {
