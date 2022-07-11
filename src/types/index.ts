@@ -1,4 +1,4 @@
-type Element = {
+export type Element = {
   title: string
   versions: {
     origin: string
@@ -6,7 +6,7 @@ type Element = {
   }[]
 }
 
-type Characteristics = {
+export type Characteristics = {
   foodEnergy: Element[]
   macroMicro: Element[]
   vitamins: Element[]

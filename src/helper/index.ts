@@ -1,3 +1,6 @@
+import { characteristics, values } from '../constants/chars'
+import { Characteristics, Element } from '../types'
+
 export const dateObj = (timestamp: number | undefined) => {
   const thisTimestamp = timestamp ? new Date(timestamp) : new Date()
 
@@ -33,4 +36,46 @@ export const summOfValueOfArray = (arr: any[], value: string) => {
     summ += item[value]
   }
   return summ
+}
+
+export const maxAmountVersions = (chars: Characteristics) => {
+  let maxVersionsNumber = 0
+
+  for (const [key] of Object.entries(values)) {
+    // @ts-ignore
+    chars[key].forEach((item: { values: [] }) => {
+      if (item.values.length > maxVersionsNumber) {
+        maxVersionsNumber = item.values.length
+      }
+    })
+  }
+
+  return maxVersionsNumber
+}
+
+export const fullFilledChars = (userChars: Characteristics | null = null) => {
+  const exportChars = JSON.parse(JSON.stringify(characteristics))
+
+  for (const [key] of Object.entries(values)) {
+    exportChars[key] = exportChars[key].map((item: Element) => {
+      if (userChars) {
+        // @ts-ignore
+        const found = userChars[key].find(
+          (fItem: Element) => fItem.title === item.title
+        )
+
+        if (found) {
+          return {
+            ...item,
+            description: found.description,
+            values: [...found.values],
+          }
+        }
+      }
+
+      return { ...item, values: [{ value: 0, origin: '' }] }
+    })
+  }
+
+  return exportChars
 }

@@ -9,7 +9,7 @@ import Main from '../pages/Main.vue'
 
 // import AddProduct from '../pages/AddProduct.vue'
 // import EditProduct from '../pages/EditProduct.vue'
-// import Profile from '../pages/Profile.vue'
+import Profile from '../pages/Profile.vue'
 // import PageNotFound from '../pages/PageNotFound.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -31,11 +31,11 @@ const routes: Array<RouteRecordRaw> = [
   // 	component: EditProduct,
   // 	beforeEnter: AuthGuard,
   // },
-  // {
-  // 	path: '/profile',
-  // 	component: Profile,
-  // 	// beforeEnter: AuthGuard,
-  // },
+  {
+    path: '/profile',
+    component: Profile,
+    // beforeEnter: AuthGuard,
+  },
   {
     path: '/404',
     name: 'PageNotFound',

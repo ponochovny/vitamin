@@ -9,26 +9,28 @@
       <li>
         <router-link exact to="/">Main page</router-link>
       </li>
-      <!-- <li v-if="isUserLoggedIn">
-				<router-link to="/profile">Profile</router-link>
-			</li>
-			<li v-if="!isUserLoggedIn">
-				<router-link to="/auth">Log in</router-link>
-			</li>
-			<li v-if="isUserLoggedIn" @click="logOut">
-				<a href="#">Log out</a>
-			</li> -->
+      <li v-if="isUserLoggedIn">
+        <router-link to="/profile">Profile</router-link>
+      </li>
+      <li v-if="!isUserLoggedIn">
+        <router-link to="/auth">Log in</router-link>
+      </li>
+      <li v-if="isUserLoggedIn" @click="logOut">
+        <a href="#">Log out</a>
+      </li>
     </ul>
   </div>
 </template>
 
 <script lang="ts">
+import { useMainStore } from '../../stores'
+
 export default {
   name: 'component-menu',
   computed: {
-    // isUserLoggedIn() {
-    // 	return this.$store.getters.isUserLoggedIn
-    // },
+    isUserLoggedIn() {
+      return useMainStore().isUserLoggedIn
+    },
   },
   methods: {
     // logOut: function () {

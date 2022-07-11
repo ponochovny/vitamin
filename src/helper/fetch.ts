@@ -1,4 +1,4 @@
-import { getDatabase, ref, child, get } from 'firebase/database'
+import { getDatabase, ref, child, get, update } from 'firebase/database'
 import { Product, RegisteredMeal } from '../types'
 
 export const fetch = async (folderName: string) => {
@@ -54,4 +54,17 @@ export const getRegisteredMeals = async () => {
   })
 
   return result
+}
+
+export const patch = async (link: string, data: any[]) => {
+  const db = getDatabase()
+  const updates: { [key: string]: any } = {}
+
+  updates[link] = JSON.parse(JSON.stringify(data))
+  try {
+    update(ref(db), updates)
+    return 202
+  } catch (error: any) {
+    return new Error(error)
+  }
 }

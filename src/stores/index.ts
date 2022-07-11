@@ -1,20 +1,22 @@
 import { defineStore } from 'pinia'
-import { getProducts, getRegisteredMeals } from '../helper/fetch'
-import { Product, RegisteredMeal } from '../types'
+import { fetch, getProducts, getRegisteredMeals, patch } from '../helper/fetch'
+import { Characteristics, Product, RegisteredMeal } from '../types'
 import { areTwoDatesEquels, summOfValueOfArray } from '../helper'
 import { characteristics } from '../constants/chars'
 import { average } from '../helper/calculatePercentage'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
 class User {
-  id: number
+  id: string
 
-  constructor(id: number) {
+  constructor(id: string) {
     this.id = id
   }
 }
 
 export type RootState = {
-  user: null | { id: number }
+  user: null | { id: string }
+  userChars: null | Characteristics
   isLoading: boolean
   productsList: Product[]
   registeredMeals: RegisteredMeal[]
@@ -27,6 +29,7 @@ export const useMainStore = defineStore({
   state: () =>
     ({
       user: null,
+      userChars: null,
       isLoading: true,
       productsList: [],
       registeredMeals: [],
@@ -50,11 +53,12 @@ export const useMainStore = defineStore({
 
       this.isLoading = false
     },
-    autoLoginUser(user: any) {
+    autoLoginUser(user: { uid: string }) {
       this.user = new User(user.uid)
       if (user) {
         this.fetchProducts()
         this.fetchRegisteredMeals()
+        this.fetchChars()
       }
     },
     addProductToChoosen(payload: Product) {
@@ -163,6 +167,59 @@ export const useMainStore = defineStore({
       this.choosenProducts = []
       this.averChProdChars = {}
       this.averageProdsChars()
+    },
+
+    async loginUser({ email, password }: { email: string; password: string }) {
+      // commit('clearError')
+      this.isLoading = true
+
+      const auth = getAuth()
+
+      return signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user
+
+          this.user = new User(user.uid)
+          this.isLoading = false
+
+          this.fetchChars()
+
+          return userCredential
+        })
+        .catch((error) => {
+          console.log('[loginUser] ERROR:', error)
+
+          this.isLoading = false
+          // commit('setError', error.message)
+
+          return new Error(error)
+        })
+    },
+
+    async fetchChars() {
+      const userId = this.user?.id
+      const link = 'profile/' + userId
+      const res = fetch(link)
+
+      res
+        .then((data) => {
+          console.log('data:', data)
+          this.userChars = { ...data }
+        })
+        .catch((error) => console.log('[fetchChars] ERROR:', error))
+    },
+    async updateUserChars(data: any[]) {
+      const userId = this.user?.id
+      const link = '/profile/' + userId
+
+      const res = patch(link, data)
+      res
+        .then((status) => {
+          // trigger success modal
+
+          console.log('Status:', status)
+        })
+        .catch((error) => console.log('[updateUserChars] ERROR:', error))
     },
   },
   getters: {
