@@ -19,7 +19,7 @@ import { useMainStore } from '../../../stores'
 export default {
   name: 'app',
   components: {
-    Product: Product,
+    Product,
   },
   data() {
     return {

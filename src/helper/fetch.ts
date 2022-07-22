@@ -1,5 +1,5 @@
-import { getDatabase, ref, child, get, update } from 'firebase/database'
-import { Product, RegisteredMeal } from '../types'
+import { getDatabase, ref, child, get, update, push } from 'firebase/database'
+import { TProduct, RegisteredMeal } from '../types'
 
 export const fetch = async (folderName: string) => {
   try {
@@ -25,14 +25,13 @@ export const fetch = async (folderName: string) => {
 }
 
 export const getProducts = async () => {
-  const data: Product[] = await fetch('products')
-  const result: Product[] = []
+  const data: TProduct[] = await fetch('products')
+  const result: TProduct[] = []
 
   Object.keys(data).forEach((key: any) => {
     result.push({
       title: data[key].title,
       characteristics: { ...data[key].characteristics },
-      uid: data[key].uid,
       id: key,
     })
   })
@@ -56,7 +55,7 @@ export const getRegisteredMeals = async () => {
   return result
 }
 
-export const patch = async (link: string, data: any[]) => {
+export const put = async (link: string, data: any) => {
   const db = getDatabase()
   const updates: { [key: string]: any } = {}
 
@@ -64,6 +63,23 @@ export const patch = async (link: string, data: any[]) => {
   try {
     update(ref(db), updates)
     return 202
+  } catch (error: any) {
+    return new Error(error)
+  }
+}
+
+export const post = async (payload: any, folderPath: string) => {
+  const db = getDatabase()
+  // Get a key for a new Post.
+  const newPostKey = push(child(ref(db), folderPath)).key
+
+  // Write the new post's data simultaneously in the posts list and the user's post list.
+  const updates: any = {}
+  updates[folderPath + '/' + newPostKey] = payload
+
+  try {
+    update(ref(db), updates)
+    return newPostKey
   } catch (error: any) {
     return new Error(error)
   }

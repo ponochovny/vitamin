@@ -1,4 +1,4 @@
-export type Element = {
+export type TElement = {
   title: string
   versions: {
     origin: string
@@ -6,17 +6,28 @@ export type Element = {
   }[]
 }
 
-export type Characteristics = {
-  foodEnergy: Element[]
-  macroMicro: Element[]
-  vitamins: Element[]
+export enum ECharacteristic {
+  foodEnergy = 'foodEnergy',
+  macroMicro = 'macroMicro',
+  vitamins = 'vitamins',
 }
 
-export type Product = {
+export type TCharacteristics = {
+  [ECharacteristic.foodEnergy]: TElement[]
+  [ECharacteristic.macroMicro]: TElement[]
+  [ECharacteristic.vitamins]: TElement[]
+}
+
+export type TDataForNewProduct = {
+  title: string
+  characteristics: TCharacteristics
+  source: { origin: string }[]
+}
+
+export type TProduct = {
   id: string
   title: string
-  uid: string
-  characteristics: Characteristics
+  characteristics: TCharacteristics
   amount?: number
 }
 
@@ -29,6 +40,6 @@ export type RegisteredMeal = {
     id: string
     title: string
     uid: string
-    characteristics: Characteristics
+    characteristics: TCharacteristics
   }[]
 }

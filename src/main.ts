@@ -13,9 +13,9 @@ import Spinner from './components/Spinner/Spinner.vue'
 
 import { useMainStore } from './stores/index'
 
-const app = createApp({
+createApp({
   created() {
-    console.log('created !')
+    console.log('...[created]')
     const firebaseConfig = {
       apiKey: import.meta.env.VITE_API_KEY,
       authDomain: `${import.meta.env.VITE_PROJECT_ID}.firebaseapp.com`,
@@ -31,8 +31,12 @@ const app = createApp({
 
     onAuthStateChanged(firebaseAuth, (user) => {
       if (user) {
-        console.log('... Vue (created) - log in')
         useMainStore().autoLoginUser(user)
+        useMainStore().setUserChecked()
+        console.log('...[created] Loged In')
+      } else {
+        useMainStore().setUserChecked()
+        console.log('...[created] No User Logged In')
       }
     })
 
@@ -57,7 +61,7 @@ const app = createApp({
     draggablePercent: 0.6,
     showCloseButtonOnHover: false,
     hideProgressBar: true,
-    closeButton: false,
+    closeButton: 'button',
     icon: false,
     rtl: false,
   })

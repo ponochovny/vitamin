@@ -1,6 +1,17 @@
 import { defineStore } from 'pinia'
-import { fetch, getProducts, getRegisteredMeals, patch } from '../helper/fetch'
-import { Characteristics, Product, RegisteredMeal } from '../types'
+import {
+  fetch,
+  getProducts,
+  getRegisteredMeals,
+  post,
+  put,
+} from '../helper/fetch'
+import {
+  TCharacteristics,
+  TProduct,
+  RegisteredMeal,
+  TDataForNewProduct,
+} from '../types'
 import { areTwoDatesEquels, summOfValueOfArray } from '../helper'
 import { characteristics } from '../constants/chars'
 import { average } from '../helper/calculatePercentage'
@@ -10,6 +21,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth'
+import { CProduct } from '../classes'
 
 class User {
   id: string
@@ -21,12 +33,13 @@ class User {
 
 export type RootState = {
   user: null | { id: string }
-  userChars: null | Characteristics
+  userChars: null | TCharacteristics
+  isUserChecked: boolean
   isLoading: boolean
   error: string | null
-  productsList: Product[]
+  productsList: TProduct[]
   registeredMeals: RegisteredMeal[]
-  choosenProducts: Product[]
+  choosenProducts: TProduct[]
   averChProdChars: {}
 }
 
@@ -37,6 +50,7 @@ export const useMainStore = defineStore({
       user: null,
       userChars: null,
       isLoading: true,
+      isUserChecked: false,
       error: null,
       productsList: [],
       registeredMeals: [],
@@ -44,10 +58,64 @@ export const useMainStore = defineStore({
       averChProdChars: {},
     } as RootState),
   actions: {
+    setUserChecked() {
+      this.isUserChecked = true
+    },
+    async createProduct(payload: TDataForNewProduct) {
+      this.error = null
+      this.isLoading = true
+
+      const newProduct = new CProduct(payload.title, payload.characteristics)
+
+      return new Promise(async (resolve, reject) => {
+        try {
+          const newProductKey = await post(newProduct, 'products')
+          if (typeof newProductKey === 'string') {
+            this.productsList.push({ ...newProduct, id: newProductKey })
+          }
+          // TODO: toggle success toaster
+
+          resolve(newProductKey)
+        } catch (error: any) {
+          this.error = error.message
+          this.isLoading = false
+
+          reject(error)
+        }
+      })
+    },
+    async updateProduct({
+      title,
+      characteristics,
+      id,
+    }: {
+      title: string
+      characteristics: TCharacteristics
+      id: string
+    }) {
+      this.error = null
+      this.isLoading = true
+
+      const link = '/products/' + id
+
+      try {
+        put(link, { title, characteristics })
+
+        // update local data
+        const index = this.productsList.findIndex((el) => el.id === id)
+        this.productsList[index].title = title
+
+        this.isLoading = false
+      } catch (error: any) {
+        this.error = error.message
+        this.isLoading = false
+        throw error
+      }
+    },
     async fetchProducts() {
       this.isLoading = true
 
-      const data: Product[] = await getProducts()
+      const data: TProduct[] = await getProducts()
       this.productsList = [...data]
 
       this.isLoading = false
@@ -68,7 +136,7 @@ export const useMainStore = defineStore({
         this.fetchChars()
       }
     },
-    addProductToChoosen(payload: Product) {
+    addProductToChoosen(payload: TProduct) {
       this.choosenProducts.push({
         ...payload,
         amount: 100,
@@ -78,8 +146,8 @@ export const useMainStore = defineStore({
     allTotalPercentage(payload: object) {
       this.averChProdChars = { ...this.averChProdChars, percentage: payload }
     },
-    updateChoosenProduct(payload: Product) {
-      const choosenProducts: Product[] = [...this.choosenProducts]
+    updateChoosenProduct(payload: TProduct) {
+      const choosenProducts: TProduct[] = [...this.choosenProducts]
       const index = choosenProducts.findIndex((item) => {
         return item.id === payload.id
       })
@@ -90,7 +158,7 @@ export const useMainStore = defineStore({
       this.averageProdsChars()
     },
     removeProductFromChoosen(payload: string) {
-      const newArr: Product[] = this.choosenProducts.filter(
+      const newArr: TProduct[] = this.choosenProducts.filter(
         (el) => el.id !== payload
       )
       this.choosenProducts = [...newArr]
@@ -261,8 +329,7 @@ export const useMainStore = defineStore({
       const userId = this.user?.id
       const link = '/profile/' + userId
 
-      const res = patch(link, data)
-      res
+      put(link, data)
         .then((status) => {
           // trigger success modal
 

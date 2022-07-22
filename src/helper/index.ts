@@ -1,5 +1,5 @@
 import { characteristics, values } from '../constants/chars'
-import { Characteristics, Element } from '../types'
+import { TCharacteristics, TElement } from '../types'
 
 export const dateObj = (timestamp: number | undefined) => {
   const thisTimestamp = timestamp ? new Date(timestamp) : new Date()
@@ -38,7 +38,7 @@ export const summOfValueOfArray = (arr: any[], value: string) => {
   return summ
 }
 
-export const maxAmountVersions = (chars: Characteristics) => {
+export const maxAmountVersions = (chars: TCharacteristics) => {
   let maxVersionsNumber = 0
 
   for (const [key] of Object.entries(values)) {
@@ -53,15 +53,15 @@ export const maxAmountVersions = (chars: Characteristics) => {
   return maxVersionsNumber
 }
 
-export const fullFilledChars = (userChars: Characteristics | null = null) => {
+export const fullFilledChars = (userChars: TCharacteristics | null = null) => {
   const exportChars = JSON.parse(JSON.stringify(characteristics))
 
   for (const [key] of Object.entries(values)) {
-    exportChars[key] = exportChars[key].map((item: Element) => {
+    exportChars[key] = exportChars[key].map((item: TElement) => {
       if (userChars) {
         // @ts-ignore
         const found = userChars[key].find(
-          (fItem: Element) => fItem.title === item.title
+          (fItem: TElement) => fItem.title === item.title
         )
 
         if (found) {

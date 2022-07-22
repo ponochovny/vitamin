@@ -7,8 +7,8 @@ import Auth from '../pages/Auth.vue'
 // Temporary
 import Main from '../pages/Main.vue'
 
-// import AddProduct from '../pages/AddProduct.vue'
-// import EditProduct from '../pages/EditProduct.vue'
+import AddProduct from '../pages/AddProduct.vue'
+import EditProduct from '../pages/EditProduct.vue'
 import Profile from '../pages/Profile.vue'
 // import PageNotFound from '../pages/PageNotFound.vue'
 
@@ -21,16 +21,16 @@ const routes: Array<RouteRecordRaw> = [
     path: '/auth',
     component: Auth,
   },
-  // {
-  // 	path: '/new-product',
-  // 	component: AddProduct,
-  // 	beforeEnter: AuthGuard,
-  // },
-  // {
-  // 	path: '/edit-product/:id',
-  // 	component: EditProduct,
-  // 	beforeEnter: AuthGuard,
-  // },
+  {
+    path: '/new-product',
+    component: AddProduct,
+    beforeEnter: AuthGuard,
+  },
+  {
+    path: '/edit-product/:id',
+    component: EditProduct,
+    beforeEnter: AuthGuard,
+  },
   {
     path: '/profile',
     component: Profile,
