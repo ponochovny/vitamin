@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Preloader />
     <Menu />
     <router-view></router-view>
   </div>
@@ -9,11 +10,13 @@
 import Menu from './components/Menu/Menu.vue'
 // import Toast from 'vue-toastification'
 import { useToast } from 'vue-toastification'
+import Preloader from './components/Preloader/Preloader.vue'
 
 export default {
   name: 'app',
   components: {
     Menu: Menu,
+    Preloader,
   },
   data() {
     return {

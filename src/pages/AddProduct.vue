@@ -70,6 +70,7 @@
 
 <script lang="ts">
 import { storeToRefs } from 'pinia'
+import { useToast } from 'vue-toastification'
 import router from '../router'
 import { useMainStore } from '../stores'
 import {
@@ -95,7 +96,9 @@ export default {
   setup() {
     const mainStore = useMainStore()
     const { userChars: userCharsStore } = storeToRefs(mainStore)
-    return { userCharsStore }
+    const toast = useToast()
+
+    return { userCharsStore, toast }
   },
   methods: {
     saveData() {
@@ -108,6 +111,11 @@ export default {
         })
         .then(() => {
           router.push('/')
+          // @ts-ignore
+          this.toast.success(
+            // @ts-ignore
+            `Product ${this.productData.title} has been added!}`
+          )
         })
         .catch((error) => {
           console.log('[createProduct] ERROR:', error)

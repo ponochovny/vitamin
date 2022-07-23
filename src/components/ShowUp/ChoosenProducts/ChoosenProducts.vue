@@ -15,6 +15,7 @@
 import Product from './Product/Product.vue'
 import { useToast } from 'vue-toastification'
 import { useMainStore } from '../../../stores'
+import { toHandlers } from 'vue'
 
 export default {
   name: 'app',
@@ -42,35 +43,34 @@ export default {
 
       // fix
       if (!!this.alreadyRegisteredForCurrentDate) {
+        console.log('!!this.alreadyRegisteredForCurrentDate')
+        // return
         const foundElement = { ...this.alreadyRegisteredForCurrentDate }
+        console.log('foundElement', foundElement)
 
         // ...
-
-        this.$store
-          .dispatch('updateRegisteredMeal')
-          .then(() => {
-            this.toast.success('Data had been updated!')
-            this.$store.dispatch('clearChoosenProducts')
-          })
-          .catch((error) => {
-            this.toast.error(error)
-          })
+        useMainStore().updateRegisteredMeal()
+        // this.$store
+        //   .dispatch('updateRegisteredMeal')
+        //   .then(() => {
+        //     this.toast.success('Data had been updated!')
+        //     this.$store.dispatch('clearChoosenProducts')
+        //   })
+        //   .catch((error) => {
+        //     this.toast.error(error)
+        //   })
       } else {
-        this.$store
-          .dispatch('registerMeal')
+        useMainStore()
+          .registerMeal()
           .then(() => {
             this.toast.success('Data had been registered!')
-            this.$store.dispatch('clearChoosenProducts')
           })
-          .catch((error) => {
-            this.toast.error(error)
-          })
+          .catch((error) => this.toast.error(error.message))
       }
     },
   },
-  mounted() {},
   beforeDestroy() {
-    this.$store.dispatch('clearChoosenProducts')
+    useMainStore().clearChoosenProducts()
   },
 }
 </script>
@@ -96,8 +96,8 @@ export default {
       font-family: Roboto;
       font-style: normal;
       font-weight: normal;
-      font-size: 36px;
-      line-height: 42px;
+      font-size: 24px;
+      line-height: 28px;
 
       color: #696969;
 
@@ -143,7 +143,7 @@ export default {
     button {
       width: auto;
       padding-left: 30px;
-      padding-right: 30%;
+      padding-right: 30px;
     }
   }
 }

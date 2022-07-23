@@ -28,10 +28,10 @@ export type TProduct = {
   id: string
   title: string
   characteristics: TCharacteristics
-  amount?: number
+  amount: number
 }
 
-export type RegisteredMeal = {
+export type TRegisteredMeal = {
   id: string
   date: number
   percentage: number
@@ -39,7 +39,6 @@ export type RegisteredMeal = {
     amount: number
     id: string
     title: string
-    uid: string
     characteristics: TCharacteristics
   }[]
 }

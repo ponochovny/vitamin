@@ -1,5 +1,5 @@
 import { getDatabase, ref, child, get, update, push } from 'firebase/database'
-import { TProduct, RegisteredMeal } from '../types'
+import { TProduct, TRegisteredMeal } from '../types'
 
 export const fetch = async (folderName: string) => {
   try {
@@ -7,9 +7,10 @@ export const fetch = async (folderName: string) => {
     const data = await get(child(dbRef, folderName))
       .then((snapshot) => {
         if (snapshot.exists()) {
+          console.log('data received!', folderName)
           return snapshot.val()
         } else {
-          console.log('No data available')
+          console.log('No data available', folderName)
           throw 'error: No data available'
         }
       })
@@ -32,6 +33,7 @@ export const getProducts = async () => {
     result.push({
       title: data[key].title,
       characteristics: { ...data[key].characteristics },
+      amount: data[key].amount,
       id: key,
     })
   })
@@ -39,9 +41,9 @@ export const getProducts = async () => {
   return result
 }
 
-export const getRegisteredMeals = async () => {
-  const data: RegisteredMeal[] = await fetch('registeredMeals')
-  const result: RegisteredMeal[] = []
+export const getRegisteredMeals = async (userId: string) => {
+  const data: TRegisteredMeal[] = await fetch('registeredMeals/' + userId)
+  const result: TRegisteredMeal[] = []
 
   Object.keys(data).forEach((key: any) => {
     result.push({

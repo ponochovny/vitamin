@@ -9,7 +9,7 @@ import {
 import {
   TCharacteristics,
   TProduct,
-  RegisteredMeal,
+  TRegisteredMeal,
   TDataForNewProduct,
 } from '../types'
 import { areTwoDatesEquels, summOfValueOfArray } from '../helper'
@@ -21,7 +21,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from 'firebase/auth'
-import { CProduct } from '../classes'
+import { CProduct, CRegisteredMeal } from '../classes'
 
 class User {
   id: string
@@ -38,9 +38,14 @@ export type RootState = {
   isLoading: boolean
   error: string | null
   productsList: TProduct[]
-  registeredMeals: RegisteredMeal[]
+  registeredMeals: TRegisteredMeal[]
   choosenProducts: TProduct[]
-  averChProdChars: {}
+  averChProdChars:
+    | {
+        charachteristics: TCharacteristics
+        percentage: number
+      }
+    | {}
 }
 
 export const useMainStore = defineStore({
@@ -71,10 +76,12 @@ export const useMainStore = defineStore({
         try {
           const newProductKey = await post(newProduct, 'products')
           if (typeof newProductKey === 'string') {
-            this.productsList.push({ ...newProduct, id: newProductKey })
+            this.productsList.push({
+              ...newProduct,
+              amount: 100,
+              id: newProductKey,
+            })
           }
-          // TODO: toggle success toaster
-
           resolve(newProductKey)
         } catch (error: any) {
           this.error = error.message
@@ -123,7 +130,7 @@ export const useMainStore = defineStore({
     async fetchRegisteredMeals() {
       this.isLoading = true
 
-      const data: RegisteredMeal[] = await getRegisteredMeals()
+      const data: TRegisteredMeal[] = await getRegisteredMeals(this.user?.id!)
       this.registeredMeals = [...data]
 
       this.isLoading = false
@@ -131,7 +138,6 @@ export const useMainStore = defineStore({
     autoLoginUser(user: { uid: string }) {
       this.user = new User(user.uid)
       if (user) {
-        this.fetchProducts()
         this.fetchRegisteredMeals()
         this.fetchChars()
       }
@@ -143,8 +149,12 @@ export const useMainStore = defineStore({
       })
       this.averageProdsChars()
     },
-    allTotalPercentage(payload: object) {
-      this.averChProdChars = { ...this.averChProdChars, percentage: payload }
+    allTotalPercentage(payload: number) {
+      // @ts-ignore
+      this.averChProdChars = {
+        ...this.averChProdChars,
+        percentage: payload,
+      }
     },
     updateChoosenProduct(payload: TProduct) {
       const choosenProducts: TProduct[] = [...this.choosenProducts]
@@ -236,6 +246,7 @@ export const useMainStore = defineStore({
         }
       }
 
+      // @ts-ignore
       this.averChProdChars = { ...chars }
     },
     clearChoosenProducts() {
@@ -341,6 +352,108 @@ export const useMainStore = defineStore({
       const auth = getAuth()
       signOut(auth)
       this.user = null
+    },
+
+    async registerMeal() {
+      const date = new Date()
+      // const db = getDatabase()
+
+      this.error = null
+      this.isLoading = true
+
+      const newProduct = new CRegisteredMeal(
+        date.valueOf(),
+        // @ts-ignore
+        this.averChProdChars.percentage,
+        this.choosenProducts
+      )
+
+      try {
+        const newRegisteredMealKey = await post(
+          newProduct,
+          `registeredMeals/${this.user?.id}`
+        )
+
+        this.registeredMeals.push({
+          date: newProduct.date,
+          productsList: newProduct.productsList,
+          percentage: newProduct.percentage,
+          id:
+            typeof newRegisteredMealKey === 'string'
+              ? newRegisteredMealKey
+              : 'undefined',
+        })
+
+        this.clearChoosenProducts()
+
+        this.error = null
+        this.isLoading = false
+      } catch (error: any) {
+        this.error = error.message
+        this.isLoading = false
+        throw error
+      }
+    },
+    async updateRegisteredMeal() {
+      // this.error = null
+      // this.isLoading = true
+
+      console.log('[store] updateRegisteredMeal')
+
+      return
+
+      const curDateItem = {
+        ...JSON.parse(JSON.stringify(this.alreadyRegisteredForCurrentDate)),
+      }
+      const choosenProducts = this.choosenProducts
+
+      // request >>
+      // const dbRef = ref(getDatabase())
+
+      try {
+        // ... calculate summ
+        // @ts-ignore
+        let newProductsList = curDateItem.productsList.map((el) => {
+          const found = choosenProducts.find((innerEl) => innerEl.id === el.id)
+
+          if (found) {
+            // remove this element from origin array
+            const index = choosenProducts.indexOf(found)
+            choosenProducts.splice(index, 1)
+            // ...
+
+            return {
+              ...el,
+              amount: +el.amount + +found.amount!,
+            }
+          }
+
+          return el
+        })
+        newProductsList = [...newProductsList, ...choosenProducts]
+        console.log('... newProductsList', newProductsList)
+        // ...
+
+        // const updates = {}
+        // updates['/registeredMeals/' + curDateItem.id] = {
+        // 	...curDateItem,
+        // 	productsList: newProductsList,
+        // }
+        // update(dbRef, updates)
+
+        // // UPDATE LOCALLY
+        // commit('updateRegisteredMeal', {
+        // 	id: curDateItem.id,
+        // 	productsList: newProductsList,
+        // })
+
+        this.isLoading = false
+      } catch (error: any) {
+        this.error = error.message
+        this.isLoading = false
+
+        throw error
+      }
     },
   },
   getters: {

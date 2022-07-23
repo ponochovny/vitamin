@@ -41,7 +41,6 @@ createApp({
     })
 
     useMainStore().fetchProducts()
-    useMainStore().fetchRegisteredMeals()
   },
   render: () => h(App),
 })
