@@ -90,6 +90,20 @@ body {
     }
 }
 
+a {
+    color: #4e8479;
+    text-decoration: none;
+
+    &:hover {
+        color: #72ada1;
+        text-decoration: underline;
+    }
+}
+
+#app {
+
+}
+
 .fieldset {
     display: flex;
     width: 100%;
