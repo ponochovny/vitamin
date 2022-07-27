@@ -14,7 +14,6 @@ import { useMainStore } from '../../../../stores'
 export default {
   props: ['item'],
   name: 'app',
-  components: {},
   data() {
     return {
       amount: 100,
@@ -37,7 +36,7 @@ export default {
       })
     },
     removeItem() {
-      this.$store.dispatch('removeProductFromChoosen', this.item.id)
+      useMainStore().removeProductFromChoosen(this.item.id)
     },
   },
 }

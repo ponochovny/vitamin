@@ -1,4 +1,5 @@
 import { getDatabase, ref, child, get, update, push } from 'firebase/database'
+import { deepClone } from '.'
 import { TProduct, TRegisteredMeal } from '../types'
 
 export const fetch = async (folderName: string) => {
@@ -61,7 +62,7 @@ export const put = async (link: string, data: any) => {
   const db = getDatabase()
   const updates: { [key: string]: any } = {}
 
-  updates[link] = JSON.parse(JSON.stringify(data))
+  updates[link] = deepClone(data)
   try {
     update(ref(db), updates)
     return 202

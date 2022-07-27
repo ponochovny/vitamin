@@ -1,6 +1,9 @@
 import { characteristics, values } from '../constants/chars'
 import { TCharacteristics, TElement } from '../types'
 
+export const deepClone = (arr: any[] | object) =>
+  JSON.parse(JSON.stringify(arr))
+
 export const dateObj = (timestamp: number | undefined) => {
   const thisTimestamp = timestamp ? new Date(timestamp) : new Date()
 
@@ -54,7 +57,7 @@ export const maxAmountVersions = (chars: TCharacteristics) => {
 }
 
 export const fullFilledChars = (userChars: TCharacteristics | null = null) => {
-  const exportChars = JSON.parse(JSON.stringify(characteristics))
+  const exportChars = deepClone(characteristics)
 
   for (const [key] of Object.entries(values)) {
     exportChars[key] = exportChars[key].map((item: TElement) => {

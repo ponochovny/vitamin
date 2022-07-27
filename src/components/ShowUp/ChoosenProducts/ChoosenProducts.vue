@@ -41,24 +41,13 @@ export default {
     registerMeal() {
       if (this.choosenProducts.length == 0) return
 
-      // fix
       if (!!this.alreadyRegisteredForCurrentDate) {
-        console.log('!!this.alreadyRegisteredForCurrentDate')
-        // return
-        const foundElement = { ...this.alreadyRegisteredForCurrentDate }
-        console.log('foundElement', foundElement)
-
-        // ...
-        useMainStore().updateRegisteredMeal()
-        // this.$store
-        //   .dispatch('updateRegisteredMeal')
-        //   .then(() => {
-        //     this.toast.success('Data had been updated!')
-        //     this.$store.dispatch('clearChoosenProducts')
-        //   })
-        //   .catch((error) => {
-        //     this.toast.error(error)
-        //   })
+        useMainStore()
+          .updateRegisteredMeal()
+          .then(() => {
+            this.toast.success('Data had been updated!')
+          })
+          .catch((error) => this.toast.error(error.message))
       } else {
         useMainStore()
           .registerMeal()

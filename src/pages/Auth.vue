@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { useToast } from 'vue-toastification'
 import router from '../router'
 import { useMainStore } from '../stores'
 
@@ -27,6 +28,7 @@ export default {
       password: '',
       loginAction: true,
       isLoading: false,
+      toast: useToast(),
     }
   },
   methods: {
@@ -38,10 +40,11 @@ export default {
           .loginUser({ email: this.email, password: this.password })
           .then(() => {
             router.push('/')
+            this.toast.success('Log in success!')
           })
           .catch((err) => {
             this.isLoading = false
-            console.log('loginUser error:', err)
+            this.toast.error(`Log in error: ${err}`)
           })
       } else {
         useMainStore()
@@ -51,10 +54,11 @@ export default {
           })
           .then(() => {
             router.push('/')
+            this.toast.success('Registration success!')
           })
           .catch((err) => {
             this.isLoading = false
-            console.log('registerUser error:', err)
+            this.toast.error(`Registeration error: ${err}`)
           })
       }
     },
@@ -62,9 +66,7 @@ export default {
   created() {
     // window.location.hash
     if (this.$route.query['loginError']) {
-      alert('Please log in to access this page')
-      // this.$store.dispatch('setError', 'Please log in to access this page')
-      // this.$toasted.error('Please log in to access this page')
+      this.toast.error('Please log in to access this page')
     }
   },
 }

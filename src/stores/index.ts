@@ -12,7 +12,7 @@ import {
   TRegisteredMeal,
   TDataForNewProduct,
 } from '../types'
-import { areTwoDatesEquels, summOfValueOfArray } from '../helper'
+import { areTwoDatesEquels, deepClone, summOfValueOfArray } from '../helper'
 import { characteristics } from '../constants/chars'
 import { average } from '../helper/calculatePercentage'
 import {
@@ -168,14 +168,15 @@ export const useMainStore = defineStore({
       this.averageProdsChars()
     },
     removeProductFromChoosen(payload: string) {
-      const newArr: TProduct[] = this.choosenProducts.filter(
+      this.choosenProducts = this.choosenProducts.filter(
         (el) => el.id !== payload
       )
-      this.choosenProducts = [...newArr]
 
       this.averageProdsChars()
 
-      if (newArr.length === 0) this.clearChoosenProducts()
+      if (this.choosenProducts.length === 0) {
+        this.clearChoosenProducts()
+      }
     },
     averageProdsChars() {
       if (this.choosenProducts.length === 0) return {}
@@ -314,7 +315,7 @@ export const useMainStore = defineStore({
 
           resolve(userCredential)
         } catch (error: any) {
-          console.log('[createUserWithEmailAndPassword] ERROR:', error)
+          console.log('[createUserWithEmailAndPassword] ERROR:', error.message)
 
           this.error = error.message
           this.isLoading = false
@@ -395,25 +396,19 @@ export const useMainStore = defineStore({
       }
     },
     async updateRegisteredMeal() {
-      // this.error = null
-      // this.isLoading = true
+      if (!this.alreadyRegisteredForCurrentDate) return
+      this.error = null
+      this.isLoading = true
 
-      console.log('[store] updateRegisteredMeal')
+      const curDateItem: TRegisteredMeal = deepClone(
+        this.alreadyRegisteredForCurrentDate
+      )
+      const choosenProducts: TProduct[] = deepClone(this.choosenProducts)
 
-      return
-
-      const curDateItem = {
-        ...JSON.parse(JSON.stringify(this.alreadyRegisteredForCurrentDate)),
-      }
-      const choosenProducts = this.choosenProducts
-
-      // request >>
-      // const dbRef = ref(getDatabase())
-
-      try {
-        // ... calculate summ
-        // @ts-ignore
-        let newProductsList = curDateItem.productsList.map((el) => {
+      // ... calculate summ
+      // @ts-ignore
+      let newProductsList = [
+        ...curDateItem.productsList.map((el) => {
           const found = choosenProducts.find((innerEl) => innerEl.id === el.id)
 
           if (found) {
@@ -429,23 +424,26 @@ export const useMainStore = defineStore({
           }
 
           return el
+        }),
+        ...deepClone(choosenProducts),
+      ]
+
+      try {
+        put(
+          `registeredMeals/${this.user?.id}/${this.alreadyRegisteredForCurrentDate.id}`,
+          {
+            ...deepClone(this.alreadyRegisteredForCurrentDate),
+            productsList: newProductsList,
+          }
+        )
+
+        // UPDATE LOCALLY
+        const index = this.registeredMeals.findIndex((el) => {
+          return el.id === this.alreadyRegisteredForCurrentDate!.id
         })
-        newProductsList = [...newProductsList, ...choosenProducts]
-        console.log('... newProductsList', newProductsList)
-        // ...
+        this.registeredMeals[index].productsList = newProductsList
 
-        // const updates = {}
-        // updates['/registeredMeals/' + curDateItem.id] = {
-        // 	...curDateItem,
-        // 	productsList: newProductsList,
-        // }
-        // update(dbRef, updates)
-
-        // // UPDATE LOCALLY
-        // commit('updateRegisteredMeal', {
-        // 	id: curDateItem.id,
-        // 	productsList: newProductsList,
-        // })
+        this.clearChoosenProducts()
 
         this.isLoading = false
       } catch (error: any) {
