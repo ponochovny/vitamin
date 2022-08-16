@@ -24,9 +24,10 @@
   </ul>
 </template>
 
-<script>
+<script lang="ts">
+import { ref, onMounted, computed } from 'vue'
 import { calculatedPercent } from '../../../helper/calculatePercentage'
-import { colors } from '../../../constants/colors'
+import { colors as importedColors } from '../../../constants/colors'
 
 export default {
   props: {
@@ -46,41 +47,53 @@ export default {
     },
   },
   name: 'app',
-  data() {
-    return {
-      colors: [],
-    }
-  },
-  methods: {
-    bgColors: function () {
-      let max = this.colors.length > 0 ? this.colors.length - 1 : 0
-      let randomNumber = Math.floor(Math.random() * max)
-      let result =
-        this.colors.length > 0 ? this.colors[randomNumber].value : '#fff'
+  setup(props) {
+    const { characteristics } = props
+    const colors = ref<any[]>([])
+
+    const bgColors = () => {
+      const max = colors.value.length > 0 ? colors.value.length - 1 : 0
+      const randomNumber = Math.floor(Math.random() * max)
+      const result =
+        colors.value.length > 0 ? colors.value[randomNumber].value : '#fff'
       return result
-    },
-    calculatedPercentComputed(item, averageProductsCharacteristics) {
+    }
+    const calculatedPercentComputed = (
+      // @ts-ignore
+      item,
+      // @ts-ignore
+      averageProductsCharacteristics
+    ) => {
       return calculatedPercent(item, averageProductsCharacteristics)
-    },
-  },
-  mounted() {
-    this.colors = [...colors]
-  },
-  computed: {
-    totalPrecent() {
+    }
+
+    // TEST. calculates total or selected charlist
+    const totalPrecent = computed(() => {
       let times = 0
       let summ = 0
 
-      for (let item of this.characteristics) {
+      for (let item of characteristics!) {
         times++
-        summ += +this.calculatedPercentComputed(
+        summ += +calculatedPercentComputed(
           item,
-          this.averageProductsCharacteristics
+          props.averageProductsCharacteristics
         )
       }
 
       return summ / times
-    },
+    })
+
+    onMounted(() => {
+      colors.value = [...importedColors]
+    })
+
+    return {
+      colors,
+
+      totalPrecent,
+      bgColors,
+      calculatedPercentComputed,
+    }
   },
 }
 </script>

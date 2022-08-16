@@ -21,6 +21,7 @@
 </template>
 
 <script lang="ts">
+import { computed } from 'vue'
 import { useMainStore } from '../stores'
 import FilledChars from '../components/ShowUp/FilledChars.vue'
 import ProductsSearch from '../components/ProductsSearch/ProductsSearch.vue'
@@ -35,18 +36,14 @@ export default {
     ChoosenProducts,
     History,
   },
-  data() {
+  setup() {
+    const isUserLoggedIn = computed(() => useMainStore().isUserLoggedIn)
+    const registeredMeals = computed(() => useMainStore().registeredMeals)
+
     return {
-      isLoggedIn: true,
+      isUserLoggedIn,
+      registeredMeals,
     }
-  },
-  computed: {
-    isUserLoggedIn() {
-      return useMainStore().isUserLoggedIn
-    },
-    registeredMeals() {
-      return useMainStore().registeredMeals
-    },
   },
 }
 </script>

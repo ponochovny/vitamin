@@ -23,21 +23,24 @@
 </template>
 
 <script lang="ts">
+import { computed } from 'vue'
 import router from '../../router'
 import { useMainStore } from '../../stores'
 
 export default {
   name: 'component-menu',
-  computed: {
-    isUserLoggedIn() {
-      return useMainStore().isUserLoggedIn
-    },
-  },
-  methods: {
-    logOut() {
+  setup() {
+    const isUserLoggedIn = computed(() => useMainStore().isUserLoggedIn)
+
+    const logOut = () => {
       useMainStore().logoutUser()
       router.push('/')
-    },
+    }
+
+    return {
+      isUserLoggedIn,
+      logOut,
+    }
   },
 }
 </script>

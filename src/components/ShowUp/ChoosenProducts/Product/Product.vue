@@ -9,35 +9,39 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { ref, computed } from 'vue'
 import { useMainStore } from '../../../../stores'
 export default {
   props: ['item'],
   name: 'app',
-  data() {
-    return {
-      amount: 100,
-    }
-  },
-  computed: {
-    value() {
+  setup(props) {
+    const amount = ref(100)
+    const value = computed(() => {
       let item = useMainStore().choosenProducts.find(
-        (el) => el.id === this.item.id
+        (el) => el.id === props.item.id
       )
       return item ? item : '0'
-    },
-  },
-  methods: {
-    updateChoosenProduct(event) {
-      let value = event.target.value
+    })
+
+    const updateChoosenProduct = (event: any) => {
+      const value = event.target.value
       useMainStore().updateChoosenProduct({
-        ...this.item,
+        ...props.item,
         amount: value,
       })
-    },
-    removeItem() {
-      useMainStore().removeProductFromChoosen(this.item.id)
-    },
+    }
+    const removeItem = () => {
+      useMainStore().removeProductFromChoosen(props.item.id)
+    }
+
+    return {
+      amount,
+      value,
+
+      updateChoosenProduct,
+      removeItem,
+    }
   },
 }
 </script>

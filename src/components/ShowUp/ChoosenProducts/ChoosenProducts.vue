@@ -11,52 +11,53 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { ref, computed } from 'vue'
 import Product from './Product/Product.vue'
 import { useToast } from 'vue-toastification'
 import { useMainStore } from '../../../stores'
-import { toHandlers } from 'vue'
 
 export default {
   name: 'app',
   components: {
     Product,
   },
-  data() {
-    return {
-      amount: 0,
-      toast: useToast(),
-    }
-  },
-  computed: {
-    choosenProducts() {
-      return useMainStore().choosenProducts
-    },
+  setup() {
+    const amount = ref(0)
+    const toast = useToast()
 
-    alreadyRegisteredForCurrentDate() {
-      return !!useMainStore().alreadyRegisteredForCurrentDate
-    },
-  },
-  methods: {
-    registerMeal() {
-      if (this.choosenProducts.length == 0) return
+    const choosenProducts = computed(() => useMainStore().choosenProducts)
+    const alreadyRegisteredForCurrentDate = computed(
+      () => !!useMainStore().alreadyRegisteredForCurrentDate
+    )
 
-      if (!!this.alreadyRegisteredForCurrentDate) {
+    const registerMeal = () => {
+      if (choosenProducts.value.length == 0) return
+
+      if (!!alreadyRegisteredForCurrentDate.value) {
         useMainStore()
           .updateRegisteredMeal()
           .then(() => {
-            this.toast.success('Data had been updated!')
+            toast.success('Data had been updated!')
           })
-          .catch((error) => this.toast.error(error.message))
+          .catch((error) => toast.error(error.message))
       } else {
         useMainStore()
           .registerMeal()
           .then(() => {
-            this.toast.success('Data had been registered!')
+            toast.success('Data had been registered!')
           })
-          .catch((error) => this.toast.error(error.message))
+          .catch((error) => toast.error(error.message))
       }
-    },
+    }
+
+    return {
+      amount,
+      toast,
+      choosenProducts,
+      alreadyRegisteredForCurrentDate,
+      registerMeal,
+    }
   },
   beforeDestroy() {
     useMainStore().clearChoosenProducts()

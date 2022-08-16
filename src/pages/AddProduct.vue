@@ -69,6 +69,7 @@
 </template>
 
 <script lang="ts">
+import { ref, watch, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useToast } from 'vue-toastification'
 import router from '../router'
@@ -82,46 +83,40 @@ import {
 
 export default {
   name: 'add-product',
-  data() {
-    return {
-      isLoading: false,
-      productData: {
-        title: '',
-        characteristics: {},
-        source: [{ origin: '' }],
-      } as TDataForNewProduct,
-      columns: 1,
-    }
-  },
   setup() {
     const mainStore = useMainStore()
     const { userChars: userCharsStore } = storeToRefs(mainStore)
     const toast = useToast()
+    const isLoading = ref(false)
+    const productData = ref({
+      title: '',
+      characteristics: {},
+      source: [{ origin: '' }],
+    } as TDataForNewProduct)
+    const columns = ref(1)
 
-    return { userCharsStore, toast }
-  },
-  methods: {
-    saveData() {
+    const saveData = () => {
       // 1. send new data to existed product to edit
       // 2. edit basic characteristics if there are new fields
       useMainStore()
         .createProduct({
           // @ts-ignore
-          ...this.productData,
+          ...productData.value,
         })
-        .then(() => {
+        .then(function () {
           router.push('/')
           // @ts-ignore
-          this.toast.success(
+          toast.success(
             // @ts-ignore
-            `Product ${this.productData.title} has been added!}`
+            `Product ${productData.value.title} has been added!}`
           )
         })
-        .catch((error) => {
+        .catch(function (error) {
           console.log('[createProduct] ERROR:', error)
         })
-    },
-    loadData() {
+    }
+
+    const loadData = () => {
       const chars: { [key in ECharacteristic]: TElement[] } = {
         foodEnergy: [],
         macroMicro: [],
@@ -141,22 +136,31 @@ export default {
       }
 
       // @ts-ignore
-      this.productData = {
+      productData.value = {
         title: '',
         characteristics: { ...chars },
         source: [{ origin: '' }],
       }
-    },
-  },
-  mounted() {
-    // @ts-ignore
-    useMainStore().isUserChecked && this.loadData()
-  },
-  watch: {
-    userCharsStore(_: any, oldValue: null | TCharacteristics) {
+    }
+
+    watch(userCharsStore, function (_: any, oldValue: null | TCharacteristics) {
       // @ts-ignore
-      if (oldValue === null) this.loadData()
-    },
+      if (oldValue === null) loadData()
+    })
+
+    // @ts-ignore
+    onMounted(() => useMainStore().isUserChecked && loadData())
+
+    return {
+      userCharsStore,
+      toast,
+      isLoading,
+      productData,
+      columns,
+
+      saveData,
+      loadData,
+    }
   },
 }
 </script>

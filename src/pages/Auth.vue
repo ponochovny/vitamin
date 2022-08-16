@@ -16,52 +16,60 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import router from '../router'
 import { useMainStore } from '../stores'
 
 export default {
   name: 'auth',
-  data() {
-    return {
-      email: '',
-      password: '',
-      loginAction: true,
-      isLoading: false,
-      toast: useToast(),
-    }
-  },
-  methods: {
-    submit() {
-      this.isLoading = true
+  setup() {
+    const email = ref('')
+    const password = ref('')
+    const loginAction = ref(true)
+    const isLoading = ref(false)
+    const toast = useToast()
 
-      if (this.loginAction) {
+    const submit = () => {
+      isLoading.value = true
+
+      if (loginAction.value) {
         useMainStore()
-          .loginUser({ email: this.email, password: this.password })
+          .loginUser({ email: email.value, password: password.value })
           .then(() => {
             router.push('/')
-            this.toast.success('Log in success!')
+            toast.success('Log in success!')
           })
           .catch((err) => {
-            this.isLoading = false
-            this.toast.error(`Log in error: ${err}`)
+            isLoading.value = false
+            toast.error(`Log in error: ${err}`)
           })
       } else {
         useMainStore()
           .registerUser({
-            email: this.email,
-            password: this.password,
+            email: email.value,
+            password: password.value,
           })
           .then(() => {
             router.push('/')
-            this.toast.success('Registration success!')
+            toast.success('Registration success!')
           })
           .catch((err) => {
-            this.isLoading = false
-            this.toast.error(`Registeration error: ${err}`)
+            isLoading.value = false
+            toast.error(`Registeration error: ${err}`)
           })
       }
-    },
+    }
+
+    return {
+      email,
+      password,
+      loginAction,
+      isLoading,
+      toast,
+
+      submit,
+    }
   },
   created() {
     // window.location.hash

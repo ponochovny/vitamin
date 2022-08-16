@@ -39,37 +39,40 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { ref, computed } from 'vue'
 import { useMainStore } from '../../stores'
+import router from '../../router'
 
 export default {
   name: 'ProductsSearch',
-  data() {
-    return {
-      search: '',
-    }
-  },
-  computed: {
-    loading() {
-      return useMainStore().isLoading
-    },
-    filteredProducts() {
-      return useMainStore().productsList.filter((el) =>
-        el.title.toLowerCase().includes(this.search.toLowerCase())
+  setup() {
+    const search = ref('')
+    const loading = computed(() => useMainStore().isLoading)
+    const filteredProducts = computed(() =>
+      useMainStore().productsList.filter((el) =>
+        el.title.toLowerCase().includes(search.value.toLowerCase())
       )
-    },
-  },
-  methods: {
-    editProduct(id) {
-      this.$router.push(`/edit-product/${id}`)
-    },
-    addProductToChoosen(item) {
+    )
+
+    const editProduct = (id: string) => router.push(`/edit-product/${id}`)
+    // @ts-ignore
+    const addProductToChoosen = (item) => {
       if (useMainStore().choosenProducts.find((el) => el.id === item.id)) return
 
       useMainStore().addProductToChoosen({
         ...item,
       })
-    },
+    }
+
+    return {
+      search,
+      loading,
+      filteredProducts,
+
+      editProduct,
+      addProductToChoosen,
+    }
   },
   mounted() {
     // const rangeStart = 0

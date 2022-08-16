@@ -55,43 +55,45 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { computed, ref, watch, onMounted } from 'vue'
 import { values } from '../constants/chars'
 import { maxAmountVersions, fullFilledChars } from '../helper'
 import Spinner from '../components/Spinner/Spinner.vue'
 import { useMainStore } from '../stores'
 
 export default {
-  data() {
-    return {
-      wait: false,
-      isLoading: false,
-
-      filledChars: null,
-
-      versionsCounter: 1,
-      charsValues: values,
-    }
-  },
   components: {
     Spinner,
   },
-  methods: {
-    dispatchUpdateData() {
-      useMainStore().updateUserChars(this.filledChars)
-    },
+  setup() {
+    const wait = ref(false)
+    const isLoading = ref(false)
 
-    fill() {
-      this.filledChars = fullFilledChars(useMainStore().userChars)
+    const filledChars = ref(null)
+
+    const versionsCounter = ref(1)
+    const charsValues = ref(values)
+
+    const dispatchUpdateData = () => {
+      if (filledChars.value === null) return alert('nonono')
+
+      useMainStore().updateUserChars(filledChars.value)
+    }
+
+    const fill = () => {
+      filledChars.value = fullFilledChars(useMainStore().userChars)
 
       if (useMainStore().userChars) {
-        this.versionsCounter = maxAmountVersions(useMainStore().userChars)
+        // @ts-ignore
+        versionsCounter.value = maxAmountVersions(useMainStore().userChars)
       }
-    },
+    }
 
-    addColumn() {
-      for (const [key, _] of Object.entries(this.charsValues)) {
-        this.filledChars[key] = this.filledChars[key].map((item) => {
+    const addColumn = () => {
+      for (const [key, _] of Object.entries(charsValues.value)) {
+        // @ts-ignore
+        filledChars.value[key] = filledChars.value[key].map((item) => {
           const newValues = [...item.values]
           newValues.push({ origin: '', value: null })
           return {
@@ -101,30 +103,39 @@ export default {
         })
       }
 
-      this.versionsCounter = this.versionsCounter + 1
-    },
-  },
-  mounted() {
-    if (useMainStore().user === null) {
-      this.wait = true // set flag for refill
-      this.isLoading = true
-    } else {
-      this.fill()
+      versionsCounter.value = versionsCounter.value + 1
     }
-  },
-  computed: {
-    userCharsVar() {
-      return useMainStore().userChars
-    },
-  },
-  watch: {
-    userCharsVar(newValue, oldValue) {
-      console.log(`Updating from ${oldValue} to ${newValue}`)
-      if (oldValue === null && this.wait) {
-        this.fill()
-        this.isLoading = false
+
+    const userCharsVar = computed(() => useMainStore().userChars)
+
+    onMounted(() => {
+      if (useMainStore().user === null) {
+        wait.value = true // set flag for refill
+        isLoading.value = true
+      } else {
+        fill()
       }
-    },
+    })
+
+    watch(userCharsVar, (newValue, oldValue) => {
+      console.log(`Updating from ${oldValue} to ${newValue}`)
+      if (oldValue === null && wait.value) {
+        fill()
+        isLoading.value = false
+      }
+    })
+
+    return {
+      wait,
+      isLoading,
+      filledChars,
+      versionsCounter,
+      charsValues,
+      userCharsVar,
+
+      dispatchUpdateData,
+      addColumn,
+    }
   },
 }
 </script>

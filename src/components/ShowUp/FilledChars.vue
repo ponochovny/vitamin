@@ -27,7 +27,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { computed, watch } from 'vue'
 import CharList from './CharList/CharList.vue'
 import { calculatedPercent } from '../../helper/calculatePercentage'
 import { useMainStore } from '../../stores'
@@ -37,43 +38,41 @@ export default {
   components: {
     CharList: CharList,
   },
-  data() {
-    return {}
-  },
-  computed: {
-    characteristics() {
-      return useMainStore().basicCharacteristics
-    },
-    averageProductsCharacteristics() {
-      return useMainStore().averChProdChars
-    },
-  },
-  methods: {
-    totalPercent(parameter) {
+  setup() {
+    const characteristics: any = computed(
+      () => useMainStore().basicCharacteristics
+    )
+    const averageProductsCharacteristics = computed(
+      () => useMainStore().averChProdChars
+    )
+
+    // @ts-ignore
+    const totalPercent = (parameter) => {
+      // TODO: use reducer
       let times = 0
       let summ = 0
       let result = 0
 
-      for (let item of this.characteristics[parameter]) {
+      for (const item of characteristics.value[parameter]) {
         times++
         summ += +calculatedPercent(
           item,
+          // @ts-ignore
           useMainStore().averChProdChars[parameter]
         )
       }
 
-      result = (summ / times).toFixed(2)
+      result = +(summ / times).toFixed(2)
 
       return result > 100 ? 100 : +result
-    },
-  },
-  watch: {
-    averageProductsCharacteristics(oldVal, newVal) {
-      let summ =
-        this.totalPercent('foodEnergy') +
-        this.totalPercent('vitamins') +
-        this.totalPercent('macroMicro')
-      let result = (summ / 3).toFixed(2)
+    }
+
+    watch(averageProductsCharacteristics, (oldVal, newVal: any) => {
+      const summ =
+        totalPercent('foodEnergy') +
+        totalPercent('vitamins') +
+        totalPercent('macroMicro')
+      const result: number = +(summ / 3).toFixed(2)
 
       if (
         newVal.percentage !== oldVal.percentage ||
@@ -81,7 +80,13 @@ export default {
       ) {
         useMainStore().allTotalPercentage(result > 100 ? 100 : +result)
       }
-    },
+    })
+
+    return {
+      characteristics,
+      averageProductsCharacteristics,
+      totalPercent,
+    }
   },
 }
 </script>
