@@ -1,16 +1,31 @@
 <template>
   <div class="Auth">
     <form @submit.prevent="submit">
-      <h1 @click="loginAction = !loginAction">
+      <div class="Auth__title">
         {{ loginAction ? 'Log in' : 'Register' }}
-      </h1>
+      </div>
       <p>Email:</p>
       <input type="text" v-model="email" />
       <p>Password:</p>
       <input type="password" v-model="password" />
-      <button type="submit">
-        {{ isLoading ? '...zZz...' : loginAction ? 'Enter' : 'Register' }}
+      <button class="btn btn_spinner" type="submit">
+        <template v-if="isLoading">
+          <div class="loader">...</div>
+        </template>
+        <template v-else>
+          {{ loginAction ? 'Log in' : 'Register' }}
+        </template>
       </button>
+      <p>
+        {{ loginAction ? 'New user?' : 'Have an account?' }}
+        <button
+          class="btn btn_link"
+          type="button"
+          @click="loginAction = !loginAction"
+        >
+          {{ loginAction ? 'Register' : 'Log in' }}
+        </button>
+      </p>
     </form>
   </div>
 </template>
@@ -92,8 +107,12 @@ export default {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    button {
+      margin-bottom: 20px;
+    }
   }
-  h1 {
+  &__title {
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
@@ -107,11 +126,6 @@ export default {
     padding: 5px 15px;
     border-radius: 5px;
     transition: background-color 0.15s ease;
-    &:hover {
-      background-color: #f2f2f2;
-      cursor: pointer;
-      transition: background-color 0.05s ease;
-    }
   }
   p {
     font-family: Roboto;
@@ -152,6 +166,49 @@ export default {
   button {
     padding-left: 30px;
     padding-right: 30px;
+  }
+}
+
+// Spinner
+.btn_spinner {
+  position: relative;
+  overflow: hidden;
+}
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+.loader {
+  font-size: 0.1188rem;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 2em solid rgba(43, 255, 0, 0.2);
+  border-right: 2em solid rgba(43, 255, 0, 0.2);
+  border-bottom: 2em solid rgba(43, 255, 0, 0.2);
+  border-left: 2em solid #2bff00;
+  transform: translateZ(0);
+  animation: load8 1.1s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 </style>

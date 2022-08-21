@@ -75,7 +75,9 @@
       </ul>
 
       <br />
-      <button @click="editData">{{ loading ? '...' : 'Save changes' }}</button>
+      <button class="btn" @click="editData">
+        {{ loading ? '...' : 'Save changes' }}
+      </button>
     </template>
 
     <Loader v-else />

@@ -35,7 +35,7 @@
         </span>
       </li>
     </ul>
-    <button @click="$router.push('/new-product')">Добавить</button>
+    <button class="btn" @click="$router.push('/new-product')">Добавить</button>
   </div>
 </template>
 

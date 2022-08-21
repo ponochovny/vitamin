@@ -14,7 +14,7 @@
     </template>
     <template v-else>
       <h2 style="width: 100%; text-align: center; margin-top: 60px">
-        You're not logged in. <router-link to="/auth">Log in</router-link>
+        Hello!<br />Please <router-link to="/auth">log in</router-link>
       </h2>
     </template>
   </div>

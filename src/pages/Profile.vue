@@ -5,6 +5,7 @@
     <div class="Profile__form" v-if="filledChars">
       <button
         type="button"
+        class="btn"
         @click="addColumn"
         :style="{ marginBottom: '20px' }"
       >
@@ -50,7 +51,9 @@
         </div>
       </div>
       <!-- SOURCE end -->
-      <button type="button" @click="dispatchUpdateData">Update</button>
+      <button class="btn" type="button" @click="dispatchUpdateData">
+        Update
+      </button>
     </div>
   </div>
 </template>

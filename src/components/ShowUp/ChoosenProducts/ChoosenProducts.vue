@@ -3,7 +3,11 @@
     <div class="ChoosenProducts__list">
       <Product v-for="item of choosenProducts" :key="item.title" :item="item" />
     </div>
-    <button :disabled="choosenProducts.length == 0" @click="registerMeal">
+    <button
+      class="btn"
+      :disabled="choosenProducts.length == 0"
+      @click="registerMeal"
+    >
       {{
         !!alreadyRegisteredForCurrentDate ? 'Добавить еще' : 'Зарегистрировать'
       }}

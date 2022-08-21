@@ -64,7 +64,9 @@
       </li>
     </ul>
     <br />
-    <button @click="saveData">{{ isLoading ? '...' : 'Save' }}</button>
+    <button class="btn" @click="saveData">
+      {{ isLoading ? '...' : 'Save' }}
+    </button>
   </div>
 </template>
 
