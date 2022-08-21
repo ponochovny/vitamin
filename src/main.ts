@@ -1,3 +1,5 @@
+// TODO: add plugin 'react-circular-progressbar'
+
 import { createPinia } from 'pinia'
 import { createApp, h } from 'vue'
 import App from './App.vue'
