@@ -15,7 +15,7 @@ import { useMainStore } from '../../../../stores'
 export default {
   props: ['item'],
   name: 'app',
-  setup(props) {
+  setup(props: any) {
     const amount = ref(100)
     const value = computed(() => {
       let item = useMainStore().choosenProducts.find(

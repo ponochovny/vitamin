@@ -47,7 +47,7 @@ export default {
     },
   },
   name: 'app',
-  setup(props) {
+  setup(props: any) {
     const { characteristics } = props
     const colors = ref<any[]>([])
 
