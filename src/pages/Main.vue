@@ -2,14 +2,8 @@
   <div class="Main">
     <template v-if="isUserLoggedIn">
       <ProductsSearch />
-      <div class="Main__choosenProducts">
-        <h2 :style="{ marginBottom: '35px' }">Выбранные продукты</h2>
-        <ChoosenProducts />
-      </div>
-      <div class="Main__filledChars">
-        <h2 :style="{ marginBottom: '35px' }">От дневной нормы</h2>
-        <FilledChars />
-      </div>
+      <ChoosenProducts :classes="'Main__choosenProducts'" />
+      <FilledChars :classes="'Main__filledChars'" />
       <History :items="registeredMeals" />
     </template>
     <template v-else>

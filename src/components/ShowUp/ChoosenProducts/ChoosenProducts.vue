@@ -1,17 +1,25 @@
 <template>
-  <div class="ChoosenProducts">
-    <div class="ChoosenProducts__list">
-      <Product v-for="item of choosenProducts" :key="item.title" :item="item" />
+  <div :class="classes">
+    <h2 :style="{ marginBottom: '35px' }">Выбранные продукты</h2>
+    <div class="ChoosenProducts">
+      <template v-if="choosenProducts.length != 0">
+        <div class="ChoosenProducts__list">
+          <Product
+            v-for="item of choosenProducts"
+            :key="item.title"
+            :item="item"
+          />
+        </div>
+        <button class="btn" @click="registerMeal">
+          {{
+            !!alreadyRegisteredForCurrentDate
+              ? 'Добавить еще'
+              : 'Зарегистрировать'
+          }}
+        </button>
+      </template>
+      <div v-else>Choose products, please</div>
     </div>
-    <button
-      class="btn"
-      :disabled="choosenProducts.length == 0"
-      @click="registerMeal"
-    >
-      {{
-        !!alreadyRegisteredForCurrentDate ? 'Добавить еще' : 'Зарегистрировать'
-      }}
-    </button>
   </div>
 </template>
 
@@ -23,6 +31,7 @@ import { useMainStore } from '../../../stores'
 
 export default {
   name: 'app',
+  props: ['classes'],
   components: {
     Product,
   },

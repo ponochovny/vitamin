@@ -1,29 +1,34 @@
 <template>
-  <div class="FilledChars">
-    <h2>Б/Ж/У [total: {{ totalPercent('foodEnergy') }}]</h2>
-    <CharList
-      :myClass="'FilledChars__list'"
-      :averageProductsCharacteristics="
-        averageProductsCharacteristics.foodEnergy
-      "
-      :characteristics="characteristics.foodEnergy"
-    />
-    <h2>Витамины [total: {{ totalPercent('vitamins') }}]</h2>
-    <CharList
-      :myClass="'FilledChars__list'"
-      :averageProductsCharacteristics="averageProductsCharacteristics.vitamins"
-      :characteristics="characteristics.vitamins"
-      :itemBefore="'Витамин '"
-      :itemAfter="', мг'"
-    />
-    <h2>Микро/Макроелементы [total: {{ totalPercent('macroMicro') }}]</h2>
-    <CharList
-      :averageProductsCharacteristics="
-        averageProductsCharacteristics.macroMicro
-      "
-      :characteristics="characteristics.macroMicro"
-      :itemAfter="', мг'"
-    />
+  <div :class="classes">
+    <h2 :style="{ marginBottom: '35px' }">От дневной нормы</h2>
+    <div class="FilledChars">
+      <h2>Б/Ж/У [total: {{ totalPercent('foodEnergy') }}]</h2>
+      <CharList
+        :myClass="'FilledChars__list'"
+        :averageProductsCharacteristics="
+          averageProductsCharacteristics.foodEnergy
+        "
+        :characteristics="characteristics.foodEnergy"
+      />
+      <h2>Витамины [total: {{ totalPercent('vitamins') }}]</h2>
+      <CharList
+        :myClass="'FilledChars__list'"
+        :averageProductsCharacteristics="
+          averageProductsCharacteristics.vitamins
+        "
+        :characteristics="characteristics.vitamins"
+        :itemBefore="'Витамин '"
+        :itemAfter="', мг'"
+      />
+      <h2>Микро/Макроелементы [total: {{ totalPercent('macroMicro') }}]</h2>
+      <CharList
+        :averageProductsCharacteristics="
+          averageProductsCharacteristics.macroMicro
+        "
+        :characteristics="characteristics.macroMicro"
+        :itemAfter="', мг'"
+      />
+    </div>
   </div>
 </template>
 
@@ -35,6 +40,7 @@ import { useMainStore } from '../../stores'
 
 export default {
   name: 'filledChars',
+  props: ['classes'],
   components: {
     CharList: CharList,
   },

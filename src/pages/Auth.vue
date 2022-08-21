@@ -131,7 +131,7 @@ export default {
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 21px;
 
     color: #000;

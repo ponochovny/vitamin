@@ -1,6 +1,8 @@
 <template>
   <div>
-    <Preloader />
+    <teleport to="body">
+      <Preloader />
+    </teleport>
     <Menu />
     <router-view></router-view>
   </div>
