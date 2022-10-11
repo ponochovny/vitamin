@@ -1,15 +1,15 @@
 <template>
-  <div class="Main">Main page</div>
+  <div class="Header">header</div>
 </template>
 
 <script lang="ts">
 export default {
-  name: 'main-page',
+  name: 'component-header',
   setup() {},
 }
 </script>
 
 <style lang="scss">
-.Main {
+.Header {
 }
 </style>

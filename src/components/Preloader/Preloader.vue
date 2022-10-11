@@ -1,11 +1,13 @@
 <template>
-  <div :class="{ Preloader: true, active: isActive }">
-    <img
-      src="../../assets/leaf.png"
-      alt=""
-      :class="{ 'zoom-in': imageAnimate }"
-    />
-  </div>
+  <teleport to="body">
+    <div :class="{ Preloader: true, active: isActive }">
+      <img
+        src="../../assets/leaf.png"
+        alt=""
+        :class="{ 'zoom-in': imageAnimate }"
+      />
+    </div>
+  </teleport>
 </template>
 
 <script lang="ts">
