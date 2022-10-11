@@ -1,34 +1,36 @@
 <template>
-  <div :class="classes">
-    <h2 :style="{ marginBottom: '35px' }">От дневной нормы</h2>
-    <div class="FilledChars">
-      <h2>Б/Ж/У [total: {{ totalPercent('foodEnergy') }}]</h2>
-      <CharList
-        :myClass="'FilledChars__list'"
-        :averageProductsCharacteristics="
-          averageProductsCharacteristics.foodEnergy
-        "
-        :characteristics="characteristics.foodEnergy"
-      />
-      <h2>Витамины [total: {{ totalPercent('vitamins') }}]</h2>
-      <CharList
-        :myClass="'FilledChars__list'"
-        :averageProductsCharacteristics="
-          averageProductsCharacteristics.vitamins
-        "
-        :characteristics="characteristics.vitamins"
-        :itemBefore="'Витамин '"
-        :itemAfter="', мг'"
-      />
-      <h2>Микро/Макроелементы [total: {{ totalPercent('macroMicro') }}]</h2>
-      <CharList
-        :averageProductsCharacteristics="
-          averageProductsCharacteristics.macroMicro
-        "
-        :characteristics="characteristics.macroMicro"
-        :itemAfter="', мг'"
-      />
-    </div>
+  <div class="FilledChars">
+    <h2 class="FilledChars__title">От дневной нормы</h2>
+    <h2 class="FilledChars__subtitle">
+      Б/Ж/У [total: {{ totalPercent('foodEnergy') }}]
+    </h2>
+    <CharList
+      :myClass="'FilledChars__list'"
+      :averageProductsCharacteristics="
+        averageProductsCharacteristics.foodEnergy
+      "
+      :characteristics="characteristics.foodEnergy"
+    />
+    <h2 class="FilledChars__subtitle">
+      Витамины [total: {{ totalPercent('vitamins') }}]
+    </h2>
+    <CharList
+      :myClass="'FilledChars__list'"
+      :averageProductsCharacteristics="averageProductsCharacteristics.vitamins"
+      :characteristics="characteristics.vitamins"
+      :itemBefore="'Витамин '"
+      :itemAfter="', мг'"
+    />
+    <h2 class="FilledChars__subtitle">
+      Микро/Макроелементы [total: {{ totalPercent('macroMicro') }}]
+    </h2>
+    <CharList
+      :averageProductsCharacteristics="
+        averageProductsCharacteristics.macroMicro
+      "
+      :characteristics="characteristics.macroMicro"
+      :itemAfter="', мг'"
+    />
   </div>
 </template>
 
@@ -40,7 +42,6 @@ import { useMainStore } from '../../stores'
 
 export default {
   name: 'filledChars',
-  props: ['classes'],
   components: {
     CharList: CharList,
   },
@@ -74,16 +75,16 @@ export default {
     }
 
     watch(averageProductsCharacteristics, (oldVal, newVal: any) => {
-      const summ =
-        totalPercent('foodEnergy') +
-        totalPercent('vitamins') +
-        totalPercent('macroMicro')
-      const result: number = +(summ / 3).toFixed(2)
-
       if (
         newVal.percentage !== oldVal.percentage ||
         newVal.percentage === undefined
       ) {
+        const summ =
+          totalPercent('foodEnergy') +
+          totalPercent('vitamins') +
+          totalPercent('macroMicro')
+        const result: number = +(summ / 3).toFixed(2)
+
         useMainStore().allTotalPercentage(result > 100 ? 100 : +result)
       }
     })
@@ -99,36 +100,43 @@ export default {
 
 <style lang="scss">
 .FilledChars {
+  width: 33%;
   .list {
     &__item {
-      margin-bottom: 33px;
+      width: 33%;
+      margin-bottom: 16px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
     }
     &__title {
       display: inline-block;
-      width: 175px;
 
       font-family: Roboto;
       font-style: normal;
       font-weight: normal;
-      font-size: 18px;
-      line-height: 21px;
+      font-size: 14px;
+      line-height: 18px;
+      margin-bottom: 4px;
 
       color: #000000;
     }
   }
   .progress {
     position: relative;
-    display: inline-block;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
     &__bar {
       position: relative;
       display: inline-block;
       vertical-align: middle;
-      width: 130px;
-      height: 20px;
+      width: 90px;
+      height: 14px;
       border-radius: 30px;
       background-color: #f2f2f2;
       border: 1px solid #c8c8c8;
-      margin-right: 12px;
       overflow: hidden;
       span {
         position: absolute;
@@ -140,28 +148,31 @@ export default {
       }
     }
     &__label {
-      display: inline-block;
-      vertical-align: middle;
+      // display: inline-block;
+      // vertical-align: middle;
 
       font-family: Roboto;
       font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
+      font-weight: 500;
+      font-size: 14px;
       line-height: 21px;
 
       color: #000000;
     }
   }
-  h2 {
+  &__subtitle {
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
-    font-size: 24px;
-    line-height: 28px;
-
+    font-size: 21px;
+    line-height: 24px;
     color: #a8a8a8;
-
-    margin-bottom: 40px;
+    margin-bottom: 21px;
   }
+  // &__title {
+  //   font-size: 32px;
+  //   line-height: 20px;
+  //   margin-bottom: 38px;
+  // }
 }
 </style>

@@ -105,7 +105,6 @@ export default {
   }
   &__title {
     display: inline-block;
-    width: 175px;
 
     font-family: Roboto;
     font-style: normal;

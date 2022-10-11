@@ -1,25 +1,23 @@
 <template>
-  <div :class="classes">
+  <div class="ChoosenProducts">
     <h2 :style="{ marginBottom: '35px' }">Выбранные продукты</h2>
-    <div class="ChoosenProducts">
-      <template v-if="choosenProducts.length != 0">
-        <div class="ChoosenProducts__list">
-          <Product
-            v-for="item of choosenProducts"
-            :key="item.title"
-            :item="item"
-          />
-        </div>
-        <button class="btn" @click="registerMeal">
-          {{
-            !!alreadyRegisteredForCurrentDate
-              ? 'Добавить еще'
-              : 'Зарегистрировать'
-          }}
-        </button>
-      </template>
-      <div v-else>Choose products, please</div>
-    </div>
+    <template v-if="choosenProducts.length != 0">
+      <div class="ChoosenProducts__list">
+        <Product
+          v-for="item of choosenProducts"
+          :key="item.title"
+          :item="item"
+        />
+      </div>
+      <button class="btn" @click="registerMeal">
+        {{
+          !!alreadyRegisteredForCurrentDate
+            ? 'Добавить еще'
+            : 'Зарегистрировать'
+        }}
+      </button>
+    </template>
+    <div v-else>Choose products, please</div>
   </div>
 </template>
 
@@ -80,18 +78,20 @@ export default {
 
 <style lang="scss">
 .ChoosenProducts {
-  width: 550px;
+  width: 33%;
   text-align: center;
   &__list {
     margin-bottom: 31px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
   }
   button {
     width: 320px;
   }
   .item {
     display: inline-block;
-    margin-right: 24px;
-    width: 263px;
+    width: calc(50% - 10px);
     &:nth-child(even) {
       margin-right: 0;
     }
@@ -99,8 +99,8 @@ export default {
       font-family: Roboto;
       font-style: normal;
       font-weight: normal;
-      font-size: 24px;
-      line-height: 28px;
+      font-size: 21px;
+      line-height: 24px;
 
       color: #696969;
 
@@ -130,8 +130,8 @@ export default {
       font-family: Roboto;
       font-style: normal;
       font-weight: normal;
-      font-size: 24px;
-      line-height: 28px;
+      font-size: 21px;
+      line-height: 24px;
 
       color: #696969;
     }

@@ -2,8 +2,8 @@
   <div class="Main">
     <template v-if="isUserLoggedIn">
       <ProductsSearch />
-      <ChoosenProducts :classes="'Main__choosenProducts'" />
-      <FilledChars :classes="'Main__filledChars'" />
+      <ChoosenProducts />
+      <FilledChars />
       <History :items="registeredMeals" />
     </template>
     <template v-else>
@@ -47,37 +47,17 @@ export default {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: flex-start;
   align-content: flex-start;
-  padding: 0 45px;
-  .ProductsSearch {
-    margin-top: 56px;
-    margin-right: 96px;
-  }
-  .ChoosenProducts {
-    margin-right: 96px;
-  }
-  &__choosenProducts,
-  &__filledChars {
-    margin-top: 56px;
-  }
+  padding: 40px 45px;
 }
 
 @media (max-width: 1440px) {
   .Main {
-    .ProductsSearch {
-      margin-top: 36px;
-      margin-right: 50px;
-    }
     .ChoosenProducts {
       max-width: 530px;
       min-width: 420px;
-      margin-right: 50px;
-    }
-    &__choosenProducts,
-    &__filledChars {
-      margin-top: 36px;
     }
   }
 }

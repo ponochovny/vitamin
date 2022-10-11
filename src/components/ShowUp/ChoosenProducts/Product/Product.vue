@@ -49,9 +49,6 @@ export default {
 <style lang="scss" scoped>
 .item {
   display: inline-block;
-  margin-right: 24px;
-  margin-bottom: 16px;
-  width: 263px;
 
   &:last-child {
     margin-right: 0;
