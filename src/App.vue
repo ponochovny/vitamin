@@ -1,21 +1,17 @@
 <template>
-  <div>
-    <teleport to="body">
-      <Preloader />
-    </teleport>
-    <Menu />
-    <router-view></router-view>
-  </div>
+  <Preloader />
+  <Header />
+  <router-view></router-view>
 </template>
 
 <script lang="ts">
-import Menu from './components/Menu/Menu.vue'
+import Header from './components/Header/Header.vue'
 import Preloader from './components/Preloader/Preloader.vue'
 
 export default {
   name: 'app',
   components: {
-    Menu,
+    Header,
     Preloader,
   },
 }

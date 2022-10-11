@@ -1,41 +1,50 @@
 <template>
   <div class="Main">
-    <template v-if="isUserLoggedIn">
-      <ProductsSearch />
-      <ChoosenProducts />
-      <FilledChars />
-      <History :items="registeredMeals" />
-    </template>
-    <template v-else>
-      <h2 style="width: 100%; text-align: center; margin-top: 60px">
-        Hello!<br />Please <router-link to="/auth">log in</router-link>
-      </h2>
-    </template>
+    <div class="FilledDays">
+      <transition mode="out-in">
+        <template v-if="!registeredMeals.length"><Spinner /></template>
+        <ul v-else>
+          <li v-for="day in filledLastDays(5, registeredMeals)" :key="day">
+            <p>
+              {{ formatedDate(day.date)[0] }},
+              <span>{{ formatedDate(day.date)[1] }}</span>
+            </p>
+            <div class="progress">
+              <div
+                class="progress__line"
+                :style="{ transform: `translateX(${day.filled - 100}%)` }"
+              ></div>
+            </div>
+          </li>
+        </ul>
+      </transition>
+    </div>
+    <button class="btn btn-accent">Fill the day</button>
   </div>
 </template>
 
 <script lang="ts">
 import { computed } from 'vue'
 import { useMainStore } from '../stores'
-import FilledChars from '../components/ShowUp/FilledChars.vue'
-import ProductsSearch from '../components/ProductsSearch/ProductsSearch.vue'
-import ChoosenProducts from '../components/ShowUp/ChoosenProducts/ChoosenProducts.vue'
-import History from '../components/ShowUp/History/History.vue'
+import dayjs from 'dayjs'
+import FilledLastDays from '../utils/FillDays'
+import Spinner from '../components/Spinner/Spinner.vue'
 
 export default {
-  name: 'app',
+  name: 'main-page',
   components: {
-    FilledChars,
-    ProductsSearch,
-    ChoosenProducts,
-    History,
+    Spinner,
   },
   setup() {
-    const isUserLoggedIn = computed(() => useMainStore().isUserLoggedIn)
     const registeredMeals = computed(() => useMainStore().registeredMeals)
-
+    function formatedDate(dateString: number) {
+      const date = dayjs(dateString)
+      const dateStr = date.format('ddd, D')
+      return dateStr.split(',')
+    }
     return {
-      isUserLoggedIn,
+      formatedDate,
+      filledLastDays: FilledLastDays,
       registeredMeals,
     }
   },
@@ -45,19 +54,76 @@ export default {
 <style lang="scss">
 .Main {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  align-content: flex-start;
-  padding: 40px 45px;
-}
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 84px;
+  flex-direction: column;
+  gap: 36px;
 
-@media (max-width: 1440px) {
-  .Main {
-    .ChoosenProducts {
-      max-width: 530px;
-      min-width: 420px;
+  .FilledDays {
+    display: inline-flex;
+    align-content: center;
+    justify-content: center;
+
+    min-width: 440px;
+    min-height: 56px;
+
+    padding: 12px 16px;
+    box-shadow: 0px 1px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 4px;
+
+    & > span {
+      justify-self: center;
+      align-self: center;
+    }
+
+    ul {
+      display: flex;
+      gap: 12px;
+      li {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-direction: column;
+        gap: 4px;
+
+        width: 72px;
+        height: 32px;
+        p {
+          font-family: 'Roboto';
+          font-style: normal;
+          font-weight: 400;
+          font-size: 12px;
+          line-height: 14px;
+
+          color: #000000;
+
+          span {
+            color: #949494;
+          }
+        }
+
+        .progress {
+          position: relative;
+          width: 72px;
+          height: 14px;
+          box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.12);
+          border-radius: 7px;
+          overflow: hidden;
+
+          &__line {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 7px;
+            background: linear-gradient(
+              270deg,
+              #70ffdd 0%,
+              rgba(63, 128, 255, 0.58) 100%
+            );
+          }
+        }
+      }
     }
   }
 }

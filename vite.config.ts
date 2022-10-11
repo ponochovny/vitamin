@@ -7,4 +7,11 @@ export default defineConfig({
   // esbuild: {
   //   drop: ['console', 'debugger'],
   // },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "./src/utils/_variables.scss";`,
+      },
+    },
+  },
 })
