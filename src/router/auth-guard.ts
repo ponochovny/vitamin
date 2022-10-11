@@ -1,9 +1,12 @@
 import { useMainStore } from '../stores'
-export default function (_: any, _2: any, next: any) {
+export default function (to: any, from: any, next: any) {
   const nextSteps = () => {
     if (useMainStore().user !== null) {
       next()
     } else {
+      if (to.path === '/' && from.path === '/') {
+        next('/auth')
+      }
       next('/auth?loginError=true')
     }
   }
