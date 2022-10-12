@@ -21,7 +21,7 @@
             </ul>
           </transition>
         </div>
-        <button class="btn btn-accent">Fill the day</button>
+        <button class="btn btn-accent btn-p2">Fill the day</button>
       </div>
       <div class="Main__login" v-else>
         You are not authorized. Log in, please
