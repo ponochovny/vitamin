@@ -1,7 +1,11 @@
 <template>
   <Preloader />
   <Header />
-  <router-view></router-view>
+  <router-view v-slot="{ Component }">
+    <transition mode="out-in">
+      <component :is="Component" />
+    </transition>
+  </router-view>
 </template>
 
 <script lang="ts">
