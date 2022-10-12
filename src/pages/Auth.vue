@@ -1,32 +1,32 @@
 <template>
   <div class="Auth">
-    <form @submit.prevent="submit">
-      <div class="Auth__title">
-        {{ loginAction ? 'Log in' : 'Register' }}
-      </div>
-      <p>Email:</p>
-      <input type="text" v-model="email" />
-      <p>Password:</p>
-      <input type="password" v-model="password" />
-      <button class="btn btn_spinner" type="submit">
-        <template v-if="isLoading">
-          <div class="loader">...</div>
-        </template>
-        <template v-else>
+    <div class="Auth__container">
+      <form @submit.prevent="submit">
+        <div class="Auth__title">
           {{ loginAction ? 'Log in' : 'Register' }}
-        </template>
-      </button>
-      <p>
-        {{ loginAction ? 'New user?' : 'Have an account?' }}
-        <button
-          class="btn btn_link"
-          type="button"
-          @click="loginAction = !loginAction"
-        >
-          {{ loginAction ? 'Register' : 'Log in' }}
+        </div>
+        <input type="text" v-model="email" />
+        <input type="password" v-model="password" />
+        <p>
+          {{ loginAction ? 'New user?' : 'Already have an account?' }}
+          <button
+            class="btn btn-link"
+            type="button"
+            @click="loginAction = !loginAction"
+          >
+            {{ loginAction ? 'Register' : 'Log in' }}
+          </button>
+        </p>
+        <button class="btn btn-secondary btn-p1" type="submit">
+          <template v-if="isLoading">
+            <div class="loader">...</div>
+          </template>
+          <template v-else>
+            {{ loginAction ? 'Log in' : 'Register' }}
+          </template>
         </button>
-      </p>
-    </form>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -86,12 +86,6 @@ export default {
       submit,
     }
   },
-  created() {
-    // window.location.hash
-    if (this.$route.query['loginError']) {
-      this.toast.error('Please log in to access this page')
-    }
-  },
 }
 </script>
 
@@ -102,113 +96,68 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  &__container {
+    padding: 32px 80px;
+    background: #ffffff;
+    box-shadow: 0px 1px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 40px;
+  }
+
   form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: stretch;
 
-    button {
-      margin-bottom: 20px;
+    p {
+      width: 100%;
+
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 16px;
+
+      color: #000000;
+
+      margin-bottom: 24px;
     }
   }
   &__title {
-    font-family: Roboto;
+    font-family: 'Roboto';
     font-style: normal;
-    font-weight: normal;
-    font-size: 48px;
-    line-height: 56px;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 42px;
 
     color: #000000;
 
-    margin-bottom: 25px;
-
-    padding: 5px 15px;
-    border-radius: 5px;
-    transition: background-color 0.15s ease;
-  }
-  p {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 21px;
-
-    color: #000;
-
-    margin-bottom: 8px;
+    margin-bottom: 32px;
   }
   input {
-    width: 263px;
-    height: 41px;
-    margin-bottom: 27px;
-    padding: 0 7px;
-    background-color: #f2f2f2;
-    border: 1px solid #b5b5b5;
-    border-radius: 5px;
+    width: 280px;
 
-    font-family: Roboto;
+    background: #f7f7f7;
+    border: 0;
+    border-radius: 12px;
+    padding: 8px 16px;
+
+    margin-bottom: 14px;
+
+    font-family: 'Roboto';
     font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 21px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
 
-    color: #606060;
-
-    text-align: center;
+    color: #b8b8b8;
 
     transition: color 0.35s ease;
 
     &:focus {
       color: #000;
     }
-  }
-  button {
-    padding-left: 30px;
-    padding-right: 30px;
-  }
-}
-
-// Spinner
-.btn_spinner {
-  position: relative;
-  overflow: hidden;
-}
-.loader,
-.loader:after {
-  border-radius: 50%;
-  width: 10em;
-  height: 10em;
-}
-.loader {
-  font-size: 0.1188rem;
-  position: relative;
-  text-indent: -9999em;
-  border-top: 2em solid rgba(43, 255, 0, 0.2);
-  border-right: 2em solid rgba(43, 255, 0, 0.2);
-  border-bottom: 2em solid rgba(43, 255, 0, 0.2);
-  border-left: 2em solid #2bff00;
-  transform: translateZ(0);
-  animation: load8 1.1s infinite linear;
-}
-@-webkit-keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
   }
 }
 </style>
