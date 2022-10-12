@@ -1,46 +1,70 @@
 <template>
   <div class="Header">
-    <div class="Header__logo">
-      <router-link to="/">
-        <img src="../../assets/leaf.png" alt="" />
-      </router-link>
-    </div>
-    <nav>
-      <ul>
-        <li>
-          <router-link class="route-link" exact to="/">Home</router-link>
-        </li>
-        <li>
-          <router-link class="route-link" exact to="/fill"
-            >Fill the day</router-link
-          >
-        </li>
-        <li>
-          <router-link class="route-link" exact to="/profile"
-            >Profile</router-link
-          >
-        </li>
-      </ul>
-    </nav>
-    <div class="Header__rightSide">
-      <button
-        :class="`btn-link route-link ${
-          $route.matched.some(({ path }) => path === '/login')
-            ? 'router-link-active'
-            : ''
-        }`"
-        @click="logOut"
-      >
-        Log In
-      </button>
+    <div class="Header__wrapper">
+      <div class="Header__logo">
+        <router-link to="/">
+          <img src="../../assets/leaf.png" alt="" />
+        </router-link>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <router-link class="route-link" exact to="/">Home</router-link>
+          </li>
+          <li>
+            <router-link class="route-link" exact to="/fill"
+              >Fill the day</router-link
+            >
+          </li>
+          <li>
+            <router-link class="route-link" exact to="/profile"
+              >Profile</router-link
+            >
+          </li>
+        </ul>
+      </nav>
+      <div class="Header__rightSide">
+        <button
+          :class="`btn-link route-link ${
+            $route.matched.some(({ path }) => path === '/auth')
+              ? 'router-link-active'
+              : ''
+          }`"
+          @click="isUserLoggedIn ? logOut() : logIn()"
+        >
+          {{ isUserLoggedIn ? 'Log out' : 'Log In' }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { useMainStore } from '../../stores'
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
   name: 'component-header',
-  setup() {},
+  setup() {
+    const router = useRouter()
+    const isUserLoggedIn = computed<boolean>(
+      () => useMainStore().isUserLoggedIn
+    )
+    function logIn() {
+      console.log('log in')
+      router.push('/auth')
+    }
+    function logOut() {
+      console.log('log out')
+      useMainStore().logoutUser()
+    }
+
+    return {
+      isUserLoggedIn,
+      logIn,
+      logOut,
+    }
+  },
 }
 </script>
 
@@ -48,17 +72,27 @@ export default {
 .Header {
   position: fixed;
   top: 16px;
-  left: $wrapper_padding_desc;
+  left: 0;
 
   height: 46px;
-  width: $wrapper_width;
-  max-width: $wrapper_maxWidth;
+  width: 100%;
 
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 
+  &__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: $wrapper_width;
+    max-width: $wrapper_maxWidth;
+  }
+
   &__logo {
+    display: flex;
+    flex-grow: 1;
+    flex-basis: 0;
     width: 42px;
     height: 46px;
     a {
@@ -107,6 +141,10 @@ export default {
   }
 
   &__rightSide {
+    display: flex;
+    justify-content: flex-end;
+    flex-grow: 1;
+    flex-basis: 0;
     button {
       padding: 8px 12px;
     }

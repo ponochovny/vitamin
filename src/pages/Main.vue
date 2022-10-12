@@ -1,25 +1,32 @@
 <template>
   <div class="Main">
-    <div class="FilledDays">
-      <transition mode="out-in">
-        <template v-if="!registeredMeals.length"><Spinner /></template>
-        <ul v-else>
-          <li v-for="day in filledLastDays(5, registeredMeals)" :key="day">
-            <p>
-              {{ formatedDate(day.date)[0] }},
-              <span>{{ formatedDate(day.date)[1] }}</span>
-            </p>
-            <div class="progress">
-              <div
-                class="progress__line"
-                :style="{ transform: `translateX(${day.filled - 100}%)` }"
-              ></div>
-            </div>
-          </li>
-        </ul>
-      </transition>
-    </div>
-    <button class="btn btn-accent">Fill the day</button>
+    <transition mode="out-in">
+      <div class="Main__content" v-if="isUserLoggedIn">
+        <div class="FilledDays">
+          <transition mode="out-in">
+            <template v-if="!registeredMeals.length"><Spinner /></template>
+            <ul v-else>
+              <li v-for="day in filledLastDays(5, registeredMeals)" :key="day">
+                <p>
+                  {{ formatedDate(day.date)[0] }},
+                  <span>{{ formatedDate(day.date)[1] }}</span>
+                </p>
+                <div class="progress">
+                  <div
+                    class="progress__line"
+                    :style="{ transform: `translateX(${day.filled - 100}%)` }"
+                  ></div>
+                </div>
+              </li>
+            </ul>
+          </transition>
+        </div>
+        <button class="btn btn-accent">Fill the day</button>
+      </div>
+      <div class="Main__login" v-else>
+        You are not authorized. Log in, please
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -36,6 +43,7 @@ export default {
     Spinner,
   },
   setup() {
+    const isUserLoggedIn = computed(() => useMainStore().isUserLoggedIn)
     const registeredMeals = computed(() => useMainStore().registeredMeals)
     function formatedDate(dateString: number) {
       const date = dayjs(dateString)
@@ -46,6 +54,7 @@ export default {
       formatedDate,
       filledLastDays: FilledLastDays,
       registeredMeals,
+      isUserLoggedIn,
     }
   },
 }
@@ -54,11 +63,22 @@ export default {
 <style lang="scss">
 .Main {
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
   padding-top: 84px;
-  flex-direction: column;
-  gap: 36px;
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 36px;
+    flex: 1;
+  }
+
+  &__login {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+  }
 
   .FilledDays {
     display: inline-flex;
