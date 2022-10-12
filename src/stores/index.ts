@@ -353,6 +353,8 @@ export const useMainStore = defineStore({
       const auth = getAuth()
       signOut(auth)
       this.user = null
+
+      this.registeredMeals = []
     },
 
     async registerMeal() {

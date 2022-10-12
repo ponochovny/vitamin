@@ -31,13 +31,6 @@ export type TProduct = {
   amount: number
 }
 
-interface Array<T> {
-  find(
-    predicate: (value: T, index: number, obj: Array<T>) => boolean,
-    thisArg?: any
-  ): T | undefined
-}
-
 export type TRegisteredMeal = {
   id: string
   date: number
@@ -48,7 +41,7 @@ export type TRegisteredMeal = {
     title: string
     characteristics: TCharacteristics
   }[]
-} & Array<TRegisteredMeal>
+}
 
 export type TFilledDaysArray = {
   date: Date
