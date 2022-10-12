@@ -5,8 +5,8 @@
         <div class="Auth__title">
           {{ loginAction ? 'Log in' : 'Register' }}
         </div>
-        <input type="text" v-model="email" />
-        <input type="password" v-model="password" />
+        <input type="text" placeholder="Your email" v-model="email" />
+        <input type="password" placeholder="Your password" v-model="password" />
         <p>
           {{ loginAction ? 'New user?' : 'Already have an account?' }}
           <button
