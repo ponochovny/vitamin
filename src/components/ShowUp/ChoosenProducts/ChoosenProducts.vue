@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeUnmount } from 'vue'
 import Product from './Product/Product.vue'
 import { useToast } from 'vue-toastification'
 import { useMainStore } from '../../../stores'
@@ -57,6 +57,10 @@ export default {
       }
     }
 
+    onBeforeUnmount(() => {
+      useMainStore().clearChoosenProducts()
+    })
+
     return {
       amount,
       toast,
@@ -64,9 +68,6 @@ export default {
       alreadyRegisteredForCurrentDate,
       registerMeal,
     }
-  },
-  beforeDestroy() {
-    useMainStore().clearChoosenProducts()
   },
 }
 </script>
