@@ -1,7 +1,9 @@
 <template>
   <div class="FillTheDay">
     <div class="FillTheDay__wrapper">
-      <div class="FillTheDay__sidebar">Sidebar</div>
+      <div class="FillTheDay__sidebar">
+        <products-search />
+      </div>
       <div class="FillTheDay__content">Fill the Day page</div>
       <div class="FillTheDay__metrics">right side</div>
     </div>
@@ -9,7 +11,10 @@
 </template>
 
 <script>
-export default {}
+import ProductsSearch from '../components/ProductsSearch/ProductsSearch.vue'
+export default {
+  components: { ProductsSearch },
+}
 </script>
 
 <style lang="scss">

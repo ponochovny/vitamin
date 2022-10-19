@@ -1,65 +1,59 @@
 <template>
   <div class="ProductsSearch">
-    <h2 class="ProductsSearch__title">Продукты</h2>
-    <div class="separator" />
-    <input type="text" v-model="search" />
-    <div class="separator" />
-    <p
-      v-if="loading"
-      style="text-align: center; font-size: 24px; margin-bottom: 15px"
-    >
-      <Loader />
-    </p>
-    <ul class="ProductsSearch__list" v-if="filteredProducts.length > 0">
-      <li
-        v-for="item of filteredProducts"
-        :key="item.title"
-        @click="addProductToChoosen(item)"
-      >
-        <span>
-          {{ item.title }}
-        </span>
-        <span class="ProductsSearch__icon" @click.stop="editProduct(item.id)">
+    <div class="ProductsSearch__input">
+      <input type="text" placeholder="Seach..." v-model="search" />
+      <div class="ProductsSearch__filter">
+        <button class="btn">
           <svg
             width="11"
-            height="11"
-            viewBox="0 0 11 11"
+            height="10"
+            viewBox="0 0 11 10"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path
-              d="M6.84007 1.85367L9.07772 4.09129L3.41361 9.7554L1.17723 7.51777L6.84007 1.85367ZM10.7757 1.314L9.77776 0.316097C9.3921 -0.0695585 8.76587 -0.0695585 8.37891 0.316097L7.42301 1.27199L9.66066 3.50964L10.7757 2.39464C11.0748 2.09551 11.0748 1.61312 10.7757 1.314ZM0.00622685 10.6629C-0.0344955 10.8462 0.130973 11.0104 0.314265 10.9659L2.80775 10.3613L0.571369 8.12366L0.00622685 10.6629Z"
-              fill="black"
-            />
+            <rect width="3" height="10" rx="1.5" fill="#D9D9D9" />
+            <rect x="4" y="4" width="3" height="6" rx="1.5" fill="#D9D9D9" />
+            <rect x="8" y="2" width="3" height="8" rx="1.5" fill="#D9D9D9" />
           </svg>
-        </span>
-      </li>
-    </ul>
-    <button class="btn" @click="$router.push('/new-product')">Добавить</button>
+        </button>
+      </div>
+    </div>
+    <div class="ProductsSearch__list">
+      <div class="centered" v-if="filteredList.length === 0">
+        <spinner />
+      </div>
+      <ul>
+        <li
+          v-for="item of filteredList"
+          :key="item.id"
+          :title="item.title"
+          @click="addProductToChoosen(item)"
+        >
+          {{ item.title }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { ref, computed } from 'vue'
 import { useMainStore } from '../../stores'
-import router from '../../router'
+import Spinner from '../Spinner/Spinner.vue'
 
 export default {
+  components: { Spinner },
   name: 'ProductsSearch',
   setup() {
     const search = ref('')
-    const loading = computed(() => useMainStore().isLoading)
-    const filteredProducts = computed(() =>
+    const filteredList = computed(() =>
       useMainStore().productsList.filter((el) =>
         el.title.toLowerCase().includes(search.value.toLowerCase())
       )
     )
-
-    const editProduct = (id: string) => router.push(`/edit-product/${id}`)
     // @ts-ignore
     const addProductToChoosen = (item) => {
       if (useMainStore().choosenProducts.find((el) => el.id === item.id)) return
-
       useMainStore().addProductToChoosen({
         ...item,
       })
@@ -67,129 +61,79 @@ export default {
 
     return {
       search,
-      loading,
-      filteredProducts,
-
-      editProduct,
+      filteredList,
       addProductToChoosen,
     }
-  },
-  mounted() {
-    // const rangeStart = 0
-    // const rangeEnd = 2
-    // var iterate = function* (start = 0, end = 5, step = 1) {
-    //     for (let i = start; i <= end; i += step) {
-    //         yield i;
-    //     }
-    // }
-    // var values =    (rangeStart, rangeEnd);
-    // var tmp = [];
-    // for (let item = 0; item < rangeEnd; item++) {
-    //     console.log('...', item)
-    //     console.log('... values.next', values.next)
-    //     if (values.next) {
-    //         console.log('...', values.next())
-    //         debugger
-    //         if (values.next().done) break
-    //         tmp.push(values.next().value)
-    //     }
-    // }
-    // console.log(tmp.join(","))
   },
 }
 </script>
 
 <style lang="scss">
 .ProductsSearch {
-  max-width: 383px;
-  min-width: 290px;
-  &__title {
-    margin-bottom: 21px;
-  }
-  button {
-    width: 100%;
-    max-width: 263px;
-  }
-  input {
-    width: 100%;
-    height: 41px;
-    margin: 24px 0;
-    padding: 0 7px;
-    background-color: #f2f2f2;
-    border: 1px solid #b5b5b5;
-    border-radius: 5px;
-
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 21px;
-
-    color: #606060;
-
-    transition: color 0.35s ease;
-
-    &:focus {
-      color: #000;
+  &__filter {
+    line-height: 0;
+    padding: 4px;
+    background-color: #fbfbfb;
+    border-radius: 4px;
+    .btn {
+      line-height: 0;
     }
   }
-  .separator {
-    width: 100%;
-    height: 1px;
-    background-color: #bcbcbc;
-  }
-  &__list {
-    margin: 16px 0;
-    li {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      font-family: Roboto;
+  &__input {
+    position: relative;
+    input {
+      font-family: 'Roboto';
       font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 21px;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 16px;
 
       color: #000000;
 
-      padding: 10px 16px;
-      margin-bottom: 7px;
-      border-radius: 5px;
-      width: 263px;
+      height: 24px;
+      padding: 4px 8px;
 
-      transition: color 35s ease, background-color 0.15s ease;
-      &:hover {
-        background-color: #f2f2f2;
-        color: #696969;
-        transition: color 35s ease, background-color 0.05s ease;
-        cursor: pointer;
-      }
+      border-bottom: 1px solid rgba(#000, 0.55);
 
-      .ProductsSearch {
-        &__icon {
-          display: inline-flex;
-          align-items: center;
-
-          padding: 5px 10px;
-          border-radius: 5px;
-          background-color: transparent;
-
-          transition: background-color 0.35s ease;
-          &:hover {
-            background-color: #dbdbdb;
-          }
-        }
+      &::placeholder {
+        color: rgba(#000, 0.4);
       }
     }
+    .ProductsSearch__filter {
+      position: absolute;
+      left: -22px;
+      top: 3px;
+    }
   }
-}
 
-@media (max-width: 1440px) {
-  .ProductsSearch {
-    &__title {
-      // font-size: 36px;
-      // line-height: 44px;
+  &__list {
+    padding: 10px 0;
+    width: 180px;
+    ul {
+      height: 154px;
+      overflow-y: scroll;
+      li {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 16px;
+
+        color: #000000;
+
+        padding: 6px 8px;
+
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        padding-right: 27px;
+
+        &.active,
+        &:hover {
+          background-color: #f0f0f0;
+          cursor: pointer;
+        }
+      }
     }
   }
 }
