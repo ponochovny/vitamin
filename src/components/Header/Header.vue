@@ -87,6 +87,8 @@ export default {
     align-items: center;
     width: $wrapper_width;
     max-width: $wrapper_maxWidth;
+    padding: 16px 0 16px 0;
+    background-color: #fff;
   }
 
   &__logo {
