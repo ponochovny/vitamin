@@ -22,6 +22,7 @@ import {
   signOut,
 } from 'firebase/auth'
 import { CProduct, CRegisteredMeal } from '../classes'
+import { searchListMock } from '../utils/mocks'
 
 class User {
   id: string
@@ -122,8 +123,14 @@ export const useMainStore = defineStore({
     async fetchProducts() {
       this.isLoading = true
 
-      const data: TProduct[] = await getProducts()
-      this.productsList = [...data]
+      if (import.meta.env.MOCKED) {
+        setTimeout(() => {
+          this.productsList = searchListMock
+        }, 1500)
+      } else {
+        const data: TProduct[] = await getProducts()
+        this.productsList = [...data]
+      }
 
       this.isLoading = false
     },
