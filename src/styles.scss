@@ -44,14 +44,13 @@ body {
   padding-top: calc(46px + 32px);
 
   * {
-    font-family: Roboto;
+    font-family: 'Roboto';
     margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
 
   h2 {
-    font-family: Roboto;
     font-style: normal;
     font-weight: normal;
 
@@ -62,7 +61,6 @@ body {
     color: #000000;
   }
   h3 {
-    font-family: Roboto;
     font-style: normal;
     font-weight: normal;
     font-size: 24px;
@@ -89,7 +87,6 @@ body {
 }
 
 button {
-  font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
