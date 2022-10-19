@@ -7,7 +7,11 @@
       <div class="FillTheDay__content">
         <choosen-products />
       </div>
-      <div class="FillTheDay__metrics">right side</div>
+      <div class="FillTheDay__metrics">
+        <transition>
+          <chars-list v-show="isAvgCharsProdCharsExists" />
+        </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -15,8 +19,19 @@
 <script>
 import ProductsSearch from '../components/ProductsSearch/ProductsSearch.vue'
 import ChoosenProducts from '../components/ShowUp/ChoosenProducts/ChoosenProducts.vue'
+import CharsList from '../components/ShowUp/CharsList/CharsList.vue'
+import { computed } from 'vue'
+import { useMainStore } from '../stores'
 export default {
-  components: { ProductsSearch, ChoosenProducts },
+  components: { ProductsSearch, ChoosenProducts, CharsList },
+  setup() {
+    const isAvgCharsProdCharsExists = computed(
+      () => Object.keys(useMainStore().averChProdChars).length
+    )
+    return {
+      isAvgCharsProdCharsExists,
+    }
+  },
 }
 </script>
 
