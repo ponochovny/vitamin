@@ -1,13 +1,14 @@
 export const values: { [key: string]: string } = {
   foodEnergy: 'Food energy',
   vitamins: 'Vitamins',
-  macroMicro: 'Macro / Micro',
+  minerals: 'Minerals',
 }
 
 export const characteristics = {
   foodEnergy: [
     {
-      title: 'Белки',
+      id: '8217fb5fca64a5230ca83050c7714ace',
+      title: 'Energy',
       description: 'Lorem ipsum',
       values: [
         { value: 200, origin: 'v1' },
@@ -15,7 +16,26 @@ export const characteristics = {
       ],
     },
     {
-      title: 'Жиры',
+      id: 'c28bf02ac6472601e0e7509515a1c932',
+      title: 'Water',
+      description: 'Lorem ipsum',
+      values: [
+        { value: 1500, origin: 'v1' },
+        { value: 2150, origin: 'v2' },
+      ],
+    },
+    {
+      id: 'b7651d9a4e47bd0ae639ccbe0e59b29a',
+      title: 'Proteins',
+      description: 'Lorem ipsum',
+      values: [
+        { value: 200, origin: 'v1' },
+        { value: 300, origin: 'v2' },
+      ],
+    },
+    {
+      id: 'cb3a8c1ef41e8185877d296bfde9f134',
+      title: 'Fat',
       description: 'Lorem ipsum',
       values: [
         { value: 100, origin: 'v1' },
@@ -23,7 +43,8 @@ export const characteristics = {
       ],
     },
     {
-      title: 'Углеводы',
+      id: '6f60fb28c7c63493c97844dce57ec0d5',
+      title: 'Carbs',
       description: 'Lorem ipsum',
       values: [
         { value: 250, origin: 'v1' },
@@ -121,7 +142,7 @@ export const characteristics = {
       ],
     },
   ],
-  macroMicro: [
+  minerals: [
     {
       title: 'Калий',
       description: 'Lorem ipsum',

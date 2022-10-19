@@ -71,15 +71,19 @@ export default {
 <style lang="scss">
 .Header {
   position: fixed;
-  top: 16px;
+  top: 0;
   left: 0;
 
-  height: 46px;
+  height: calc(46px + 32px);
   width: 100%;
 
   display: flex;
   justify-content: center;
   align-items: center;
+
+  background-color: #fff;
+
+  z-index: 1;
 
   &__wrapper {
     display: flex;
@@ -87,8 +91,6 @@ export default {
     align-items: center;
     width: $wrapper_width;
     max-width: $wrapper_maxWidth;
-    padding: 16px 0 16px 0;
-    background-color: #fff;
   }
 
   &__logo {

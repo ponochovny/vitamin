@@ -23,7 +23,7 @@ import { useToast } from 'vue-toastification'
 import { useMainStore } from '../../../stores'
 
 export default {
-  name: 'app',
+  name: 'choosen-products',
   props: ['classes'],
   components: {
     Product,
@@ -44,14 +44,14 @@ export default {
         useMainStore()
           .updateRegisteredMeal()
           .then(() => {
-            toast.success('Data had been updated!')
+            toast.success('Data have been updated!')
           })
           .catch((error) => toast.error(error.message))
       } else {
         useMainStore()
           .registerMeal()
           .then(() => {
-            toast.success('Data had been registered!')
+            toast.success('Data have been registered!')
           })
           .catch((error) => toast.error(error.message))
       }

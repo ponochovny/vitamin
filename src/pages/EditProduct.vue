@@ -49,15 +49,13 @@
       </h3>
       <ul>
         <li
-          v-for="(item, i) of productData.characteristics.macroMicro"
+          v-for="(item, i) of productData.characteristics.minerals"
           :key="item.title"
         >
           <span>{{ item.title }}</span>
           <input
             type="text"
-            v-model="
-              productData.characteristics.macroMicro[i].versions[0].value
-            "
+            v-model="productData.characteristics.minerals[i].versions[0].value"
           />
         </li>
       </ul>

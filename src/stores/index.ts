@@ -194,11 +194,11 @@ export const useMainStore = defineStore({
       for (const product of this.choosenProducts) {
         let currProductChars: {
           foodEnergy: any[]
-          macroMicro: any[]
+          minerals: any[]
           vitamins: any[]
         } = {
           foodEnergy: [],
-          macroMicro: [],
+          minerals: [],
           vitamins: [],
         }
         for (const [key, secondItem] of Object.entries(

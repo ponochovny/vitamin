@@ -16,7 +16,7 @@ export const searchListMock: TProduct[] = [
           ],
         },
       ],
-      macroMicro: [
+      minerals: [
         {
           title: 'A',
           versions: [
@@ -56,7 +56,7 @@ export const searchListMock: TProduct[] = [
           ],
         },
       ],
-      macroMicro: [
+      minerals: [
         {
           title: 'A',
           versions: [
@@ -96,7 +96,7 @@ export const searchListMock: TProduct[] = [
           ],
         },
       ],
-      macroMicro: [
+      minerals: [
         {
           title: 'A',
           versions: [
@@ -136,7 +136,7 @@ export const searchListMock: TProduct[] = [
           ],
         },
       ],
-      macroMicro: [
+      minerals: [
         {
           title: 'A',
           versions: [
@@ -176,7 +176,7 @@ export const searchListMock: TProduct[] = [
           ],
         },
       ],
-      macroMicro: [
+      minerals: [
         {
           title: 'A',
           versions: [
@@ -216,7 +216,7 @@ export const searchListMock: TProduct[] = [
           ],
         },
       ],
-      macroMicro: [
+      minerals: [
         {
           title: 'A',
           versions: [

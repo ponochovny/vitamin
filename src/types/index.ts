@@ -8,13 +8,13 @@ export type TElement = {
 
 export enum ECharacteristic {
   foodEnergy = 'foodEnergy',
-  macroMicro = 'macroMicro',
+  minerals = 'minerals',
   vitamins = 'vitamins',
 }
 
 export type TCharacteristics = {
   [ECharacteristic.foodEnergy]: TElement[]
-  [ECharacteristic.macroMicro]: TElement[]
+  [ECharacteristic.minerals]: TElement[]
   [ECharacteristic.vitamins]: TElement[]
 }
 

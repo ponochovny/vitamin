@@ -3,7 +3,7 @@
     <div class="product__title" @click.self="removeItem">
       {{ product.title }}
 
-      <div class="product__icon">
+      <div class="product__icon" title="Check description">
         <button class="btn">
           <svg
             width="11"
@@ -19,7 +19,7 @@
         </button>
       </div>
     </div>
-    <div class="product__amount" @click="inputRefFocus">
+    <div class="product__amount" @click.self="inputRefFocus">
       <input
         ref="inputRef"
         type="text"
@@ -58,8 +58,12 @@ export default {
       useMainStore().removeProductFromChoosen(props.product.id)
     }
 
-    // @ts-ignore
-    const inputRefFocus = () => inputRef.value.focus()
+    const inputRefFocus = () => {
+      // @ts-ignore
+      inputRef.value.focus()
+      // @ts-ignore
+      inputRef.value.select()
+    }
 
     return {
       amount,
