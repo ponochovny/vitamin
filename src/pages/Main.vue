@@ -21,10 +21,7 @@
             </ul>
           </transition>
         </div>
-        <button
-          class="btn btn-accent btn-p2"
-          @click="$router.push('/filltheday')"
-        >
+        <button class="btn btn-accent btn-p2" @click="$router.push('/fill')">
           Fill the day
         </button>
       </div>

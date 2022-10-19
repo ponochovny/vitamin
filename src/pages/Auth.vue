@@ -137,6 +137,7 @@ export default {
   }
   input {
     width: 280px;
+    height: 35px;
 
     background: #f7f7f7;
     border: 0;
