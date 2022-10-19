@@ -1,23 +1,18 @@
 <template>
   <div class="ChoosenProducts">
-    <h2 :style="{ marginBottom: '35px' }">Выбранные продукты</h2>
     <template v-if="choosenProducts.length != 0">
       <div class="ChoosenProducts__list">
         <Product
-          v-for="item of choosenProducts"
-          :key="item.title"
-          :item="item"
+          v-for="product of choosenProducts"
+          :key="product.title"
+          :product="product"
         />
       </div>
-      <button class="btn" @click="registerMeal">
-        {{
-          !!alreadyRegisteredForCurrentDate
-            ? 'Добавить еще'
-            : 'Зарегистрировать'
-        }}
+      <button class="btn btn-p2 btn-secondary" @click="registerMeal">
+        {{ !!alreadyRegisteredForCurrentDate ? 'Add more' : 'Register' }}
       </button>
     </template>
-    <div v-else>Choose products, please</div>
+    <div v-else>Use list on the left to add products</div>
   </div>
 </template>
 
@@ -78,76 +73,12 @@ export default {
 
 <style lang="scss">
 .ChoosenProducts {
-  width: 33%;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   &__list {
-    margin-bottom: 31px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  button {
-    width: 320px;
-  }
-  .item {
-    display: inline-block;
-    width: calc(50% - 10px);
-    &:nth-child(even) {
-      margin-right: 0;
-    }
-    &__title {
-      font-family: Roboto;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 21px;
-      line-height: 24px;
-
-      color: #696969;
-
-      padding: 12px 15px;
-      background-color: #f2f2f2;
-      border-radius: 5px;
-      margin-bottom: 8px;
-      text-align: center;
-
-      transition: background-color 0.35s ease;
-
-      &:hover {
-        background-color: #dbdbdb;
-        cursor: pointer;
-      }
-    }
-    input {
-      width: 100%;
-      height: 41px;
-
-      background: #f2f2f2;
-      border: 1px solid #b5b5b5;
-      box-sizing: border-box;
-      border-radius: 5px;
-      text-align: center;
-
-      font-family: Roboto;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 21px;
-      line-height: 24px;
-
-      color: #696969;
-    }
-  }
-}
-
-@media (max-width: 1440px) {
-  .ChoosenProducts {
-    &__list {
-      margin-bottom: 16px;
-    }
-    button {
-      width: auto;
-      padding-left: 30px;
-      padding-right: 30px;
-    }
+    margin-bottom: 36px;
   }
 }
 </style>

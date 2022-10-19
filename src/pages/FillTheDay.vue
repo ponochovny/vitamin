@@ -4,7 +4,9 @@
       <div class="FillTheDay__sidebar">
         <products-search />
       </div>
-      <div class="FillTheDay__content">Fill the Day page</div>
+      <div class="FillTheDay__content">
+        <choosen-products />
+      </div>
       <div class="FillTheDay__metrics">right side</div>
     </div>
   </div>
@@ -12,8 +14,9 @@
 
 <script>
 import ProductsSearch from '../components/ProductsSearch/ProductsSearch.vue'
+import ChoosenProducts from '../components/ShowUp/ChoosenProducts/ChoosenProducts.vue'
 export default {
-  components: { ProductsSearch },
+  components: { ProductsSearch, ChoosenProducts },
 }
 </script>
 
