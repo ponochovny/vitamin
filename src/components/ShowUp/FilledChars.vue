@@ -22,13 +22,11 @@
       :itemAfter="', мг'"
     />
     <h2 class="FilledChars__subtitle">
-      Микро/Макроелементы [total: {{ totalPercent('macroMicro') }}]
+      Микро/Макроелементы [total: {{ totalPercent('minerals') }}]
     </h2>
     <CharList
-      :averageProductsCharacteristics="
-        averageProductsCharacteristics.macroMicro
-      "
-      :characteristics="characteristics.macroMicro"
+      :averageProductsCharacteristics="averageProductsCharacteristics.minerals"
+      :characteristics="characteristics.minerals"
       :itemAfter="', мг'"
     />
   </div>
@@ -36,7 +34,7 @@
 
 <script lang="ts">
 import { computed, watch } from 'vue'
-import CharList from './CharList/CharList.vue'
+import CharList from './CharList/CharsList.vue'
 import { calculatedPercent } from '../../helper/calculatePercentage'
 import { useMainStore } from '../../stores'
 
@@ -82,7 +80,7 @@ export default {
         const summ =
           totalPercent('foodEnergy') +
           totalPercent('vitamins') +
-          totalPercent('macroMicro')
+          totalPercent('minerals')
         const result: number = +(summ / 3).toFixed(2)
 
         useMainStore().allTotalPercentage(result > 100 ? 100 : +result)
