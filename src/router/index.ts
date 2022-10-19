@@ -7,6 +7,7 @@ import Main from '../pages/Main.vue'
 import AddProduct from '../pages/AddProduct.vue'
 import EditProduct from '../pages/EditProduct.vue'
 import Profile from '../pages/Profile.vue'
+import FillTheDay from '../pages/FillTheDay.vue'
 // import PageNotFound from '../pages/PageNotFound.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -15,6 +16,12 @@ const routes: Array<RouteRecordRaw> = [
     component: Main,
     beforeEnter: AuthGuard,
   },
+  {
+    path: '/fill',
+    component: FillTheDay,
+    beforeEnter: AuthGuard,
+  },
+
   {
     path: '/auth',
     component: Auth,
