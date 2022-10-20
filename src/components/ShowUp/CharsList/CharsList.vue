@@ -17,7 +17,7 @@
               <div
                 class="progress__bar"
                 :style="{
-                  backgroundColor: bgColors(),
+                  backgroundColor: item.color ? item.color : bgColors(),
                   transform: `translateX(${
                     calculatedPercentComputed(item, avgProdsChars[key]) - 100
                   }%)`,

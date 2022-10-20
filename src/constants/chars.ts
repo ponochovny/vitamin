@@ -10,6 +10,7 @@ export const characteristics = {
       id: '8217fb5fca64a5230ca83050c7714ace',
       title: 'Energy',
       description: 'Lorem ipsum',
+      color: '#DD4124',
       values: [
         { value: 200, origin: 'v1' },
         { value: 300, origin: 'v2' },
@@ -19,6 +20,7 @@ export const characteristics = {
       id: 'c28bf02ac6472601e0e7509515a1c932',
       title: 'Water',
       description: 'Lorem ipsum',
+      color: '#7FCDCD',
       values: [
         { value: 1500, origin: 'v1' },
         { value: 2150, origin: 'v2' },
@@ -28,6 +30,7 @@ export const characteristics = {
       id: 'b7651d9a4e47bd0ae639ccbe0e59b29a',
       title: 'Proteins',
       description: 'Lorem ipsum',
+      color: '#955251',
       values: [
         { value: 200, origin: 'v1' },
         { value: 300, origin: 'v2' },
@@ -37,6 +40,7 @@ export const characteristics = {
       id: 'cb3a8c1ef41e8185877d296bfde9f134',
       title: 'Fat',
       description: 'Lorem ipsum',
+      color: '#B565A7',
       values: [
         { value: 100, origin: 'v1' },
         { value: 150, origin: 'v2' },
@@ -46,6 +50,7 @@ export const characteristics = {
       id: '6f60fb28c7c63493c97844dce57ec0d5',
       title: 'Carbs',
       description: 'Lorem ipsum',
+      color: '#009B77',
       values: [
         { value: 250, origin: 'v1' },
         { value: 310, origin: 'v2' },
