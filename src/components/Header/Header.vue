@@ -26,6 +26,7 @@
       <div class="Header__rightSide">
         <button
           :class="`btn-link route-link ${
+            // @ts-ignore
             $route.matched.some(({ path }) => path === '/auth')
               ? 'router-link-active'
               : ''

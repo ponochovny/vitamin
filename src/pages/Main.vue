@@ -26,7 +26,10 @@
         </button>
       </div>
       <div class="Main__login" v-else>
-        You are not authorized. Log in, please
+        <span>
+          You are not authorized. <router-link to="/auth">Log in</router-link>,
+          please
+        </span>
       </div>
     </transition>
   </div>

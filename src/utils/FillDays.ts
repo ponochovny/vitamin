@@ -8,7 +8,9 @@ export default function FilledLastDays(
   for (let i = 0; i < count; i++) {
     const d = new Date()
     d.setDate(d.getDate() - i)
+    // @ts-ignore
     const find = filledDays.find(
+      // @ts-ignore
       (e) => new Date(e.date).toDateString() === d.toDateString()
     )
     result.unshift({ date: d, filled: find ? find.percentage : 0 })
