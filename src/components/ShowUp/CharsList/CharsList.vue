@@ -64,7 +64,7 @@ export default {
     console.log('-')
     const colors = ref<any[]>(['red', 'green', 'yellow'])
     const bgColors = () => {
-      const max = colors.value.length > 0 ? colors.value.length - 1 : 0
+      const max = colors.value.length > 0 ? colors.value.length : 0
       const randomNumber = Math.floor(Math.random() * max)
       const result =
         colors.value.length > 0 ? colors.value[randomNumber] : '#fff'
