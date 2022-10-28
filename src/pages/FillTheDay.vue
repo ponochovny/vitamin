@@ -26,7 +26,7 @@ export default {
   components: { ProductsSearch, ChoosenProducts, CharsList },
   setup() {
     const isAvgCharsProdCharsExists = computed(
-      () => Object.keys(useMainStore().averChProdChars).length
+      () => useMainStore().averChProdChars !== null
     )
     return {
       isAvgCharsProdCharsExists,

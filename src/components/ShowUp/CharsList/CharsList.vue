@@ -3,14 +3,19 @@
     <template v-for="(value, key, i) in chars" :key="value">
       <div>
         <p v-if="i !== 0">{{ categories[key] }}</p>
-        <ul>
+        <ul v-if="averChProdChars !== null">
           <li v-for="item of value" :key="item.title">
             <div>
               <span>
                 {{ item.title }}
               </span>
               <span>
-                {{ calculatedPercentComputed(item, avgProdsChars[key]) }}%
+                {{
+                  calculatedPercentComputed(
+                    item,
+                    averChProdChars.characteristics[key]
+                  )
+                }}%
               </span>
             </div>
             <div class="CharsList__progress progress">
@@ -19,7 +24,15 @@
                 :style="{
                   backgroundColor: item.color ? item.color : bgColors(),
                   transform: `translateX(${
-                    calculatedPercentComputed(item, avgProdsChars[key]) - 100
+                    calculatedPercentComputed(
+                      item,
+                      averChProdChars.characteristics[key]
+                    ) > 100
+                      ? 0
+                      : calculatedPercentComputed(
+                          item,
+                          averChProdChars.characteristics[key]
+                        ) - 100
                   }%)`,
                 }"
               ></div>
@@ -42,19 +55,19 @@ export default {
   name: 'metrics',
   setup(props: any) {
     const mainStore = useMainStore()
-    const avgProdsChars = computed(() => mainStore.averChProdChars)
+    const averChProdChars = computed(() => mainStore.averChProdChars)
     const chars = characteristics
     const categories = values
     console.log('-')
     console.log(props)
     console.log(chars)
     console.log('-')
-    const colors = ref<any[]>([])
+    const colors = ref<any[]>(['red', 'green', 'yellow'])
     const bgColors = () => {
       const max = colors.value.length > 0 ? colors.value.length - 1 : 0
       const randomNumber = Math.floor(Math.random() * max)
       const result =
-        colors.value.length > 0 ? colors.value[randomNumber].value : '#fff'
+        colors.value.length > 0 ? colors.value[randomNumber] : '#fff'
       return result
     }
     const calculatedPercentComputed = calculatedPercent
@@ -64,7 +77,7 @@ export default {
     //   let summ = 0
     //   for (let item of characteristics!) {
     //     times++
-    //     summ += +calculatedPercentComputed(item, props.avgProdsChars)
+    //     summ += +calculatedPercentComputed(item, props.averChProdChars)
     //   }
     //   return summ / times
     // })
@@ -78,7 +91,7 @@ export default {
     //   calculatedPercentComputed,
     // }
     return {
-      avgProdsChars,
+      averChProdChars,
       chars,
       categories,
       calculatedPercentComputed,

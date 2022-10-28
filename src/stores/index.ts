@@ -11,8 +11,11 @@ import {
   TProduct,
   TRegisteredMeal,
   TDataForNewProduct,
+  CharacteristicsMock,
+  TElement,
+  TElementMock,
 } from '../types'
-import { areTwoDatesEquels, deepClone, summOfValueOfArray } from '../helper'
+import { areTwoDatesEquals, deepClone, summOfValueOfArray } from '../helper'
 import { characteristics } from '../constants/chars'
 import { average } from '../helper/calculatePercentage'
 import { CProduct, CRegisteredMeal } from '../classes'
@@ -27,12 +30,10 @@ export type RootState = {
   productsList: TProduct[]
   registeredMeals: TRegisteredMeal[]
   choosenProducts: TProduct[]
-  averChProdChars:
-    | {
-        charachteristics: TCharacteristics
-        percentage: number
-      }
-    | {}
+  averChProdChars: {
+    characteristics: TCharacteristics
+    percentage: number
+  } | null
 }
 
 export const useMainStore = defineStore({
@@ -46,7 +47,7 @@ export const useMainStore = defineStore({
       productsList: [],
       registeredMeals: [],
       choosenProducts: [],
-      averChProdChars: {},
+      averChProdChars: null,
     } as RootState),
   actions: {
     async createProduct(payload: TDataForNewProduct) {
@@ -165,15 +166,17 @@ export const useMainStore = defineStore({
     averageProdsChars() {
       if (this.choosenProducts.length === 0) return {}
 
-      const listOfProductsWithAverage = []
-      const chars = {}
+      type currProductCharsT = {
+        foodEnergy: any[]
+        minerals: any[]
+        vitamins: any[]
+      }
+
+      const listOfProductsWithAverage: currProductCharsT[] = []
+      const chars: TCharacteristics = CharacteristicsMock
 
       for (const product of this.choosenProducts) {
-        let currProductChars: {
-          foodEnergy: any[]
-          minerals: any[]
-          vitamins: any[]
-        } = {
+        let currProductChars: currProductCharsT = {
           foodEnergy: [],
           minerals: [],
           vitamins: [],
@@ -181,14 +184,13 @@ export const useMainStore = defineStore({
         for (const [key, secondItem] of Object.entries(
           product.characteristics
         )) {
-          // @ts-ignore
-          currProductChars[key] = []
+          currProductChars[key as keyof currProductCharsT] = []
           for (let item of secondItem) {
             let versions = item.versions
-            // @ts-ignore
-            currProductChars[key].push({
+
+            currProductChars[key as keyof currProductCharsT].push({
               title: item.title,
-              // @ts-ignore
+
               versions: [{ value: (average(versions) * product.amount) / 100 }],
             })
           }
@@ -196,47 +198,55 @@ export const useMainStore = defineStore({
         listOfProductsWithAverage.push(currProductChars)
       }
 
-      for (const [key, item] of Object.entries(listOfProductsWithAverage[0])) {
-        // @ts-ignore
-        chars[key] = []
-        for (const productItem of listOfProductsWithAverage) {
-          // @ts-ignore
-          for (let innerItem of productItem[key]) {
-            // @ts-ignore
-            let foundParam = chars[key].find(
-              // @ts-ignore
-              (el) => el.title === innerItem.title
-            )
-            if (foundParam) {
-              foundParam.versions.push({ value: innerItem.versions[0].value })
-            } else {
-              // @ts-ignore
-              chars[key].push({
-                title: innerItem.title,
-                versions: [...innerItem.versions],
-              })
+      if (chars !== null) {
+        for (const [key, item] of Object.entries(
+          listOfProductsWithAverage[0]
+        )) {
+          chars[key as keyof TCharacteristics] = []
+          for (const productItem of listOfProductsWithAverage) {
+            for (const innerItem of productItem[
+              key as keyof currProductCharsT
+            ]) {
+              const foundParam = chars[key as keyof TCharacteristics].find(
+                (el) => el.title === innerItem.title
+              )
+              if (foundParam) {
+                foundParam.versions.push({
+                  value: innerItem.versions[0].value,
+                  origin: '',
+                })
+              } else {
+                chars[key as keyof TCharacteristics].push({
+                  title: innerItem.title,
+                  versions: [...innerItem.versions],
+                })
+              }
             }
-          }
-          const resultOfItemsInCat = []
-          // @ts-ignore
-          for (const item of chars[key]) {
-            const averageOfParam = {
-              title: item.title,
-              versions: [{ value: summOfValueOfArray(item.versions, 'value') }],
-            }
-            resultOfItemsInCat.push(averageOfParam)
-          }
-          // @ts-ignore
-          chars[key] = [...resultOfItemsInCat]
-        }
-      }
+            const resultOfItemsInCat: TElement[] = [TElementMock]
 
-      // @ts-ignore
-      this.averChProdChars = { ...chars }
+            for (const item of chars[key as keyof TCharacteristics]) {
+              const averageOfParam = {
+                title: item.title,
+                versions: [
+                  {
+                    value: summOfValueOfArray(item.versions, 'value'),
+                    origin: '',
+                  },
+                ],
+              }
+              resultOfItemsInCat.push(averageOfParam)
+            }
+
+            chars[key as keyof TCharacteristics] = [...resultOfItemsInCat]
+          }
+        }
+
+        this.averChProdChars = { characteristics: { ...chars }, percentage: 0 }
+      }
     },
     clearChoosenProducts() {
       this.choosenProducts = []
-      this.averChProdChars = {}
+      this.averChProdChars = null
       this.averageProdsChars()
     },
 
@@ -274,8 +284,8 @@ export const useMainStore = defineStore({
 
       const newProduct = new CRegisteredMeal(
         date.valueOf(),
-        // @ts-ignore
-        this.averChProdChars.percentage,
+
+        this.averChProdChars?.percentage!,
         this.choosenProducts
       )
 
@@ -372,7 +382,7 @@ export const useMainStore = defineStore({
     },
     alreadyRegisteredForCurrentDate(state) {
       return state.registeredMeals.find((el) =>
-        areTwoDatesEquels(null, el.date)
+        areTwoDatesEquals(null, el.date)
       )
     },
     basicCharacteristics() {

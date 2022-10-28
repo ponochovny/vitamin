@@ -6,10 +6,56 @@ export type TElement = {
   }[]
 }
 
+export const TElementMock: TElement = {
+  title: '',
+  versions: [
+    {
+      origin: '',
+      value: 0,
+    },
+  ],
+}
+
 export enum ECharacteristic {
   foodEnergy = 'foodEnergy',
   minerals = 'minerals',
   vitamins = 'vitamins',
+}
+
+export const CharacteristicsMock: TCharacteristics = {
+  foodEnergy: [
+    {
+      title: '',
+      versions: [
+        {
+          origin: '',
+          value: 0,
+        },
+      ],
+    },
+  ],
+  minerals: [
+    {
+      title: '',
+      versions: [
+        {
+          origin: '',
+          value: 0,
+        },
+      ],
+    },
+  ],
+  vitamins: [
+    {
+      title: '',
+      versions: [
+        {
+          origin: '',
+          value: 0,
+        },
+      ],
+    },
+  ],
 }
 
 export type TCharacteristics = {
