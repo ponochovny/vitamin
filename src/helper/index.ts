@@ -14,7 +14,7 @@ export const dateObj = (timestamp: number | undefined) => {
   }
 }
 
-export const areTwoDatesEquels = (date: null | number, date2: number) => {
+export const areTwoDatesEquals = (date: null | number, date2: number) => {
   const date1 = date !== null ? date : new Date().getTime()
 
   const { month: month1, day: day1, year: year1 } = dateObj(date1)
