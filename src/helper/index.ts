@@ -33,13 +33,8 @@ export const datePrettier = (date: number) => {
   return `${day}.${month}.${year}`
 }
 
-export const summOfValueOfArray = (arr: any[], value: string) => {
-  let summ = 0
-  for (let item of arr) {
-    summ += item[value]
-  }
-  return summ
-}
+export const summOfValueOfArray = (arr: { value: number }[]) =>
+  arr.reduce((prev, curr) => prev + curr.value, 0)
 
 export const maxAmountVersions = (chars: TCharacteristics) => {
   let maxVersionsNumber = 0

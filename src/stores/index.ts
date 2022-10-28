@@ -229,7 +229,7 @@ export const useMainStore = defineStore({
                 title: item.title,
                 versions: [
                   {
-                    value: summOfValueOfArray(item.versions, 'value'),
+                    value: summOfValueOfArray(item.versions),
                     origin: '',
                   },
                 ],
