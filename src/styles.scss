@@ -1,3 +1,7 @@
+:root {
+  --black: rgb(20, 20, 20);
+}
+
 html {
   overflow-y: scroll;
 
@@ -42,6 +46,7 @@ body {
   margin: 0;
   padding: 0;
   padding-top: calc(46px + 32px);
+  color: var(--black);
 
   * {
     font-family: 'Roboto';
