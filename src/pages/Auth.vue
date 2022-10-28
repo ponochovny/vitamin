@@ -34,7 +34,7 @@
 import { ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import router from '../router'
-import { useMainStore } from '../stores'
+import { useUserStore } from '../stores/modules/user'
 
 export default {
   name: 'auth',
@@ -49,7 +49,7 @@ export default {
       isLoading.value = true
 
       if (loginAction.value) {
-        useMainStore()
+        useUserStore()
           .loginUser({ email: email.value, password: password.value })
           .then(() => {
             router.push('/')
@@ -60,7 +60,7 @@ export default {
             toast.error(`Log in error: ${err}`)
           })
       } else {
-        useMainStore()
+        useUserStore()
           .registerUser({
             email: email.value,
             password: password.value,

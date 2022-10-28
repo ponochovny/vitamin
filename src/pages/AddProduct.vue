@@ -82,6 +82,7 @@ import {
   TElement,
   TCharacteristics,
 } from '../types'
+import { useUserStore } from '../stores/modules/user'
 
 export default {
   name: 'add-product',
@@ -151,7 +152,7 @@ export default {
     })
 
     // @ts-ignore
-    onMounted(() => useMainStore().isUserChecked && loadData())
+    onMounted(() => useUserStore().isUserChecked && loadData())
 
     return {
       userCharsStore,

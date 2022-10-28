@@ -15,27 +15,13 @@ import {
 import { areTwoDatesEquels, deepClone, summOfValueOfArray } from '../helper'
 import { characteristics } from '../constants/chars'
 import { average } from '../helper/calculatePercentage'
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  signInWithEmailAndPassword,
-  signOut,
-} from 'firebase/auth'
 import { CProduct, CRegisteredMeal } from '../classes'
 import { searchListMock } from '../utils/mocks'
-
-class User {
-  id: string
-
-  constructor(id: string) {
-    this.id = id
-  }
-}
+import { useUserStore } from './modules/user'
 
 export type RootState = {
   user: null | { id: string }
   userChars: null | TCharacteristics
-  isUserChecked: boolean
   isLoading: boolean
   error: string | null
   productsList: TProduct[]
@@ -56,7 +42,6 @@ export const useMainStore = defineStore({
       user: null,
       userChars: null,
       isLoading: true,
-      isUserChecked: false,
       error: null,
       productsList: [],
       registeredMeals: [],
@@ -64,9 +49,6 @@ export const useMainStore = defineStore({
       averChProdChars: {},
     } as RootState),
   actions: {
-    setUserChecked() {
-      this.isUserChecked = true
-    },
     async createProduct(payload: TDataForNewProduct) {
       this.error = null
       this.isLoading = true
@@ -137,17 +119,12 @@ export const useMainStore = defineStore({
     async fetchRegisteredMeals() {
       this.isLoading = true
 
-      const data: TRegisteredMeal[] = await getRegisteredMeals(this.user?.id!)
+      const data: TRegisteredMeal[] = await getRegisteredMeals(
+        useUserStore().user?.id!
+      )
       this.registeredMeals = [...data]
 
       this.isLoading = false
-    },
-    autoLoginUser(user: { uid: string }) {
-      this.user = new User(user.uid)
-      if (user) {
-        this.fetchRegisteredMeals()
-        this.fetchChars()
-      }
     },
     addProductToChoosen(payload: TProduct) {
       this.choosenProducts.push({
@@ -263,77 +240,8 @@ export const useMainStore = defineStore({
       this.averageProdsChars()
     },
 
-    async loginUser({ email, password }: { email: string; password: string }) {
-      this.error = null
-      this.isLoading = true
-
-      const auth = getAuth()
-
-      return new Promise(async (resolve, reject) => {
-        try {
-          const userCredential = await signInWithEmailAndPassword(
-            auth,
-            email,
-            password
-          )
-
-          const user = userCredential.user
-
-          this.user = new User(user.uid)
-          this.isLoading = false
-
-          this.fetchChars()
-
-          resolve(userCredential)
-        } catch (error: any) {
-          console.log('[loginUser] ERROR:', error)
-
-          this.isLoading = false
-          this.error = error.message
-
-          reject(error)
-        }
-      })
-    },
-    async registerUser({
-      email,
-      password,
-    }: {
-      email: string
-      password: string
-    }) {
-      const auth = getAuth()
-
-      this.error = null
-      this.isLoading = true
-
-      return new Promise(async (resolve, reject) => {
-        try {
-          const userCredential = await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-          )
-
-          const user = userCredential.user
-
-          this.user = new User(user.uid)
-          this.isLoading = false
-
-          resolve(userCredential)
-        } catch (error: any) {
-          console.log('[createUserWithEmailAndPassword] ERROR:', error.message)
-
-          this.error = error.message
-          this.isLoading = false
-
-          reject(error)
-        }
-      })
-    },
-
     async fetchChars() {
-      const userId = this.user?.id
+      const userId = useUserStore().user?.id
       const link = 'profile/' + userId
       const res = fetch(link)
 
@@ -356,13 +264,6 @@ export const useMainStore = defineStore({
         })
         .catch((error) => console.log('[updateUserChars] ERROR:', error))
     },
-    logoutUser() {
-      const auth = getAuth()
-      signOut(auth)
-      this.user = null
-
-      this.registeredMeals = []
-    },
 
     async registerMeal() {
       const date = new Date()
@@ -381,7 +282,7 @@ export const useMainStore = defineStore({
       try {
         const newRegisteredMealKey = await post(
           newProduct,
-          `registeredMeals/${this.user?.id}`
+          `registeredMeals/${useUserStore().user?.id}`
         )
 
         this.registeredMeals.push({
@@ -439,7 +340,9 @@ export const useMainStore = defineStore({
 
       try {
         put(
-          `registeredMeals/${this.user?.id}/${this.alreadyRegisteredForCurrentDate.id}`,
+          `registeredMeals/${useUserStore().user?.id}/${
+            this.alreadyRegisteredForCurrentDate.id
+          }`,
           {
             ...deepClone(this.alreadyRegisteredForCurrentDate),
             productsList: newProductsList,
@@ -467,15 +370,12 @@ export const useMainStore = defineStore({
     getData(state) {
       return state.productsList
     },
-    isUserLoggedIn(state) {
-      return state.user !== null
-    },
     alreadyRegisteredForCurrentDate(state) {
       return state.registeredMeals.find((el) =>
         areTwoDatesEquels(null, el.date)
       )
     },
-    basicCharacteristics(state) {
+    basicCharacteristics() {
       return characteristics
     },
   },

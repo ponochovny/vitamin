@@ -41,15 +41,15 @@
 </template>
 
 <script lang="ts">
-import { useMainStore } from '../../stores'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '../../stores/modules/user'
 export default {
-  name: 'component-header',
+  name: 'header',
   setup() {
     const router = useRouter()
     const isUserLoggedIn = computed<boolean>(
-      () => useMainStore().isUserLoggedIn
+      () => useUserStore().isUserLoggedIn
     )
     function logIn() {
       console.log('log in')
@@ -57,7 +57,7 @@ export default {
     }
     function logOut() {
       console.log('log out')
-      useMainStore().logoutUser()
+      useUserStore().logoutUser()
     }
 
     return {

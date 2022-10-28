@@ -13,12 +13,12 @@
 <script lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useMainStore } from '../../stores'
+import { useUserStore } from '../../stores/modules/user'
 
 export default {
   setup() {
-    const mainStore = useMainStore()
-    const { isUserChecked } = storeToRefs(mainStore)
+    const userStore = useUserStore()
+    const { isUserChecked } = storeToRefs(userStore)
 
     const isActive = ref(true)
     const imageAnimate = ref(false)

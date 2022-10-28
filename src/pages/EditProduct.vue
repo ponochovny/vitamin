@@ -89,6 +89,7 @@ import { useToast } from 'vue-toastification'
 import { useRoute } from 'vue-router'
 import { onMounted } from 'vue'
 import router from '../router'
+import { useUserStore } from '../stores/modules/user'
 
 export default {
   name: 'edit-product',
@@ -156,7 +157,7 @@ export default {
 
     onMounted(() => {
       // @ts-ignore
-      useMainStore().isUserChecked && loadData()
+      useUserStore().isUserChecked && loadData()
     })
 
     return {

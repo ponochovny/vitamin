@@ -41,6 +41,7 @@ import { useMainStore } from '../stores'
 import dayjs from 'dayjs'
 import FilledLastDays from '../utils/FillDays'
 import Spinner from '../components/Spinner/Spinner.vue'
+import { useUserStore } from '../stores/modules/user'
 
 export default {
   name: 'main-page',
@@ -48,7 +49,7 @@ export default {
     Spinner,
   },
   setup() {
-    const isUserLoggedIn = computed(() => useMainStore().isUserLoggedIn)
+    const isUserLoggedIn = computed(() => useUserStore().isUserLoggedIn)
     const registeredMeals = computed(() => useMainStore().registeredMeals)
     function formatedDate(dateString: number) {
       const date = dayjs(dateString)
