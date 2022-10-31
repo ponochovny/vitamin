@@ -19,8 +19,8 @@ import { areTwoDatesEquals, deepClone, summOfValueOfArray } from '../helper'
 import { characteristics } from '../constants/chars'
 import { average } from '../helper/calculatePercentage'
 import { CProduct, CRegisteredMeal } from '../classes'
-import { searchListMock } from '../utils/mocks'
 import { useUserStore } from './modules/user'
+import { productsListMock } from '../helper/mocks/products'
 
 export type RootState = {
   user: null | { id: string }
@@ -106,10 +106,13 @@ export const useMainStore = defineStore({
     async fetchProducts() {
       this.isLoading = true
 
-      if (import.meta.env.MOCKED) {
-        setTimeout(() => {
-          this.productsList = searchListMock
-        }, 1500)
+      if (import.meta.env.VITE_USE_MOCK_DATA) {
+        const data: TProduct[] = await new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(productsListMock)
+          }, 1500)
+        })
+        this.productsList = data
       } else {
         const data: TProduct[] = await getProducts()
         this.productsList = [...data]
