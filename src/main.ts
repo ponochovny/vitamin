@@ -1,3 +1,5 @@
+// TODO: add plugin 'react-circular-progressbar'
+
 import { createPinia } from 'pinia'
 import { createApp, h } from 'vue'
 import App from './App.vue'
@@ -12,6 +14,7 @@ import 'vue-toastification/dist/index.css'
 import Spinner from './components/Spinner/Spinner.vue'
 
 import { useMainStore } from './stores/index'
+import { useUserStore } from './stores/modules/user'
 
 createApp({
   created() {
@@ -31,11 +34,11 @@ createApp({
 
     onAuthStateChanged(firebaseAuth, (user) => {
       if (user) {
-        useMainStore().autoLoginUser(user)
-        useMainStore().setUserChecked()
+        useUserStore().autoLoginUser(user)
+        useUserStore().setUserChecked()
         console.log('...[created] Loged In')
       } else {
-        useMainStore().setUserChecked()
+        useUserStore().setUserChecked()
         console.log('...[created] No User Logged In')
       }
     })

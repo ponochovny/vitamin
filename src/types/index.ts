@@ -6,15 +6,61 @@ export type TElement = {
   }[]
 }
 
+export const TElementMock: TElement = {
+  title: '',
+  versions: [
+    {
+      origin: '',
+      value: 0,
+    },
+  ],
+}
+
 export enum ECharacteristic {
   foodEnergy = 'foodEnergy',
-  macroMicro = 'macroMicro',
+  minerals = 'minerals',
   vitamins = 'vitamins',
+}
+
+export const CharacteristicsMock: TCharacteristics = {
+  foodEnergy: [
+    {
+      title: '',
+      versions: [
+        {
+          origin: '',
+          value: 0,
+        },
+      ],
+    },
+  ],
+  minerals: [
+    {
+      title: '',
+      versions: [
+        {
+          origin: '',
+          value: 0,
+        },
+      ],
+    },
+  ],
+  vitamins: [
+    {
+      title: '',
+      versions: [
+        {
+          origin: '',
+          value: 0,
+        },
+      ],
+    },
+  ],
 }
 
 export type TCharacteristics = {
   [ECharacteristic.foodEnergy]: TElement[]
-  [ECharacteristic.macroMicro]: TElement[]
+  [ECharacteristic.minerals]: TElement[]
   [ECharacteristic.vitamins]: TElement[]
 }
 
@@ -41,4 +87,9 @@ export type TRegisteredMeal = {
     title: string
     characteristics: TCharacteristics
   }[]
+}
+
+export type TFilledDaysArray = {
+  date: Date
+  filled: number
 }

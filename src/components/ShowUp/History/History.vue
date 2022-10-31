@@ -11,16 +11,19 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { datePrettier } from '../../../helper'
 
 export default {
   props: ['items'],
   name: 'history',
-  methods: {
-    date(item) {
-      return datePrettier(item.date)
-    },
+  setup() {
+    // @ts-ignore
+    const date = (item) => datePrettier(item.date)
+
+    return {
+      date,
+    }
   },
 }
 </script>

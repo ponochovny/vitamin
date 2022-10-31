@@ -1,47 +1,50 @@
 <template>
-  <div :class="{ Preloader: true, active: isActive }">
-    <img
-      src="../../assets/leaf.png"
-      alt=""
-      :class="{ 'zoom-in': imageAnimate }"
-    />
-  </div>
+  <teleport to="body">
+    <div :class="{ Preloader: true, active: isActive }">
+      <img
+        src="../../assets/leaf.png"
+        alt=""
+        :class="{ 'zoom-in': imageAnimate }"
+      />
+    </div>
+  </teleport>
 </template>
-<script>
-// import img from '../../assets/leaf.png'
 
+<script lang="ts">
+import { ref, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useMainStore } from '../../stores'
+import { useUserStore } from '../../stores/modules/user'
 
 export default {
   setup() {
-    const mainStore = useMainStore()
-    const { isUserChecked } = storeToRefs(mainStore)
+    const userStore = useUserStore()
+    const { isUserChecked } = storeToRefs(userStore)
 
-    return { isUserChecked }
-  },
-  data() {
-    return {
-      // preloadLogo: img,
-      isActive: true,
-      imageAnimate: false,
+    const isActive = ref(true)
+    const imageAnimate = ref(false)
+
+    const closePreloader = () => {
+      isActive.value = false
+      imageAnimate.value = false
     }
-  },
-  methods: {
-    closePreloader() {
-      this.isActive = false
-      this.imageAnimate = false
-    },
-  },
-  mounted() {
-    setTimeout(() => {
-      this.imageAnimate = true
+
+    watch(isUserChecked, (_, oldValue) => {
+      if (oldValue === false) closePreloader()
     })
-  },
-  watch: {
-    isUserChecked(_, oldValue) {
-      if (oldValue === false) this.closePreloader()
-    },
+
+    onMounted(() => {
+      setTimeout(() => {
+        imageAnimate.value = true
+      })
+    })
+
+    return {
+      isUserChecked,
+      isActive,
+      imageAnimate,
+
+      closePreloader,
+    }
   },
 }
 </script>

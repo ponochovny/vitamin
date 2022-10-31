@@ -5,12 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "test": "vitest",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
-    "format": "prettier .  --write"
+    "format": "prettier .  --write",
+    "deploy": "npm run build && firebase deploy --only hosting:vponochovny-vitamin"
   },
   "dependencies": {
+    "dayjs": "^1.11.5",
     "firebase": "^9.8.2",
     "pinia": "^2.0.14",
     "uuid": "^8.3.2",
@@ -21,13 +24,14 @@
   "devDependencies": {
     "@types/uuid": "^8.3.4",
     "@vitejs/plugin-vue": "^2.3.3",
-    "eslint": "^8.16.0",
+    "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-vue": "^9.1.0",
     "prettier": "2.6.2",
     "sass": "^1.52.2",
     "typescript": "^4.5.4",
     "vite": "^2.9.9",
+    "vitest": "^0.24.3",
     "vue-tsc": "^0.34.7"
   }
 }

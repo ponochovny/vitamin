@@ -2,21 +2,26 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 import AuthGuard from './auth-guard'
 import Auth from '../pages/Auth.vue'
-// import Main from '../pages/Main.vue'
-
-// Temporary
 import Main from '../pages/Main.vue'
 
 import AddProduct from '../pages/AddProduct.vue'
 import EditProduct from '../pages/EditProduct.vue'
 import Profile from '../pages/Profile.vue'
+import FillTheDay from '../pages/FillTheDay.vue'
 // import PageNotFound from '../pages/PageNotFound.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '',
     component: Main,
+    beforeEnter: AuthGuard,
   },
+  {
+    path: '/fill',
+    component: FillTheDay,
+    beforeEnter: AuthGuard,
+  },
+
   {
     path: '/auth',
     component: Auth,

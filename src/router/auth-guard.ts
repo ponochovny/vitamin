@@ -1,15 +1,18 @@
-import { useMainStore } from '../stores'
-export default function (_: any, _2: any, next: any) {
+import { useUserStore } from '../stores/modules/user'
+export default function (to: any, from: any, next: any) {
   const nextSteps = () => {
-    if (useMainStore().user !== null) {
+    if (useUserStore().user !== null) {
       next()
     } else {
+      if (to.path === '/' && from.path === '/') {
+        next('/auth')
+      }
       next('/auth?loginError=true')
     }
   }
 
   function checkFlag() {
-    if (useMainStore().isUserChecked === false) {
+    if (useUserStore().isUserChecked === false) {
       window.setTimeout(
         checkFlag,
         100

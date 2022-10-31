@@ -49,15 +49,13 @@
       </h3>
       <ul>
         <li
-          v-for="(item, i) of productData.characteristics.macroMicro"
+          v-for="(item, i) of productData.characteristics.minerals"
           :key="item.title"
         >
           <span>{{ item.title }}</span>
           <input
             type="text"
-            v-model="
-              productData.characteristics.macroMicro[i].versions[0].value
-            "
+            v-model="productData.characteristics.minerals[i].versions[0].value"
           />
         </li>
       </ul>
@@ -75,7 +73,9 @@
       </ul>
 
       <br />
-      <button @click="editData">{{ loading ? '...' : 'Save changes' }}</button>
+      <button class="btn" @click="editData">
+        {{ loading ? '...' : 'Save changes' }}
+      </button>
     </template>
 
     <Loader v-else />
@@ -83,72 +83,51 @@
 </template>
 
 <script>
+import { ref, computed, watch } from 'vue'
 import { useMainStore } from '../stores'
 import { useToast } from 'vue-toastification'
+import { useRoute } from 'vue-router'
+import { onMounted } from 'vue'
+import router from '../router'
+import { useUserStore } from '../stores/modules/user'
 
 export default {
   name: 'edit-product',
   setup() {
+    const route = useRoute()
     const toast = useToast()
+    const productData = ref({
+      title: '',
+      characteristics: null,
+      source: [{ origin: '' }],
+    })
+    const columns = ref(1)
+    const loading = ref(false)
+    const currentItem = computed(() =>
+      useMainStore().productsList.find((el) => el.id === route.params.id)
+    )
 
-    return { toast }
-  },
-  data() {
-    return {
-      productData: {
-        title: '',
-        characteristics: null,
-        source: [{ origin: '' }],
-      },
-      columns: 1,
-      loading: false,
-    }
-  },
-  computed: {
-    currentItem() {
-      return useMainStore().productsList.find(
-        (el) => el.id === this.$route.params.id
-      )
-    },
-  },
-  watch: {
-    currentItem(val, val2) {
-      if (val) {
-        this.productData = {
-          ...this.productData,
-          title: val.title,
-          characteristics: val.characteristics,
-        }
-      }
-    },
-  },
-  methods: {
-    editData() {
+    const editData = () => {
       // 1. send new data to existed product to edit
       // 2. edit basic characteristics if there are new fields
       useMainStore()
         .updateProduct({
-          title: this.productData.title,
-          characteristics: this.productData.characteristics,
-          id: this.currentItem.id,
+          title: productData.value.title,
+          characteristics: productData.value.characteristics,
+          id: currentItem.value.id,
         })
         .then(() => {
-          this.$router.push('/')
-          this.toast.success(`Data updated: ${this.productData.title}`)
+          router.push('/')
+          toast.success(`Data updated: ${productData.value.title}`)
         })
         .catch((error) => {
-          this.toast.error(error.message)
+          toast.error(error.message)
         })
-    },
+    }
 
-    tempHandler(value) {
-      console.log('... value', value.target.value)
-    },
-
-    loadData() {
+    const loadData = () => {
       let chars = {}
       for (let key in useMainStore().userChars) {
-        // console.log('... key', key)
         chars[key] = []
         for (let item of useMainStore().userChars[key]) {
           let innerItem = {
@@ -158,17 +137,37 @@ export default {
           chars[key].push(innerItem)
         }
       }
-      if (this.currentItem)
-        this.productData = {
-          ...this.productData,
-          title: this.currentItem.title,
-          characteristics: this.currentItem.characteristics,
+      if (currentItem.value)
+        productData.value = {
+          ...productData.value,
+          title: currentItem.value.title,
+          characteristics: currentItem.value.characteristics,
         }
-    },
-  },
-  mounted() {
-    // @ts-ignore
-    useMainStore().isUserChecked && this.loadData()
+    }
+
+    watch(currentItem, (val) => {
+      if (val) {
+        productData.value = {
+          ...productData.value,
+          title: val.title,
+          characteristics: val.characteristics,
+        }
+      }
+    })
+
+    onMounted(() => {
+      // @ts-ignore
+      useUserStore().isUserChecked && loadData()
+    })
+
+    return {
+      toast,
+      productData,
+      columns,
+      loading,
+      currentItem,
+      editData,
+    }
   },
 }
 </script>

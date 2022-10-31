@@ -1,72 +1,89 @@
 <template>
   <div class="Auth">
-    <form @submit.prevent="submit">
-      <h1 @click="loginAction = !loginAction">
-        {{ loginAction ? 'Log in' : 'Register' }}
-      </h1>
-      <p>Email:</p>
-      <input type="text" v-model="email" />
-      <p>Password:</p>
-      <input type="password" v-model="password" />
-      <button type="submit">
-        {{ isLoading ? '...zZz...' : loginAction ? 'Enter' : 'Register' }}
-      </button>
-    </form>
+    <div class="Auth__container">
+      <form @submit.prevent="submit">
+        <div class="Auth__title">
+          {{ loginAction ? 'Log in' : 'Register' }}
+        </div>
+        <input type="text" placeholder="Your email" v-model="email" />
+        <input type="password" placeholder="Your password" v-model="password" />
+        <p>
+          {{ loginAction ? 'New user?' : 'Already have an account?' }}
+          <button
+            class="btn btn-link"
+            type="button"
+            @click="loginAction = !loginAction"
+          >
+            {{ loginAction ? 'Register' : 'Log in' }}
+          </button>
+        </p>
+        <button class="btn btn-secondary btn-p1" type="submit">
+          <template v-if="isLoading">
+            <div class="loader">...</div>
+          </template>
+          <template v-else>
+            {{ loginAction ? 'Log in' : 'Register' }}
+          </template>
+        </button>
+      </form>
+    </div>
   </div>
 </template>
 
 <script>
+import { ref } from 'vue'
 import { useToast } from 'vue-toastification'
 import router from '../router'
-import { useMainStore } from '../stores'
+import { useUserStore } from '../stores/modules/user'
 
 export default {
   name: 'auth',
-  data() {
-    return {
-      email: '',
-      password: '',
-      loginAction: true,
-      isLoading: false,
-      toast: useToast(),
-    }
-  },
-  methods: {
-    submit() {
-      this.isLoading = true
+  setup() {
+    const email = ref('')
+    const password = ref('')
+    const loginAction = ref(true)
+    const isLoading = ref(false)
+    const toast = useToast()
 
-      if (this.loginAction) {
-        useMainStore()
-          .loginUser({ email: this.email, password: this.password })
+    const submit = () => {
+      isLoading.value = true
+
+      if (loginAction.value) {
+        useUserStore()
+          .loginUser({ email: email.value, password: password.value })
           .then(() => {
             router.push('/')
-            this.toast.success('Log in success!')
+            toast.success('Log in success!')
           })
           .catch((err) => {
-            this.isLoading = false
-            this.toast.error(`Log in error: ${err}`)
+            isLoading.value = false
+            toast.error(`Log in error: ${err}`)
           })
       } else {
-        useMainStore()
+        useUserStore()
           .registerUser({
-            email: this.email,
-            password: this.password,
+            email: email.value,
+            password: password.value,
           })
           .then(() => {
             router.push('/')
-            this.toast.success('Registration success!')
+            toast.success('Registration success!')
           })
           .catch((err) => {
-            this.isLoading = false
-            this.toast.error(`Registeration error: ${err}`)
+            isLoading.value = false
+            toast.error(`Registeration error: ${err}`)
           })
       }
-    },
-  },
-  created() {
-    // window.location.hash
-    if (this.$route.query['loginError']) {
-      this.toast.error('Please log in to access this page')
+    }
+
+    return {
+      email,
+      password,
+      loginAction,
+      isLoading,
+      toast,
+
+      submit,
     }
   },
 }
@@ -79,71 +96,69 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  &__container {
+    padding: 32px 80px;
+    background: #ffffff;
+    box-shadow: 0px 1px 16px rgba(0, 0, 0, 0.08);
+    border-radius: 40px;
+  }
+
   form {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: stretch;
+
+    p {
+      width: 100%;
+
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 16px;
+
+      color: #000000;
+
+      margin-bottom: 24px;
+    }
   }
-  h1 {
-    font-family: Roboto;
+  &__title {
+    font-family: 'Roboto';
     font-style: normal;
-    font-weight: normal;
-    font-size: 48px;
-    line-height: 56px;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 42px;
 
     color: #000000;
 
-    margin-bottom: 25px;
-
-    padding: 5px 15px;
-    border-radius: 5px;
-    transition: background-color 0.15s ease;
-    &:hover {
-      background-color: #f2f2f2;
-      cursor: pointer;
-      transition: background-color 0.05s ease;
-    }
-  }
-  p {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 21px;
-
-    color: #000;
-
-    margin-bottom: 8px;
+    margin-bottom: 32px;
   }
   input {
-    width: 263px;
-    height: 41px;
-    margin-bottom: 27px;
-    padding: 0 7px;
-    background-color: #f2f2f2;
-    border: 1px solid #b5b5b5;
-    border-radius: 5px;
+    width: 280px;
+    height: 35px;
 
-    font-family: Roboto;
+    background: #f7f7f7;
+    border: 0;
+    border-radius: 12px;
+    padding: 8px 16px;
+
+    margin-bottom: 14px;
+
+    font-family: 'Roboto';
     font-style: normal;
-    font-weight: normal;
-    font-size: 18px;
-    line-height: 21px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
 
-    color: #606060;
-
-    text-align: center;
+    color: #b8b8b8;
 
     transition: color 0.35s ease;
 
     &:focus {
       color: #000;
     }
-  }
-  button {
-    padding-left: 30px;
-    padding-right: 30px;
   }
 }
 </style>
