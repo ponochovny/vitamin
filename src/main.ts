@@ -18,7 +18,7 @@ import { useUserStore } from './stores/modules/user'
 
 createApp({
   created() {
-    if (!import.meta.env.VITE_USE_MOCK_DATA) {
+    if (import.meta.env.VITE_USE_MOCK_DATA === 'false') {
       console.log('...[created]')
       const firebaseConfig = {
         apiKey: import.meta.env.VITE_API_KEY,
@@ -40,7 +40,9 @@ createApp({
       })
     }
 
-    useUserStore().setUserChecked()
+    setTimeout(() => {
+      useUserStore().setUserChecked()
+    }, 0)
     useMainStore().fetchProducts()
   },
   render: () => h(App),
