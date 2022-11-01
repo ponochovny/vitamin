@@ -106,7 +106,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 32px;
-  width: 340px;
+  width: 100%;
 
   & > div p {
     font-weight: 400;

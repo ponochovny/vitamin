@@ -51,6 +51,8 @@ export default {
 
     max-width: $wrapper_maxWidth;
     width: $wrapper_width;
+
+    gap: 32px;
   }
   &__sidebar {
     display: flex;
@@ -63,8 +65,9 @@ export default {
   &__metrics {
     display: flex;
     justify-content: flex-end;
-    flex-grow: 1;
-    flex-basis: 0;
+    flex-grow: 0;
+    flex-basis: 340px;
+    flex-shrink: 1;
   }
 }
 </style>
