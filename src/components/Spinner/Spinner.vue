@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'spinner',
+  name: 'the-spinner',
 }
 </script>
 

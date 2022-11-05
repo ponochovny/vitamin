@@ -70,12 +70,13 @@
 </template>
 
 <script lang="ts">
-import Spinner from '../components/Spinner/Spinner.vue'
+// import Spinner from '../components/Spinner/Spinner.vue'
 import { ref } from 'vue'
 
 export default {
+  name: 'the-profile',
   components: {
-    Spinner,
+    // Spinner,
   },
   setup() {
     const autoCalculation = ref(false)

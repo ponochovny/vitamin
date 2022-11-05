@@ -45,7 +45,7 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/modules/user'
 export default {
-  name: 'header',
+  name: 'the-header',
   setup() {
     const router = useRouter()
     const isUserLoggedIn = computed<boolean>(

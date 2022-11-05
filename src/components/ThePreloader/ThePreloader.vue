@@ -16,6 +16,7 @@ import { storeToRefs } from 'pinia'
 import { useUserStore } from '../../stores/modules/user'
 
 export default {
+  name: 'the-preloader',
   setup() {
     const userStore = useUserStore()
     const { isUserChecked } = storeToRefs(userStore)

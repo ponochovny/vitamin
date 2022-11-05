@@ -40,7 +40,7 @@ export default {
     const registerMeal = () => {
       if (choosenProducts.value.length == 0) return
 
-      if (!!alreadyRegisteredForCurrentDate.value) {
+      if (alreadyRegisteredForCurrentDate.value) {
         useMainStore()
           .updateRegisteredMeal()
           .then(() => {

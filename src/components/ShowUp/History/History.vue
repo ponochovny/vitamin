@@ -16,7 +16,7 @@ import { datePrettier } from '../../../helper'
 
 export default {
   props: ['items'],
-  name: 'history',
+  name: 'the-history',
   setup() {
     // @ts-ignore
     const date = (item) => datePrettier(item.date)

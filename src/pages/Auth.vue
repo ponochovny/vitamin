@@ -37,7 +37,7 @@ import router from '../router'
 import { useUserStore } from '../stores/modules/user'
 
 export default {
-  name: 'auth',
+  name: 'the-auth',
   setup() {
     const email = ref('')
     const password = ref('')

@@ -52,7 +52,7 @@ import { computed, ref } from 'vue'
 // import { colors as importedColors } from '../../../constants/colors'
 
 export default {
-  name: 'metrics',
+  name: 'metrics-list',
   setup(props: any) {
     const mainStore = useMainStore()
     const averChProdChars = computed(() => mainStore.averChProdChars)
