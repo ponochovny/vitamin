@@ -16,3 +16,12 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: install modules
+        run: npm install
+      - name: run build
+        run: npm run build
+      - name: unit test
+        run: npm run test
+      - name: lint code
+        run: npm run lint
+      - run: echo "🍏 This job's status is ${{ job.status }}."
