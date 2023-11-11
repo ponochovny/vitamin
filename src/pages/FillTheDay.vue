@@ -56,7 +56,6 @@ export default {
   }
   &__sidebar {
     display: flex;
-    flex-grow: 1;
     flex-basis: 0;
   }
   &__content {

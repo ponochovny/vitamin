@@ -7,7 +7,7 @@
         </div>
         <input type="text" placeholder="Your email" v-model="email" />
         <input type="password" placeholder="Your password" v-model="password" />
-        <p>
+        <p class="Auth__choice">
           {{ loginAction ? 'New user?' : 'Already have an account?' }}
           <button
             class="btn btn-link"
@@ -102,6 +102,13 @@ export default {
     background: #ffffff;
     box-shadow: 0px 1px 16px rgba(0, 0, 0, 0.08);
     border-radius: 40px;
+  }
+
+  &__choice {
+    p,
+    button {
+      font-size: 14px;
+    }
   }
 
   form {

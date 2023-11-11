@@ -51,28 +51,26 @@ export default {
       () => useMainStore().averChProdChars
     )
 
-    // @ts-ignore
-    const totalPercent = (parameter) => {
-      // TODO: use reducer
-      let times = 0
-      let summ = 0
-      let result = 0
+    const totalPercent = (
+      parameter: 'foodEnergy' | 'minerals' | 'vitamins'
+    ) => {
+      // TODO: Fix errors
+      const mainStoreValue =
+        useMainStore().averChProdChars?.characteristics[parameter]
+      const summ = characteristics.value[parameter].reduce(
+        (acc: number, item) => acc + calculatedPercent(item, mainStoreValue),
+        0
+      )
+      const average = +(summ / characteristics.value[parameter].length).toFixed(
+        2
+      )
 
-      for (const item of characteristics.value[parameter]) {
-        times++
-        summ += +calculatedPercent(
-          item,
-          // @ts-ignore
-          useMainStore().averChProdChars[parameter]
-        )
-      }
-
-      result = +(summ / times).toFixed(2)
-
-      return result > 100 ? 100 : +result
+      return average > 100 ? 100 : average
     }
 
     watch(averageProductsCharacteristics, (oldVal, newVal: any) => {
+      // TODO: just in case can be useful
+      // console.log('[filledChars, watch] averageProductsCharacteristics')
       if (
         newVal.percentage !== oldVal.percentage ||
         newVal.percentage === undefined

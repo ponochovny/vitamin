@@ -1,10 +1,12 @@
+import { IChars } from '../core/types'
+
 export const values: { [key: string]: string } = {
   foodEnergy: 'Food energy',
   vitamins: 'Vitamins',
   minerals: 'Minerals',
 }
 
-export const characteristics = {
+export const characteristics: IChars = {
   foodEnergy: [
     {
       id: '8217fb5fca64a5230ca83050c7714ace',

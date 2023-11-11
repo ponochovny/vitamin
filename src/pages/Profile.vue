@@ -24,6 +24,24 @@
           >
         </div>
         <div class="Profile__groups">
+          <div
+            class="Profile__group"
+            v-for="item of basicChars"
+            :key="item.title"
+          >
+            <div class="Profile__group-title">{{ item.title }}</div>
+            <div
+              class="Profile__group-row"
+              v-for="innerItem of item.items"
+              :key="innerItem.title"
+            >
+              <span>{{ innerItem.title }}, kkal</span>
+              <input type="number" :value="innerItem.value" />
+            </div>
+          </div>
+          <button class="btn btn-accent btn-p2">Save</button>
+        </div>
+        <!-- <div class="Profile__groups">
           <div class="Profile__group">
             <div class="Profile__group-title">Energy</div>
             <div class="Profile__group-row">
@@ -63,7 +81,7 @@
             </div>
           </div>
           <button class="btn btn-accent btn-p2">Save</button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -71,7 +89,9 @@
 
 <script lang="ts">
 // import Spinner from '../components/Spinner/Spinner.vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { useUserStore } from '../stores/modules/user'
+import { generateBasicUserChars } from '../helper'
 
 export default {
   name: 'the-profile',
@@ -81,7 +101,18 @@ export default {
   setup() {
     const autoCalculation = ref(false)
 
+    useUserStore()
+      .fetchUserCharsData()
+      .catch(() => {
+        const res = generateBasicUserChars()
+        console.log('res', res)
+        useUserStore().setBasicChars(res)
+      })
+
+    const basicChars = computed(() => useUserStore().user?.basicChars)
+
     return {
+      basicChars,
       autoCalculation,
     }
   },
@@ -113,6 +144,8 @@ export default {
     align-items: center;
     gap: 12px;
 
+    margin-bottom: 12px;
+
     span {
       display: flex;
       align-items: center;
@@ -134,6 +167,41 @@ export default {
         &:hover {
           cursor: pointer;
         }
+      }
+    }
+  }
+  &__group {
+    margin-bottom: 8px;
+    &-title {
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 19px;
+      color: #000000;
+      margin-bottom: 8px;
+    }
+    &-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 4px;
+      span {
+        width: 100px;
+
+        font-weight: 300;
+        font-size: 16px;
+        line-height: 19px;
+        color: #000000;
+        // margin-bottom: 8px;
+      }
+      input {
+        font-size: 14px;
+        padding: 2px 4px;
+        max-width: 60px;
+        width: 100%;
+        height: 24px;
+        width: auto;
+        border: 1px solid rgb(157 157 157);
+        border-radius: 4px;
       }
     }
   }

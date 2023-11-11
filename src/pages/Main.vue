@@ -3,23 +3,25 @@
     <transition mode="out-in">
       <div class="Main__content" v-if="isUserLoggedIn">
         <div class="FilledDays">
-          <transition mode="out-in">
-            <template v-if="!registeredMeals.length"><Spinner /></template>
-            <ul v-else>
-              <li v-for="day in filledLastDays(5, registeredMeals)" :key="day">
-                <p>
-                  {{ formatedDate(day.date)[0] }},
-                  <span>{{ formatedDate(day.date)[1] }}</span>
-                </p>
-                <div class="progress">
-                  <div
-                    class="progress__line"
-                    :style="{ transform: `translateX(${day.filled - 100}%)` }"
-                  ></div>
-                </div>
-              </li>
-            </ul>
-          </transition>
+          <ul>
+            <li
+              v-for="day in filledLastDays(5, registeredMeals)"
+              :key="day.date.toString()"
+            >
+              <p :class="{ 'font-medium': isToday(day.date) }">
+                {{ formatedDate(day.date)[0] }},
+                <span :class="{ 'font-bold': isToday(day.date) }">{{
+                  formatedDate(day.date)[1]
+                }}</span>
+              </p>
+              <div class="progress">
+                <div
+                  class="progress__line"
+                  :style="{ transform: `translateX(${day.filled - 100}%)` }"
+                ></div>
+              </div>
+            </li>
+          </ul>
         </div>
         <button class="btn btn-accent btn-p2" @click="$router.push('/fill')">
           Fill the day
@@ -37,26 +39,29 @@
 
 <script lang="ts">
 import { computed } from 'vue'
-import { useMainStore } from '../stores'
 import dayjs from 'dayjs'
 import FilledLastDays from '../utils/FillDays'
-import Spinner from '../components/Spinner/Spinner.vue'
 import { useUserStore } from '../stores/modules/user'
 
 export default {
   name: 'main-page',
-  components: {
-    Spinner,
-  },
   setup() {
     const isUserLoggedIn = computed(() => useUserStore().isUserLoggedIn)
-    const registeredMeals = computed(() => useMainStore().registeredMeals)
-    function formatedDate(dateString: number) {
+    const registeredMeals = computed(
+      () => useUserStore().user?.registeredMeals || []
+    )
+    function formatedDate(dateString: Date) {
       const date = dayjs(dateString)
       const dateStr = date.format('ddd, D')
       return dateStr.split(',')
     }
+    const isToday = (dateString: Date): boolean => {
+      const one = dayjs(dateString).format('YYYY-M-D')
+      const isSame = dayjs().isSame(one, 'day')
+      return isSame
+    }
     return {
+      isToday,
       formatedDate,
       filledLastDays: FilledLastDays,
       registeredMeals,
@@ -126,6 +131,13 @@ export default {
 
           span {
             color: #949494;
+            &.font-bold {
+              font-weight: 600;
+            }
+          }
+
+          &.font-medium {
+            font-weight: 500;
           }
         }
 

@@ -32,6 +32,7 @@
               : ''
           }`"
           @click="isUserLoggedIn ? logOut() : logIn()"
+          :disabled="$route.matched.some(({ path }) => path === '/auth')"
         >
           {{ isUserLoggedIn ? 'Log out' : 'Log In' }}
         </button>
@@ -42,22 +43,26 @@
 
 <script lang="ts">
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '../../stores/modules/user'
 export default {
   name: 'the-header',
   setup() {
     const router = useRouter()
+    const route = useRoute()
     const isUserLoggedIn = computed<boolean>(
       () => useUserStore().isUserLoggedIn
     )
-    function logIn() {
+    const logIn = () => {
+      if (route.matched.some(({ path }) => path === '/auth')) return
       console.log('log in')
       router.push('/auth')
     }
-    function logOut() {
+    const logOut = () => {
+      if (route.matched.some(({ path }) => path === '/auth')) return
       console.log('log out')
       useUserStore().logoutUser()
+      router.push('/auth')
     }
 
     return {
@@ -126,7 +131,7 @@ export default {
       }
     }
     img {
-      max-width: 42px;
+      // max-width: 42px;
       max-height: 46px;
     }
   }

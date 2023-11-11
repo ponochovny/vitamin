@@ -1,6 +1,41 @@
 import { characteristics, values } from '../constants/chars'
 import { TCharacteristics, TElement } from '../types'
 
+import {
+  LIST_OF_ENERGY,
+  LIST_OF_MINERALS,
+  LIST_OF_VITAMINS,
+} from '../core/constants'
+
+export const generateBasicUserChars = () => {
+  const generateItem = (title: string) => {
+    return {
+      title,
+      versions: [
+        {
+          origin: '',
+          value: null,
+        },
+      ],
+    }
+  }
+
+  const energyItems = {
+    title: 'Energy',
+    items: LIST_OF_ENERGY.map((e: string) => generateItem(e)),
+  }
+  const mineralsItems = {
+    title: 'Minerals',
+    items: LIST_OF_MINERALS.map((m: string) => generateItem(m)),
+  }
+  const vitaminsList = {
+    title: 'Vitamins',
+    items: LIST_OF_VITAMINS.map((v: string) => generateItem(v)),
+  }
+
+  return [energyItems, mineralsItems, vitaminsList]
+}
+
 export const deepClone = (arr: any[] | object) =>
   JSON.parse(JSON.stringify(arr))
 

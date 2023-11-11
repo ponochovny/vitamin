@@ -8,54 +8,97 @@ export const fetch = async (folderName: string) => {
     const data = await get(child(dbRef, folderName))
       .then((snapshot) => {
         if (snapshot.exists()) {
-          console.log('data received!', folderName)
+          // console.log('[fetch] data', folderName)
           return snapshot.val()
         } else {
-          console.warn('No data available', folderName)
+          // console.warn('[fetch] no data', folderName)
           throw 'error: No data available'
         }
       })
       .catch((error: any) => {
-        console.log(error)
+        // console.log(error)
         throw error
       })
     return data
   } catch (error: any) {
-    console.log('!!! CATCHED AN ERROR:', error)
-    return new Error(error)
+    // console.log('!!! CATCHED AN ERROR:', error)
+    throw new Error(error)
   }
 }
 
 export const getProducts = async () => {
-  const data: TProduct[] = await fetch('products')
-  const result: TProduct[] = []
+  // console.log('[LOGGER] getProducts')
 
-  Object.keys(data).forEach((key: any) => {
-    result.push({
-      title: data[key].title,
-      characteristics: { ...data[key].characteristics },
-      amount: data[key].amount,
-      id: key,
+  try {
+    const data: TProduct[] = await fetch('products')
+    const result: TProduct[] = []
+
+    Object.keys(data).forEach((key: any) => {
+      result.push({
+        title: data[key].title,
+        characteristics: { ...data[key].characteristics },
+        amount: data[key].amount,
+        id: key,
+      })
     })
-  })
 
-  return result
+    return result
+  } catch (error: any) {
+    // console.log('double error', error)
+    throw new Error(error)
+  }
 }
 
 export const getRegisteredMeals = async (userId: string) => {
-  const data: TRegisteredMeal[] = await fetch('registeredMeals/' + userId)
-  const result: TRegisteredMeal[] = []
+  // console.log('[LOGGER] getRegisteredMeals 1')
 
-  Object.keys(data).forEach((key: any) => {
-    result.push({
-      productsList: data[key].productsList,
-      date: data[key].date,
-      percentage: data[key].percentage,
-      id: key,
+  try {
+    const data: TRegisteredMeal[] = await fetch('registeredMeals/' + userId)
+    const result: TRegisteredMeal[] = []
+
+    Object.keys(data).forEach((key: any) => {
+      const { productsList, date, percentage } = data[key]
+
+      result.push({
+        productsList,
+        date,
+        percentage,
+        id: key,
+      })
     })
-  })
 
-  return result
+    return result
+  } catch (error) {
+    // console.log('double error', error)
+  }
+}
+
+export const getUserChars = async (userId: string) => {
+  // debugger
+  // console.log('[LOGGER] getUserChars')
+
+  try {
+    const data: TRegisteredMeal[] = await fetch('profile/' + userId)
+
+    // console.log('data', data)
+    // const result: TRegisteredMeal[] = []
+
+    // Object.keys(data).forEach((key: any) => {
+    //   const { productsList, date, percentage } = data[key]
+
+    //   result.push({
+    //     productsList,
+    //     date,
+    //     percentage,
+    //     id: key,
+    //   })
+    // })
+
+    // return result
+  } catch (error: any) {
+    // console.log('getUserChars error', error)
+    throw new Error(error)
+  }
 }
 
 export const put = async (link: string, data: any) => {

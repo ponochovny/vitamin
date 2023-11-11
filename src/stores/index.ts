@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import {
   fetch,
-  getProducts,
-  getRegisteredMeals,
+  // getProducts,
+  // getRegisteredMeals,
   post,
   put,
 } from '../helper/fetch'
@@ -20,7 +20,8 @@ import { characteristics } from '../constants/chars'
 import { average } from '../helper/calculatePercentage'
 import { CProduct, CRegisteredMeal } from '../classes'
 import { useUserStore } from './modules/user'
-import { productsListMock } from '../helper/mocks/products'
+// import { productsListMock } from '../helper/mocks/products'
+import { IChars } from '../core/types'
 
 export type RootState = {
   user: null | { id: string }
@@ -56,24 +57,22 @@ export const useMainStore = defineStore({
 
       const newProduct = new CProduct(payload.title, payload.characteristics)
 
-      return new Promise(async (resolve, reject) => {
-        try {
-          const newProductKey = await post(newProduct, 'products')
-          if (typeof newProductKey === 'string') {
-            this.productsList.push({
-              ...newProduct,
-              amount: 100,
-              id: newProductKey,
-            })
-          }
-          resolve(newProductKey)
-        } catch (error: any) {
-          this.error = error.message
-          this.isLoading = false
-
-          reject(error)
+      try {
+        const newProductKey = await post(newProduct, 'products')
+        if (typeof newProductKey === 'string') {
+          this.productsList.push({
+            ...newProduct,
+            amount: 100,
+            id: newProductKey,
+          })
         }
-      })
+        return newProductKey
+      } catch (error: any) {
+        this.error = error.message
+        this.isLoading = false
+
+        throw new Error(error)
+      }
     },
     async updateProduct({
       title,
@@ -103,32 +102,19 @@ export const useMainStore = defineStore({
         throw error
       }
     },
-    async fetchProducts() {
-      this.isLoading = true
-
-      if (import.meta.env.VITE_USE_MOCK_DATA) {
-        const data: TProduct[] = await new Promise((resolve, reject) => {
-          setTimeout(() => {
-            resolve(productsListMock)
-          }, 1500)
-        })
-        this.productsList = data
-      } else {
-        const data: TProduct[] = await getProducts()
-        this.productsList = [...data]
-      }
-
-      this.isLoading = false
+    setProductsList(data: TProduct[]) {
+      this.productsList = [...data]
     },
     async fetchRegisteredMeals() {
-      this.isLoading = true
+      // this.isLoading = true
 
-      const data: TRegisteredMeal[] = await getRegisteredMeals(
-        useUserStore().user?.id!
-      )
-      this.registeredMeals = [...data]
+      // const data: TRegisteredMeal[] = await getRegisteredMeals(
+      //   useUserStore().user?.id!
+      // )
+      console.log('[mainStore] fetchRegisteredMeals data')
+      // this.registeredMeals = [...data]
 
-      this.isLoading = false
+      // this.isLoading = false
     },
     addProductToChoosen(payload: TProduct) {
       this.choosenProducts.push({
@@ -162,24 +148,19 @@ export const useMainStore = defineStore({
 
       this.averageProdsChars()
 
-      if (this.choosenProducts.length === 0) {
+      if (!this.choosenProducts.length) {
         this.clearChoosenProducts()
       }
     },
     averageProdsChars() {
-      if (this.choosenProducts.length === 0) return {}
+      // TODO: Optimize/Separate, calculate percentage
+      if (!this.choosenProducts.length || !CharacteristicsMock) return {}
 
-      type currProductCharsT = {
-        foodEnergy: any[]
-        minerals: any[]
-        vitamins: any[]
-      }
-
-      const listOfProductsWithAverage: currProductCharsT[] = []
+      const listOfProductsWithAverage: IChars[] = []
       const chars: TCharacteristics = CharacteristicsMock
 
       for (const product of this.choosenProducts) {
-        let currProductChars: currProductCharsT = {
+        const currProductChars: IChars = {
           foodEnergy: [],
           minerals: [],
           vitamins: [],
@@ -187,11 +168,11 @@ export const useMainStore = defineStore({
         for (const [key, secondItem] of Object.entries(
           product.characteristics
         )) {
-          currProductChars[key as keyof currProductCharsT] = []
-          for (let item of secondItem) {
-            let versions = item.versions
+          currProductChars[key as keyof IChars] = []
+          for (const item of secondItem) {
+            const versions = item.versions
 
-            currProductChars[key as keyof currProductCharsT].push({
+            currProductChars[key as keyof IChars].push({
               title: item.title,
 
               versions: [{ value: (average(versions) * product.amount) / 100 }],
@@ -201,51 +182,45 @@ export const useMainStore = defineStore({
         listOfProductsWithAverage.push(currProductChars)
       }
 
-      if (chars !== null) {
-        for (const [key, item] of Object.entries(
-          listOfProductsWithAverage[0]
-        )) {
-          chars[key as keyof TCharacteristics] = []
-          for (const productItem of listOfProductsWithAverage) {
-            for (const innerItem of productItem[
-              key as keyof currProductCharsT
-            ]) {
-              const foundParam = chars[key as keyof TCharacteristics].find(
-                (el) => el.title === innerItem.title
-              )
-              if (foundParam) {
-                foundParam.versions.push({
-                  value: innerItem.versions[0].value,
-                  origin: '',
-                })
-              } else {
-                chars[key as keyof TCharacteristics].push({
-                  title: innerItem.title,
-                  versions: [...innerItem.versions],
-                })
-              }
+      for (const [key] of Object.entries(listOfProductsWithAverage[0])) {
+        chars[key as keyof TCharacteristics] = []
+        for (const productItem of listOfProductsWithAverage) {
+          for (const innerItem of productItem[key as keyof IChars]) {
+            const foundParam = chars[key as keyof TCharacteristics].find(
+              (el) => el.title === innerItem.title
+            )
+            if (foundParam) {
+              foundParam.versions.push({
+                value: innerItem.versions[0].value,
+                origin: '',
+              })
+            } else {
+              chars[key as keyof TCharacteristics].push({
+                title: innerItem.title,
+                versions: [...innerItem.versions],
+              })
             }
-            const resultOfItemsInCat: TElement[] = [TElementMock]
-
-            for (const item of chars[key as keyof TCharacteristics]) {
-              const averageOfParam = {
-                title: item.title,
-                versions: [
-                  {
-                    value: summOfValueOfArray(item.versions),
-                    origin: '',
-                  },
-                ],
-              }
-              resultOfItemsInCat.push(averageOfParam)
-            }
-
-            chars[key as keyof TCharacteristics] = [...resultOfItemsInCat]
           }
-        }
+          const resultOfItemsInCat: TElement[] = [TElementMock]
 
-        this.averChProdChars = { characteristics: { ...chars }, percentage: 0 }
+          for (const item of chars[key as keyof TCharacteristics]) {
+            const averageOfParam = {
+              title: item.title,
+              versions: [
+                {
+                  value: summOfValueOfArray(item.versions),
+                  origin: '',
+                },
+              ],
+            }
+            resultOfItemsInCat.push(averageOfParam)
+          }
+
+          chars[key as keyof TCharacteristics] = [...resultOfItemsInCat]
+        }
       }
+
+      this.averChProdChars = { characteristics: { ...chars }, percentage: 0 }
     },
     clearChoosenProducts() {
       this.choosenProducts = []
@@ -279,44 +254,47 @@ export const useMainStore = defineStore({
     },
 
     async registerMeal() {
+      if (!this.averChProdChars) return
+
       const date = new Date()
       // const db = getDatabase()
 
-      this.error = null
-      this.isLoading = true
+      // this.error = null
+      // this.isLoading = true
 
       const newProduct = new CRegisteredMeal(
         date.valueOf(),
-
-        this.averChProdChars?.percentage!,
+        this.averChProdChars.percentage,
         this.choosenProducts
       )
 
-      try {
-        const newRegisteredMealKey = await post(
-          newProduct,
-          `registeredMeals/${useUserStore().user?.id}`
-        )
+      console.log('newProduct', newProduct)
 
-        this.registeredMeals.push({
-          date: newProduct.date,
-          productsList: newProduct.productsList,
-          percentage: newProduct.percentage,
-          id:
-            typeof newRegisteredMealKey === 'string'
-              ? newRegisteredMealKey
-              : 'undefined',
-        })
+      // try {
+      //   const newRegisteredMealKey = await post(
+      //     newProduct,
+      //     `registeredMeals/${useUserStore().user?.id}`
+      //   )
 
-        this.clearChoosenProducts()
+      //   this.registeredMeals.push({
+      //     date: newProduct.date,
+      //     productsList: newProduct.productsList,
+      //     percentage: newProduct.percentage,
+      //     id:
+      //       typeof newRegisteredMealKey === 'string'
+      //         ? newRegisteredMealKey
+      //         : 'undefined',
+      //   })
 
-        this.error = null
-        this.isLoading = false
-      } catch (error: any) {
-        this.error = error.message
-        this.isLoading = false
-        throw error
-      }
+      //   this.clearChoosenProducts()
+
+      //   this.error = null
+      //   this.isLoading = false
+      // } catch (error: any) {
+      //   this.error = error.message
+      //   this.isLoading = false
+      //   throw error
+      // }
     },
     async updateRegisteredMeal() {
       if (!this.alreadyRegisteredForCurrentDate) return
@@ -330,7 +308,7 @@ export const useMainStore = defineStore({
 
       // ... calculate summ
       // @ts-ignore
-      let newProductsList = [
+      const newProductsList = [
         ...curDateItem.productsList.map((el) => {
           const found = choosenProducts.find((innerEl) => innerEl.id === el.id)
 

@@ -6,44 +6,19 @@ import App from './App.vue'
 
 import './styles.scss'
 import router from './router'
-import { initializeApp } from 'firebase/app'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
 
 import Spinner from './components/Spinner/Spinner.vue'
 
-import { useMainStore } from './stores/index'
-import { useUserStore } from './stores/modules/user'
+import { initializeFirebaseFlow } from './api/firebase'
+import { basicFetch } from './core'
 
 createApp({
   created() {
-    if (import.meta.env.VITE_USE_MOCK_DATA === 'false') {
-      console.log('...[created]')
-      const firebaseConfig = {
-        apiKey: import.meta.env.VITE_API_KEY,
-        authDomain: `${import.meta.env.VITE_PROJECT_ID}.firebaseapp.com`,
-        databaseURL: `https://${
-          import.meta.env.VITE_PROJECT_ID
-        }.firebaseio.com`,
-        projectId: import.meta.env.VITE_PROJECT_ID,
-        storageBucket: `${import.meta.env.VITE_PROJECT_ID}.appspot.com`,
-        messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
-        appId: import.meta.env.VITE_APP_ID,
-      }
-      // Initialize Firebase
-      const firebaseApp = initializeApp(firebaseConfig)
-      const firebaseAuth = getAuth(firebaseApp)
+    initializeFirebaseFlow()
 
-      onAuthStateChanged(firebaseAuth, (user) => {
-        if (user) useUserStore().autoLoginUser(user)
-      })
-    }
-
-    setTimeout(() => {
-      useUserStore().setUserChecked()
-    }, 0)
-    useMainStore().fetchProducts()
+    basicFetch()
   },
   render: () => h(App),
 })

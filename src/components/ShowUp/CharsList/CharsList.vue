@@ -53,15 +53,11 @@ import { computed, ref } from 'vue'
 
 export default {
   name: 'metrics-list',
-  setup(props: any) {
+  setup() {
     const mainStore = useMainStore()
     const averChProdChars = computed(() => mainStore.averChProdChars)
     const chars = characteristics
     const categories = values
-    console.log('-')
-    console.log(props)
-    console.log(chars)
-    console.log('-')
     const colors = ref<any[]>(['red', 'green', 'yellow'])
     const bgColors = () => {
       const max = colors.value.length > 0 ? colors.value.length : 0
