@@ -69,7 +69,7 @@ export default {
   transition: opacity 0.5s ease;
 
   img {
-    width: 100px;
+    width: 150px;
     transform: scale(0.7);
 
     transition: transform 0.5s ease;
