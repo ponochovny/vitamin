@@ -13,6 +13,7 @@ import FillTheDay from '../pages/FillTheDay.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '',
+    name: 'Main',
     component: Main,
     beforeEnter: AuthGuard,
   },
@@ -24,7 +25,9 @@ const routes: Array<RouteRecordRaw> = [
 
   {
     path: '/auth',
+    name: 'Auth',
     component: Auth,
+    beforeEnter: AuthGuard,
   },
   {
     path: '/new-product',
