@@ -9,4 +9,4 @@ This project is using:
 
 ## About the project
 
-This project is designed to manage your meal data with food energy, vitamins and micro/macro elements in these. Also personal daily preferences are editable. Calculate daily needs and store meals data by dates. You can add or edit your products list and use the default one.
+This project is designed to manage your meal data, including food energy, vitamins, and macro- and microelements. Also, personal daily preferences are editable. Calculate daily needs and store meals data by date. You can add to or edit your product list and/or use the default one.
